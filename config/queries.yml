@@ -1,0 +1,432 @@
+# SQL Query Templates for MOH Polyclinic Data Extraction
+# Version: 1.0
+# Last Updated: 2026-01-26
+#
+# Template Variables:
+# - {start_date}: Start date for extraction
+# - {end_date}: End date for extraction
+# - {batch_offset}: Offset for batch processing
+# - {batch_size}: Number of records per batch
+
+# =============================================================================
+# Core Data Extraction Queries
+# =============================================================================
+
+queries:
+  # Extract polyclinic attendance records
+  attendances:
+    description: "Extract patient attendance/visit records"
+    incremental_query: |
+      SELECT 
+        a.attendance_id,
+        a.patient_id,
+        a.polyclinic_id,
+        a.attendance_date,
+        a.attendance_time,
+        a.visit_type,
+        a.appointment_type,
+        a.visit_status,
+        a.arrival_time,
+        a.consultation_start_time,
+        a.consultation_end_time,
+        a.waiting_time_minutes,
+        a.consultation_duration_minutes,
+        a.referring_source,
+        a.created_at,
+        a.updated_at
+      FROM polyclinic_attendances a
+      WHERE a.attendance_date >= '{start_date}'
+        AND a.attendance_date < '{end_date}'
+      ORDER BY a.attendance_date, a.attendance_id
+      LIMIT {batch_size} OFFSET {batch_offset}
+    
+    full_query: |
+      SELECT 
+        a.attendance_id,
+        a.patient_id,
+        a.polyclinic_id,
+        a.attendance_date,
+        a.attendance_time,
+        a.visit_type,
+        a.appointment_type,
+        a.visit_status,
+        a.arrival_time,
+        a.consultation_start_time,
+        a.consultation_end_time,
+        a.waiting_time_minutes,
+        a.consultation_duration_minutes,
+        a.referring_source,
+        a.created_at,
+        a.updated_at
+      FROM polyclinic_attendances a
+      ORDER BY a.attendance_date, a.attendance_id
+      LIMIT {batch_size} OFFSET {batch_offset}
+
+  # Extract patient demographics
+  patients:
+    description: "Extract patient demographic information"
+    incremental_query: |
+      SELECT 
+        p.patient_id,
+        p.birth_year,
+        p.age_group,
+        p.gender,
+        p.race,
+        p.nationality,
+        p.residential_status,
+        p.postal_code,
+        p.planning_area,
+        p.region,
+        p.registration_date,
+        p.healthier_sg_enrolled,
+        p.healthier_sg_enrolment_date,
+        p.chronic_conditions_count,
+        p.subsidy_category,
+        p.created_at,
+        p.updated_at
+      FROM patient_demographics p
+      WHERE p.updated_at >= '{start_date}'
+        AND p.updated_at < '{end_date}'
+      ORDER BY p.patient_id
+      LIMIT {batch_size} OFFSET {batch_offset}
+    
+    full_query: |
+      SELECT 
+        p.patient_id,
+        p.birth_year,
+        p.age_group,
+        p.gender,
+        p.race,
+        p.nationality,
+        p.residential_status,
+        p.postal_code,
+        p.planning_area,
+        p.region,
+        p.registration_date,
+        p.healthier_sg_enrolled,
+        p.healthier_sg_enrolment_date,
+        p.chronic_conditions_count,
+        p.subsidy_category,
+        p.created_at,
+        p.updated_at
+      FROM patient_demographics p
+      ORDER BY p.patient_id
+      LIMIT {batch_size} OFFSET {batch_offset}
+
+  # Extract diagnosis records
+  diagnoses:
+    description: "Extract diagnosis records with ICD codes"
+    incremental_query: |
+      SELECT 
+        d.diagnosis_id,
+        d.attendance_id,
+        d.patient_id,
+        d.diagnosis_date,
+        d.diagnosis_type,
+        d.icd_code,
+        d.icd_version,
+        d.diagnosis_description,
+        d.condition_category,
+        d.is_chronic,
+        d.is_primary_diagnosis,
+        d.diagnosis_sequence,
+        d.created_at,
+        d.updated_at
+      FROM diagnosis_records d
+      WHERE d.diagnosis_date >= '{start_date}'
+        AND d.diagnosis_date < '{end_date}'
+      ORDER BY d.diagnosis_date, d.diagnosis_id
+      LIMIT {batch_size} OFFSET {batch_offset}
+    
+    full_query: |
+      SELECT 
+        d.diagnosis_id,
+        d.attendance_id,
+        d.patient_id,
+        d.diagnosis_date,
+        d.diagnosis_type,
+        d.icd_code,
+        d.icd_version,
+        d.diagnosis_description,
+        d.condition_category,
+        d.is_chronic,
+        d.is_primary_diagnosis,
+        d.diagnosis_sequence,
+        d.created_at,
+        d.updated_at
+      FROM diagnosis_records d
+      ORDER BY d.diagnosis_date, d.diagnosis_id
+      LIMIT {batch_size} OFFSET {batch_offset}
+
+  # Extract procedure records
+  procedures:
+    description: "Extract procedures and treatments performed"
+    incremental_query: |
+      SELECT 
+        pr.procedure_id,
+        pr.attendance_id,
+        pr.patient_id,
+        pr.procedure_date,
+        pr.procedure_code,
+        pr.procedure_description,
+        pr.procedure_type,
+        pr.provider_id,
+        pr.procedure_cost,
+        pr.patient_charge,
+        pr.subsidy_amount,
+        pr.created_at,
+        pr.updated_at
+      FROM procedure_records pr
+      WHERE pr.procedure_date >= '{start_date}'
+        AND pr.procedure_date < '{end_date}'
+      ORDER BY pr.procedure_date, pr.procedure_id
+      LIMIT {batch_size} OFFSET {batch_offset}
+    
+    full_query: |
+      SELECT 
+        pr.procedure_id,
+        pr.attendance_id,
+        pr.patient_id,
+        pr.procedure_date,
+        pr.procedure_code,
+        pr.procedure_description,
+        pr.procedure_type,
+        pr.provider_id,
+        pr.procedure_cost,
+        pr.patient_charge,
+        pr.subsidy_amount,
+        pr.created_at,
+        pr.updated_at
+      FROM procedure_records pr
+      ORDER BY pr.procedure_date, pr.procedure_id
+      LIMIT {batch_size} OFFSET {batch_offset}
+
+  # Extract medication prescriptions
+  medications:
+    description: "Extract medication prescriptions"
+    incremental_query: |
+      SELECT 
+        m.prescription_id,
+        m.attendance_id,
+        m.patient_id,
+        m.prescription_date,
+        m.medication_code,
+        m.medication_name,
+        m.medication_category,
+        m.dosage,
+        m.frequency,
+        m.duration_days,
+        m.quantity,
+        m.medication_cost,
+        m.patient_charge,
+        m.subsidy_amount,
+        m.is_chronic_medication,
+        m.created_at,
+        m.updated_at
+      FROM medication_prescriptions m
+      WHERE m.prescription_date >= '{start_date}'
+        AND m.prescription_date < '{end_date}'
+      ORDER BY m.prescription_date, m.prescription_id
+      LIMIT {batch_size} OFFSET {batch_offset}
+    
+    full_query: |
+      SELECT 
+        m.prescription_id,
+        m.attendance_id,
+        m.patient_id,
+        m.prescription_date,
+        m.medication_code,
+        m.medication_name,
+        m.medication_category,
+        m.dosage,
+        m.frequency,
+        m.duration_days,
+        m.quantity,
+        m.medication_cost,
+        m.patient_charge,
+        m.subsidy_amount,
+        m.is_chronic_medication,
+        m.created_at,
+        m.updated_at
+      FROM medication_prescriptions m
+      ORDER BY m.prescription_date, m.prescription_id
+      LIMIT {batch_size} OFFSET {batch_offset}
+
+  # Extract lab results
+  lab_results:
+    description: "Extract laboratory test results"
+    incremental_query: |
+      SELECT 
+        lr.lab_result_id,
+        lr.attendance_id,
+        lr.patient_id,
+        lr.test_date,
+        lr.result_date,
+        lr.test_code,
+        lr.test_name,
+        lr.test_category,
+        lr.result_value,
+        lr.result_unit,
+        lr.reference_range,
+        lr.is_abnormal,
+        lr.abnormal_flag,
+        lr.created_at,
+        lr.updated_at
+      FROM laboratory_results lr
+      WHERE lr.result_date >= '{start_date}'
+        AND lr.result_date < '{end_date}'
+      ORDER BY lr.result_date, lr.lab_result_id
+      LIMIT {batch_size} OFFSET {batch_offset}
+    
+    full_query: |
+      SELECT 
+        lr.lab_result_id,
+        lr.attendance_id,
+        lr.patient_id,
+        lr.test_date,
+        lr.result_date,
+        lr.test_code,
+        lr.test_name,
+        lr.test_category,
+        lr.result_value,
+        lr.result_unit,
+        lr.reference_range,
+        lr.is_abnormal,
+        lr.abnormal_flag,
+        lr.created_at,
+        lr.updated_at
+      FROM laboratory_results lr
+      ORDER BY lr.result_date, lr.lab_result_id
+      LIMIT {batch_size} OFFSET {batch_offset}
+
+# =============================================================================
+# Reference Data Queries
+# =============================================================================
+
+  # Polyclinic master data
+  polyclinics:
+    description: "Extract polyclinic reference data"
+    query: |
+      SELECT 
+        pc.polyclinic_id,
+        pc.polyclinic_name,
+        pc.cluster,
+        pc.region,
+        pc.postal_code,
+        pc.address,
+        pc.operating_hours,
+        pc.total_doctors,
+        pc.total_nurses,
+        pc.annual_capacity,
+        pc.establishment_date,
+        pc.last_renovation_date,
+        pc.facility_grade,
+        pc.services_offered,
+        pc.is_active
+      FROM polyclinic_master pc
+      WHERE pc.is_active = TRUE
+      ORDER BY pc.polyclinic_id
+
+  # Condition/disease master data
+  conditions:
+    description: "Extract condition/disease reference data"
+    query: |
+      SELECT 
+        c.condition_code,
+        c.condition_name,
+        c.condition_category,
+        c.is_chronic,
+        c.is_preventable,
+        c.severity_level,
+        c.icd_10_codes,
+        c.healthier_sg_priority,
+        c.description
+      FROM condition_master c
+      ORDER BY c.condition_category, c.condition_code
+
+# =============================================================================
+# Analytical Queries (Pre-aggregated for Performance)
+# =============================================================================
+
+  # Daily attendance summary
+  daily_attendance_summary:
+    description: "Daily aggregated attendance statistics"
+    query: |
+      SELECT 
+        a.attendance_date,
+        a.polyclinic_id,
+        COUNT(*) as total_attendances,
+        COUNT(DISTINCT a.patient_id) as unique_patients,
+        AVG(a.waiting_time_minutes) as avg_waiting_time,
+        AVG(a.consultation_duration_minutes) as avg_consultation_duration,
+        SUM(CASE WHEN a.visit_type = 'acute' THEN 1 ELSE 0 END) as acute_visits,
+        SUM(CASE WHEN a.visit_type = 'chronic' THEN 1 ELSE 0 END) as chronic_visits,
+        SUM(CASE WHEN a.appointment_type = 'walk-in' THEN 1 ELSE 0 END) as walk_in_visits,
+        SUM(CASE WHEN a.appointment_type = 'appointment' THEN 1 ELSE 0 END) as appointment_visits
+      FROM polyclinic_attendances a
+      WHERE a.attendance_date >= '{start_date}'
+        AND a.attendance_date < '{end_date}'
+      GROUP BY a.attendance_date, a.polyclinic_id
+      ORDER BY a.attendance_date, a.polyclinic_id
+
+  # Condition prevalence summary
+  condition_prevalence:
+    description: "Condition prevalence by time period"
+    query: |
+      SELECT 
+        DATE_TRUNC('month', d.diagnosis_date) as diagnosis_month,
+        d.condition_category,
+        d.icd_code,
+        COUNT(*) as diagnosis_count,
+        COUNT(DISTINCT d.patient_id) as unique_patients,
+        SUM(CASE WHEN d.is_chronic = TRUE THEN 1 ELSE 0 END) as chronic_cases,
+        AVG(EXTRACT(YEAR FROM AGE(d.diagnosis_date, p.birth_year || '-01-01'))) as avg_patient_age
+      FROM diagnosis_records d
+      INNER JOIN patient_demographics p ON d.patient_id = p.patient_id
+      WHERE d.diagnosis_date >= '{start_date}'
+        AND d.diagnosis_date < '{end_date}'
+      GROUP BY diagnosis_month, d.condition_category, d.icd_code
+      ORDER BY diagnosis_month, diagnosis_count DESC
+
+# =============================================================================
+# Data Quality Validation Queries
+# =============================================================================
+
+validation:
+  # Check for orphaned records
+  orphaned_attendances:
+    description: "Find attendances without valid patients"
+    query: |
+      SELECT COUNT(*) as orphaned_count
+      FROM polyclinic_attendances a
+      LEFT JOIN patient_demographics p ON a.patient_id = p.patient_id
+      WHERE p.patient_id IS NULL
+        AND a.attendance_date >= '{start_date}'
+        AND a.attendance_date < '{end_date}'
+  
+  # Check for future dates
+  future_dates:
+    description: "Find records with future dates"
+    query: |
+      SELECT 
+        'attendances' as table_name,
+        COUNT(*) as future_date_count
+      FROM polyclinic_attendances
+      WHERE attendance_date > CURRENT_DATE
+      UNION ALL
+      SELECT 
+        'diagnoses' as table_name,
+        COUNT(*) as future_date_count
+      FROM diagnosis_records
+      WHERE diagnosis_date > CURRENT_DATE
+  
+  # Check for duplicate primary keys
+  duplicate_keys:
+    description: "Find duplicate primary keys"
+    query: |
+      SELECT 
+        attendance_id,
+        COUNT(*) as occurrence_count
+      FROM polyclinic_attendances
+      GROUP BY attendance_id
+      HAVING COUNT(*) > 1

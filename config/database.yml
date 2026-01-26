@@ -1,0 +1,263 @@
+# Database Configuration for MOH Polyclinic Data Extraction
+# Version: 1.0
+# Last Updated: 2026-01-26
+
+# =============================================================================
+# Database Connections
+# =============================================================================
+
+databases:
+  # Primary MOH polyclinic database
+  polyclinic_db:
+    type: postgresql  # Options: postgresql, mysql, mssql, oracle
+    host: ${DB_HOST}  # Use environment variables for security
+    port: ${DB_PORT}
+    database: ${DB_NAME}
+    schema: ${DB_SCHEMA}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    ssl_mode: require
+    connection_timeout: 30
+    pool_size: 5
+    
+  # NEHR (National Electronic Health Records) integration
+  nehr_db:
+    type: postgresql
+    host: ${NEHR_HOST}
+    port: ${NEHR_PORT}
+    database: ${NEHR_DB}
+    schema: public
+    username: ${NEHR_USER}
+    password: ${NEHR_PASSWORD}
+    ssl_mode: require
+    read_only: true  # Prevent accidental writes
+    
+  # Data warehouse (if applicable)
+  data_warehouse:
+    type: postgresql
+    host: ${DWH_HOST}
+    port: ${DWH_PORT}
+    database: ${DWH_DB}
+    username: ${DWH_USER}
+    password: ${DWH_PASSWORD}
+    ssl_mode: require
+
+# =============================================================================
+# Extraction Configuration
+# =============================================================================
+
+extraction:
+  # Batch sizes for data extraction
+  batch_size: 10000
+  
+  # Parallel processing
+  max_workers: 4
+  
+  # Retry configuration
+  max_retries: 3
+  retry_delay: 5  # seconds
+  
+  # Query timeout
+  query_timeout: 300  # seconds (5 minutes)
+  
+  # Memory limits
+  max_memory_mb: 2048
+  
+  # Incremental extraction
+  incremental:
+    enabled: true
+    date_column: updated_at
+    checkpoint_file: data/interim/extraction_checkpoint.json
+
+# =============================================================================
+# Data Sources and Tables
+# =============================================================================
+
+data_sources:
+  # Patient visits/attendances
+  attendances:
+    table: polyclinic_attendances
+    primary_key: attendance_id
+    date_column: attendance_date
+    incremental: true
+    
+  # Patient demographics
+  patients:
+    table: patient_demographics
+    primary_key: patient_id
+    date_column: registration_date
+    incremental: true
+    
+  # Diagnosis codes
+  diagnoses:
+    table: diagnosis_records
+    primary_key: diagnosis_id
+    date_column: diagnosis_date
+    incremental: true
+    foreign_keys:
+      - attendance_id
+      
+  # Procedures and treatments
+  procedures:
+    table: procedure_records
+    primary_key: procedure_id
+    date_column: procedure_date
+    incremental: true
+    
+  # Medications prescribed
+  medications:
+    table: medication_prescriptions
+    primary_key: prescription_id
+    date_column: prescription_date
+    incremental: true
+    
+  # Lab results (if available)
+  lab_results:
+    table: laboratory_results
+    primary_key: lab_result_id
+    date_column: result_date
+    incremental: true
+    
+  # Polyclinic master data
+  polyclinics:
+    table: polyclinic_master
+    primary_key: polyclinic_id
+    incremental: false  # Reference data
+    
+  # Condition/disease master data
+  conditions:
+    table: condition_master
+    primary_key: condition_code
+    incremental: false  # Reference data
+
+# =============================================================================
+# Output Configuration
+# =============================================================================
+
+output:
+  # Data formats
+  formats:
+    - parquet  # Efficient for large datasets
+    - csv      # For compatibility
+    
+  # Compression
+  compression: gzip
+  
+  # File naming convention
+  naming_pattern: "{source}_{date}_{timestamp}.{format}"
+  
+  # Output paths (relative to project root)
+  paths:
+    raw: data/raw
+    external: data/external
+    interim: data/interim
+    processed: data/processed
+    
+  # Partitioning strategy
+  partition_by:
+    - year
+    - month
+
+# =============================================================================
+# Data Quality Checks
+# =============================================================================
+
+quality_checks:
+  # Row count validation
+  row_count:
+    enabled: true
+    min_rows: 100
+    
+  # Null value checks
+  null_checks:
+    critical_columns:
+      - patient_id
+      - attendance_date
+      - polyclinic_id
+    max_null_percentage: 5
+    
+  # Date range validation
+  date_validation:
+    enabled: true
+    min_date: "2015-01-01"  # Historical data start
+    max_date: "today"
+    
+  # Duplicate detection
+  duplicate_checks:
+    enabled: true
+    key_columns:
+      - patient_id
+      - attendance_date
+      
+  # Referential integrity
+  referential_integrity:
+    enabled: true
+    relationships:
+      - parent: polyclinics
+        child: attendances
+        foreign_key: polyclinic_id
+        
+# =============================================================================
+# Scheduling
+# =============================================================================
+
+schedule:
+  # Daily incremental extraction
+  daily:
+    enabled: true
+    time: "02:00"  # 2 AM SGT
+    timezone: "Asia/Singapore"
+    extractions:
+      - attendances
+      - diagnoses
+      - procedures
+      - medications
+      
+  # Weekly full extraction
+  weekly:
+    enabled: true
+    day: "sunday"
+    time: "00:00"
+    extractions:
+      - all
+      
+  # Monthly reference data refresh
+  monthly:
+    enabled: true
+    day: 1
+    time: "00:00"
+    extractions:
+      - polyclinics
+      - conditions
+
+# =============================================================================
+# Logging and Monitoring
+# =============================================================================
+
+logging:
+  level: INFO  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # Log file locations
+  files:
+    extraction: logs/extraction.log
+    errors: logs/errors.log
+    audit: logs/audit.log
+    
+  # Log rotation
+  rotation:
+    max_bytes: 10485760  # 10 MB
+    backup_count: 10
+
+monitoring:
+  # Alert thresholds
+  alerts:
+    extraction_failure: true
+    row_count_deviation: 20  # percentage
+    quality_check_failure: true
+    
+  # Notification channels (configure separately)
+  notifications:
+    email: true
+    slack: false
+    teams: false

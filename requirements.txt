@@ -1,0 +1,19 @@
+# Python package dependencies
+pandas>=2.0.0
+pyarrow>=12.0.0
+pyyaml>=6.0
+psycopg2-binary>=2.9.0
+pymysql>=1.0.0
+pyodbc>=4.0.0
+cx_Oracle>=8.0.0
+schedule>=1.2.0
+psutil>=5.9.0
+python-dotenv>=1.0.0
+
+# Optional: For Jupyter notebook integration
+jupyter>=1.0.0
+ipykernel>=6.0.0
+
+# Optional: For enhanced data analysis
+numpy>=1.24.0
+scipy>=1.10.0

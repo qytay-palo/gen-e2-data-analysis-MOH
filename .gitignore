@@ -1,0 +1,110 @@
+# Environment and credentials
+.env
+*.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Data files (exclude actual data)
+data/raw/*
+data/processed/*
+data/interim/*
+data/external/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/interim/.gitkeep
+!data/external/.gitkeep
+
+# Log files
+logs/*
+*.log
+!logs/.gitkeep
+
+# Results and outputs
+results/*
+!results/.gitkeep
+!results/metrics/.gitkeep
+!results/exports/.gitkeep
+!results/tables/.gitkeep
+
+# Reports
+reports/figures/*
+reports/dashboards/*
+reports/presentations/*
+!reports/figures/.gitkeep
+!reports/dashboards/.gitkeep
+!reports/presentations/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.bak
+*.backup
+backup_*/
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Archives
+*.zip
+*.tar.gz
+*.tar.bz2
+*.7z
+
+# System files
+Thumbs.db
+.DS_Store
