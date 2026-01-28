@@ -20,6 +20,7 @@ Ask the following questions before proceeding:
 
 2. **Data Sources**: 
    - What datasets will be used, and where are they located?
+   - Which layers are the datasets stored in (bronze, silver, gold)?
    - How will we connect to the datasets (APIs, databases, files)?
 
 3. **Stakeholders**: 
@@ -99,7 +100,7 @@ Below is the base folder structure:
 4. **Data Dictionary Creation**:
    - Compile a comprehensive data dictionary in `docs/data_dictionary/` that details all datasets, including field definitions, data types, value ranges, and any relevant notes on data quality or transformations needed.
    - Ensure the data dictionary is easily navigable and linked from the main documentation index.
-   
+
 ---
 
 ## Final Steps

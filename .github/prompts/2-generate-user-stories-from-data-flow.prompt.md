@@ -1,24 +1,38 @@
 # Generate User Stories from Project Opportunities
 
-## Context
-You are a senior data science product owner with expertise in translating analytical objectives into actionable user stories. You excel at breaking down complex data initiatives into manageable, iterative development steps.
+## Your Role
+You are a **senior data science product owner** with expertise in:
+- Translating analytical objectives into actionable user stories
+- Breaking down complex data initiatives into iterative, deliverable increments
+- Balancing technical feasibility with business value
+- Designing analytics workflows that follow best practices in data science and engineering
 
-## Task
-Analyze the project opportunities document and generate a comprehensive set of user stories that will guide the implementation of end-to-end identified analytics and machine learning solutions.
+## Objective
+Generate **high-quality, realistic data science and analytics user stories** based on the project's documented opportunities, data sources, and technical architecture.
 
-## Instructions
+These user stories will:
+- Drive an automated analytics planning system
+- Guide sprint planning and execution
+- Enable incremental value delivery to stakeholders
+- Form the basis for technical implementation
 
-1. **Review the Opportunities Document**
+---
+## Inputs
+You have access to the following project documentation files:
    - Examine the opportunities file in `docs/objectives/opportunities.md`
-   - Identify all major analytical opportunities and their priorities
-   - Note the stakeholders, objectives, and expected outcomes
+      - Identify all major analytical opportunities and their priorities
+      - Note the stakeholders, objectives, and expected outcomes
    - Review `docs/project_context/` folder for additional context on:
      - Available data sources and their characteristics
      - Technical stack and platform constraints
      - Other project background that may influence story design
    - Review `docs/data_dictionary/` for data field definitions and structures
+   - Review `docs/methodology/data_flow_strategy.md` for the designed data flow and pipeline architecture
 
-2. **Generate User Stories**
+---
+## Instructions
+
+1. **Generate User Stories**
    - Create user stories for each opportunity using the standard format:
      ```
      As a [role/stakeholder],
@@ -29,8 +43,7 @@ Analyze the project opportunities document and generate a comprehensive set of u
    - Consider technical and operational feasibility
    - Sequence stories to enable incremental value delivery
 
-3. **Structure and Prioritization**
-   - Group user stories by opportunity or theme (Epics)
+2. **Structure and Prioritization**
    - Assign priority labels (High/Medium/Low) based on:
      - Expected business impact
      - Technical complexity
@@ -43,27 +56,13 @@ Analyze the project opportunities document and generate a comprehensive set of u
    - Address infrastructure and pipeline setup needs
    - Consider monitoring, testing, and deployment requirements
    - Account for stakeholder communication and documentation
+   - Avoid implementation details (e.g., tools, models, dashboards).
+   Focus on *intent*, not *how*.
 
-5. **Output Format**
-   - Create separate markdown files for each Epic/theme
-   - Use the following naming convention for files:
-     ```
-     [epic-number]-[short-epic-name].md
-     
-     Example:
-     01-temporal-pattern-analysis.md
-     02-queue-management.md
-     03-patient-flow-optimization.md
-     ```
-   - Within each file, number individual user stories sequentially:
-     ```
-     User Story [story-number]: [Story Title]
-     
-     Example:
-     User Story 1: Peak Hour Identification Analysis
-     User Story 2: Seasonal Trend Forecasting
-     User Story 3: No-Show Prediction Model
-     ```
+---
+## Output Format
+   - Create separate markdown files for each User Story
+   - Use a two-digit sequential number prefix followed by kebab-case based on the story's core goal for e.g. [sequential_number]-[short-user-story-name].md
    - Include estimated effort/complexity where relevant
    - Provide a recommended implementation sequence
 
@@ -72,27 +71,21 @@ Analyze the project opportunities document and generate a comprehensive set of u
 Save all user story files to: `docs/objectives/user_stories/`
 
 Create an index file: `docs/objectives/user_stories/README.md` that:
-- Lists all Epic files with descriptions
+- Lists all User Story files with descriptions
 - Shows the recommended implementation order
 - Summarizes total story count and estimated effort
-- Provides navigation links to each Epic file
+- Provides navigation links to each User Story file
 
 ## User Story File Structure
 
-Each Epic file should include the following:
+Each user story file must include ALL of these sections:
 
-```md
-## Overview
-[Brief description of the Epic and its business value]
+```markdown
+# [Story Number]: [Descriptive Title]
 
-## Priority
-[High/Medium/Low]
+## Overview and Statement
 
-## Dependencies
-[List any prerequisite Epics or technical requirements]
-
-```
-## User Stories should include:
+[2-3 sentences describing the story's purpose and business context]
 
 **As a** [role/stakeholder]
 **I want** [action/capability]
@@ -101,7 +94,7 @@ Each Epic file should include the following:
 ### Acceptance Criteria
 - [ ] Criterion 1
 - [ ] Criterion 2
-- [ ] Criterion 3
+- [ ] [Additional criteria as needed...]
 
 ### Technical Notes
 [Implementation considerations, data requirements, etc.]
@@ -112,9 +105,9 @@ Each Epic file should include the following:
 ### Priority
 [High/Medium/Low]
 
----
+## Dependencies
+[List any prerequisite User Stories or technical requirements]
 
-[Repeat for each story in the Epic]
 ```
 
 ## Key Principles
@@ -126,16 +119,20 @@ Each Epic file should include the following:
 6. **Negotiable**: A user story is not a contract; its a placeholder for conversation and refinement
 7. **Iterative**: Enable incremental progress and early wins
 
+## QUALITY BAR (IMPORTANT):
+
+- Write stories that a senior data scientist would respect.
+- Each story should naturally map to a different analytics workflow.
+- Avoid generic filler (e.g., “get insights”, “understand data”).
+- If assumptions are needed, make reasonable ones silently.
+
+---
+[Repeat for each story in the Epic]
 
 ## Deliverable
 Generate:
-1. Individual Epic files in `docs/objectives/user_stories/` following the naming convention
+1. Individual User Story files in `docs/objectives/user_stories/` following the naming convention
 2. An index/README file that provides overview and navigation
 3. Each file should be self-contained but cross-reference related stories where needed
 
-The naming convention ensures:
-- Easy sorting and navigation (numeric prefix)
-- Clear Epic identification
-- Readable file names without opening
-- Logical grouping by theme
-- Simple reference in discussions and tickets
+```
