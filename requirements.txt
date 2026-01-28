@@ -1,19 +1,83 @@
-# Python package dependencies
-pandas>=2.0.0
-pyarrow>=12.0.0
-pyyaml>=6.0
-psycopg2-binary>=2.9.0
-pymysql>=1.0.0
-pyodbc>=4.0.0
-cx_Oracle>=8.0.0
-schedule>=1.2.0
-psutil>=5.9.0
-python-dotenv>=1.0.0
+# Python Package Dependencies
+# Project: MOH Polyclinic Queue Optimization & Visitation Analysis
+# Platform: HEALIX (GCC Databricks)
+# Last Updated: 2026-01-28
 
-# Optional: For Jupyter notebook integration
+# =============================================================================
+# Core Data Processing
+# =============================================================================
+pandas>=2.0.0
+numpy>=1.24.0
+pyarrow>=12.0.0  # Parquet file support
+pyyaml>=6.0  # Configuration files
+
+# =============================================================================
+# Data Extraction & Database Connectivity
+# =============================================================================
+requests>=2.31.0  # API calls
+psycopg2-binary>=2.9.0  # PostgreSQL
+pymysql>=1.0.0  # MySQL
+pyodbc>=4.0.0  # MS SQL Server
+cx_Oracle>=8.0.0  # Oracle (if needed)
+python-dotenv>=1.0.0  # Environment variables
+
+# =============================================================================
+# Machine Learning & Statistical Analysis
+# =============================================================================
+scikit-learn>=1.3.0  # ML algorithms
+xgboost>=2.0.0  # Gradient boosting
+lightgbm>=4.0.0  # Gradient boosting (alternative)
+statsmodels>=0.14.0  # Statistical models
+scipy>=1.10.0  # Scientific computing
+
+# Time-Series Forecasting
+prophet>=1.1.0  # Facebook Prophet
+pmdarima>=2.0.0  # Auto ARIMA
+
+# =============================================================================
+# Deep Learning (Optional - for advanced models)
+# =============================================================================
+# tensorflow>=2.13.0
+# keras>=2.13.0
+
+# =============================================================================
+# Visualization & Dashboards
+# =============================================================================
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.17.0
+folium>=0.14.0  # Geographic maps
+streamlit>=1.28.0  # Interactive dashboards
+
+# =============================================================================
+# Simulation & Optimization
+# =============================================================================
+simpy>=4.0.0  # Discrete-event simulation (queue modeling)
+# ortools>=9.7.0  # Google OR-Tools (optimization)
+
+# =============================================================================
+# Databricks Integration
+# =============================================================================
+databricks-connect>=13.0.0  # Databricks connectivity
+pyspark>=3.4.0  # Spark for distributed processing
+
+# =============================================================================
+# Jupyter Notebook Support
+# =============================================================================
 jupyter>=1.0.0
 ipykernel>=6.0.0
+notebook>=7.0.0
 
-# Optional: For enhanced data analysis
-numpy>=1.24.0
-scipy>=1.10.0
+# =============================================================================
+# Utilities & Automation
+# =============================================================================
+schedule>=1.2.0  # Job scheduling
+psutil>=5.9.0  # System monitoring
+tqdm>=4.66.0  # Progress bars
+
+# =============================================================================
+# Testing & Quality Assurance
+# =============================================================================
+pytest>=7.4.0
+pytest-cov>=4.1.0
+

@@ -1,3 +1,5 @@
+## maybe can implement a langgraph/chain to execute the diff prompts according to data flow strategy
+
 
 7. **Establish Exploratory Data Analysis (EDA) Framework**:
    - **Create EDA Template Notebook** in `notebooks/1_exploratory/`:

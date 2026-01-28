@@ -1,13 +1,24 @@
-# Database Configuration for MOH Polyclinic Data Extraction
-# Version: 1.0
-# Last Updated: 2026-01-26
+# API Configuration for MOH Polyclinic Data Extraction
+# Version: 2.0
+# Last Updated: 2026-01-28
+# Platform: HEALIX (GCC Databricks)
 
 # =============================================================================
-# Database Connections
+# API Connections
 # =============================================================================
 
-databases:
-  # Primary MOH polyclinic database
+api_connections:
+  # MOH Singapore Open Data API
+  moh_data_api:
+    base_url: https://data.gov.sg/api/action
+    endpoint: datastore_search
+    api_key: ${MOH_API_KEY}  # Set in environment variables
+    rate_limit: 100  # requests per minute
+    timeout: 30
+    retry_attempts: 3
+    retry_delay: 5  # seconds
+    
+  # Alternative: Direct database connection (if available)
   polyclinic_db:
     type: postgresql  # Options: postgresql, mysql, mssql, oracle
     host: ${DB_HOST}  # Use environment variables for security
@@ -19,28 +30,6 @@ databases:
     ssl_mode: require
     connection_timeout: 30
     pool_size: 5
-    
-  # NEHR (National Electronic Health Records) integration
-  nehr_db:
-    type: postgresql
-    host: ${NEHR_HOST}
-    port: ${NEHR_PORT}
-    database: ${NEHR_DB}
-    schema: public
-    username: ${NEHR_USER}
-    password: ${NEHR_PASSWORD}
-    ssl_mode: require
-    read_only: true  # Prevent accidental writes
-    
-  # Data warehouse (if applicable)
-  data_warehouse:
-    type: postgresql
-    host: ${DWH_HOST}
-    port: ${DWH_PORT}
-    database: ${DWH_DB}
-    username: ${DWH_USER}
-    password: ${DWH_PASSWORD}
-    ssl_mode: require
 
 # =============================================================================
 # Extraction Configuration

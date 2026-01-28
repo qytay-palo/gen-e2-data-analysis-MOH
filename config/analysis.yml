@@ -1,0 +1,140 @@
+# Analysis Configuration
+# Version: 1.0
+# Last Updated: 2026-01-28
+# Project: Polyclinic Queue Optimization & Visitation Analysis
+
+# =============================================================================
+# Analysis Parameters
+# =============================================================================
+
+temporal_analysis:
+  # Time granularities for analysis
+  granularities:
+    - hourly
+    - daily
+    - weekly
+    - monthly
+    - quarterly
+  
+  # Peak hour detection
+  peak_hours:
+    threshold: 75  # percentile threshold for peak identification
+    min_duration: 2  # minimum consecutive hours to be considered peak
+  
+  # Seasonal decomposition
+  seasonality:
+    model: additive  # Options: additive, multiplicative
+    period: 365  # days
+    include_weekday_effect: true
+    include_holiday_effect: true
+
+geographic_analysis:
+  # Geographic aggregation levels
+  levels:
+    - polyclinic  # Individual facility
+    - region  # North, South, East, West, Central
+    - planning_area  # Singapore URA planning areas
+  
+  # Catchment analysis
+  catchment:
+    distance_bands: [1, 3, 5, 10]  # km
+    travel_time_bands: [10, 20, 30, 45]  # minutes
+  
+  # Accessibility metrics
+  accessibility:
+    population_weighted: true
+    include_transport_mode: true
+
+queue_optimization:
+  # Queue performance metrics
+  metrics:
+    - waiting_time_mean
+    - waiting_time_median
+    - waiting_time_95th_percentile
+    - service_time_mean
+    - queue_length_mean
+    - queue_length_max
+  
+  # Service level targets
+  targets:
+    waiting_time_target: 20  # minutes
+    service_level: 0.80  # 80% of patients seen within target
+  
+  # Simulation parameters
+  simulation:
+    replications: 1000
+    warmup_period: 30  # days
+    run_length: 365  # days
+    confidence_level: 0.95
+
+predictive_modeling:
+  # Forecasting horizons
+  horizons:
+    short_term: 7  # days
+    medium_term: 30  # days
+    long_term: 365  # days
+  
+  # Model selection
+  models:
+    - arima
+    - prophet
+    - xgboost
+    - lstm
+  
+  # Feature engineering
+  features:
+    lag_features: [1, 7, 14, 28, 365]  # days
+    rolling_windows: [7, 14, 30]  # days
+    calendar_features: true
+    weather_features: false  # set true if weather data available
+  
+  # Cross-validation
+  cv:
+    method: time_series_split
+    n_splits: 5
+    test_size: 0.2
+
+# =============================================================================
+# Output Configuration
+# =============================================================================
+
+output:
+  # File formats
+  formats:
+    tables: csv
+    models: joblib
+    figures: png
+    dashboards: html
+  
+  # Paths
+  paths:
+    tables: results/tables
+    metrics: results/metrics
+    exports: results/exports
+    figures: reports/figures
+    dashboards: reports/dashboards
+    models: models/
+  
+  # Reporting
+  reports:
+    executive_summary: true
+    technical_report: true
+    dashboard: true
+    api_endpoint: false
+
+# =============================================================================
+# Performance Settings
+# =============================================================================
+
+performance:
+  # Parallel processing
+  n_jobs: -1  # Use all available cores
+  chunk_size: 10000  # rows
+  
+  # Memory management
+  low_memory: false
+  max_memory_gb: 16
+  
+  # Caching
+  cache_enabled: true
+  cache_dir: .cache/

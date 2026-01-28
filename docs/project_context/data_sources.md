@@ -1,13 +1,13 @@
 # Data Sources: MOH Polyclinic Data Analysis
 
-**Source**: Ministry of Health (MOH) Singapore Open Data Portal  
+**Source**: Ministry of Health (MOH) Singapore Data  
 **URL**: https://data.gov.sg/datasets?agencies=Ministry+of+Health+(MOH)&resultId=522  
 **Last Updated**: 2026-01-26  
 **Data Domain**: Healthcare - Primary Care (Polyclinics)
 
 ---
 
-## 🎯 LLM Context Prompt
+## Initialization
 
 When analyzing this dataset, you are working with **Singapore's Ministry of Health polyclinic healthcare data**, which contains comprehensive patient visit records, diagnoses, treatments, and demographic information from public polyclinics. The data structure follows a **relational database model** with multiple interconnected tables capturing the patient journey from registration to treatment outcomes.
 
@@ -24,7 +24,7 @@ When analyzing this dataset, you are working with **Singapore's Ministry of Heal
 
 ---
 
-## 📊 Table Schema Overview
+## Table Schema Overview
 
 ### **1. POLYCLINIC_ATTENDANCES** (Patient Visits)
 **Purpose**: Records every patient visit/attendance at a polyclinic  
@@ -83,12 +83,6 @@ When analyzing this dataset, you are working with **Singapore's Ministry of Heal
 | `created_at` | TIMESTAMP | Record creation | 2018-03-12 09:00:00 | Audit trail |
 | `updated_at` | TIMESTAMP | Last update | 2025-11-20 14:30:00 | Change tracking |
 
-**LLM Analysis Prompts**:
-- *"Profile patient demographics by planning area"*
-- *"Analyze Healthier SG enrollment rates by age group and region"*
-- *"Compare chronic disease burden across ethnic groups"*
-- *"Identify underserved populations by subsidy category"*
-
 ---
 
 ### **3. DIAGNOSIS_RECORDS** (Medical Diagnoses)
@@ -120,12 +114,6 @@ When analyzing this dataset, you are working with **Singapore's Ministry of Heal
 - `E78.5` - Hyperlipidemia
 - `M54.5` - Low back pain
 
-**LLM Analysis Prompts**:
-- *"Identify top 10 most common diagnoses by condition category"*
-- *"Track seasonal patterns for respiratory infections"*
-- *"Analyze chronic disease prevalence trends over time"*
-- *"Calculate comorbidity patterns using diagnosis co-occurrence"*
-
 ---
 
 ### **4. PROCEDURE_RECORDS** (Medical Procedures)
@@ -148,12 +136,6 @@ When analyzing this dataset, you are working with **Singapore's Ministry of Heal
 | `subsidy_amount` | DECIMAL | Government subsidy | 30.00 | Public funding |
 | `created_at` | TIMESTAMP | Record creation | 2025-12-15 11:00:00 | Audit trail |
 | `updated_at` | TIMESTAMP | Last modification | 2025-12-15 11:15:00 | Change tracking |
-
-**LLM Analysis Prompts**:
-- *"Calculate average procedure costs by type and polyclinic"*
-- *"Analyze subsidy utilization patterns by patient demographics"*
-- *"Identify most common diagnostic procedures per condition"*
-- *"Track procedure volume trends for preventive care"*
 
 ---
 
@@ -182,12 +164,6 @@ When analyzing this dataset, you are working with **Singapore's Ministry of Heal
 | `created_at` | TIMESTAMP | Record creation | 2025-12-15 11:00:00 | Audit trail |
 | `updated_at` | TIMESTAMP | Last modification | 2025-12-15 11:15:00 | Change tracking |
 
-**LLM Analysis Prompts**:
-- *"Identify most prescribed medications by condition category"*
-- *"Analyze medication adherence patterns (refill frequency)"*
-- *"Calculate medication costs and subsidy distribution"*
-- *"Track chronic medication prescribing trends"*
-
 ---
 
 ### **6. LABORATORY_RESULTS** (Lab Tests)
@@ -212,12 +188,6 @@ When analyzing this dataset, you are working with **Singapore's Ministry of Heal
 | `abnormal_flag` | VARCHAR | Type of abnormality | 'High', 'Low', 'Critical' | Severity indicator |
 | `created_at` | TIMESTAMP | Record creation | 2025-12-17 14:00:00 | Audit trail |
 | `updated_at` | TIMESTAMP | Last modification | 2025-12-17 14:30:00 | Change tracking |
-
-**LLM Analysis Prompts**:
-- *"Calculate lab test turnaround times by test category"*
-- *"Analyze abnormal result rates by patient demographics"*
-- *"Track HbA1c trends for diabetic patients over time"*
-- *"Identify most frequently ordered lab tests by diagnosis"*
 
 ---
 
@@ -244,12 +214,6 @@ When analyzing this dataset, you are working with **Singapore's Ministry of Heal
 | `services_offered` | TEXT | List of services | 'GP, Dental, Pharmacy, Lab' | Service scope |
 | `is_active` | BOOLEAN | Currently operational | TRUE, FALSE | Status flag |
 
-**LLM Analysis Prompts**:
-- *"Compare utilization rates (attendance/capacity) across polyclinics"*
-- *"Analyze geographic distribution of polyclinics vs population density"*
-- *"Correlate facility grade with waiting times and patient satisfaction"*
-- *"Identify under-resourced polyclinics (visits per doctor/nurse)"*
-
 ---
 
 ### **8. CONDITION_MASTER** (Reference Data)
@@ -269,15 +233,9 @@ When analyzing this dataset, you are working with **Singapore's Ministry of Heal
 | `healthier_sg_priority` | BOOLEAN | Priority condition | TRUE, FALSE | National program |
 | `description` | TEXT | Detailed information | 'Chronic metabolic disorder...' | Clinical definition |
 
-**LLM Analysis Prompts**:
-- *"Map ICD codes to condition categories for disease burden analysis"*
-- *"Identify Healthier SG priority conditions for program evaluation"*
-- *"Analyze preventable condition rates by demographics"*
-- *"Calculate chronic disease prevalence across polyclinics"*
-
 ---
 
-## 🔗 Table Relationships (Entity-Relationship)
+## Table Relationships (Entity-Relationship)
 
 ```
 PATIENT_DEMOGRAPHICS (1) ─────< (M) POLYCLINIC_ATTENDANCES
@@ -301,7 +259,7 @@ CONDITION_MASTER (1) ─────< (M) DIAGNOSIS_RECORDS
 
 ---
 
-## 📋 Data Quality Standards
+## Data Quality Standards
 
 **Completeness**:
 - Critical fields (`patient_id`, `attendance_id`) must have 100% fill rate
@@ -318,48 +276,6 @@ CONDITION_MASTER (1) ─────< (M) DIAGNOSIS_RECORDS
 
 ---
 
-## 🎓 Common Analysis Patterns
-
-### Pattern 1: Patient Journey Analysis
-```
-JOIN patient_demographics → attendances → diagnoses + procedures + medications
-GROUP BY patient_id
-ANALYZE sequence and timing of interventions
-```
-
-### Pattern 2: Service Utilization
-```
-JOIN attendances → polyclinics
-AGGREGATE by date, polyclinic, visit_type
-CALCULATE waiting times, throughput, capacity utilization
-```
-
-### Pattern 3: Disease Prevalence
-```
-JOIN diagnoses → patients → conditions
-GROUP BY condition_category, age_group, region
-TRACK temporal trends and demographic patterns
-```
-
-### Pattern 4: Cost Analysis
-```
-JOIN procedures + medications → patients
-AGGREGATE costs by subsidy_category, condition_type
-ANALYZE healthcare expenditure patterns
-```
-
----
-
-## 💡 LLM Query Optimization Tips
-
-1. **Always filter by date range** - Data volume is large, use date filters
-2. **Join on indexed columns** - `patient_id`, `attendance_id`, `polyclinic_id`
-3. **Use pre-aggregated views** - Reference `daily_attendance_summary` for performance
-4. **Batch processing** - Process data in 10,000 record chunks
-5. **Incremental extraction** - Use `updated_at` for change data capture
-
----
-
 ## 📖 Glossary of Healthcare Terms
 
 - **Polyclinic**: Singapore's public primary care clinics (outpatient)
@@ -372,5 +288,4 @@ ANALYZE healthcare expenditure patterns
 - **BD/TDS**: Medical dosing frequency (twice/three times daily)
 
 ---
-
-*This documentation is designed for LLM consumption. Update date: 2026-01-26*
+Update date: 2026-01-26*
