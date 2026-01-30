@@ -1,92 +1,184 @@
-# Analysis Configuration
-# Version: 1.0
-# Last Updated: 2026-01-28
-# Project: Polyclinic Queue Optimization & Visitation Analysis
+# Analysis Configuration Parameters
+# Configuration for polyclinic patient analysis and policy intelligence project
+# Version: 2.0
+# Last Updated: 2026-01-30
+# Project: MOH Polyclinic Patient Analysis & Policy Intelligence
+
+# =============================================================================
+# Project Metadata
+# =============================================================================
+project:
+  name: "MOH Polyclinic Patient Analysis & Policy Intelligence"
+  version: "2.0"
+  owner: "Data Analytics Team"
+  focus: "Patient demographics, disease burden, health equity, policy intelligence"
+  last_updated: "2026-01-30"
+  
+  # Project objectives
+  objectives:
+    primary:
+      - "Analyze and understand polyclinic patient population demographics, distribution patterns, and temporal trends"
+      - "Identify healthcare problems requiring policy intervention and governance"
+    measurable_success_criteria:
+      - "Complete demographic profiling covering 100% of polyclinic patients"
+      - "Identify and quantify temporal trends in disease prevalence and service utilization"
+      - "Detect and prioritize at least 5 high-impact policy intervention opportunities"
+      - "Deliver statistically significant findings with confidence intervals for all key metrics"
+    
+  # Key stakeholders
+  stakeholders:
+    government:
+      - "Ministry of Health policy makers"
+      - "Healthcare regulators"
+      - "Public health officials"
+    business_decision_makers:
+      - "Healthcare administrators"
+      - "Hospital executives"
+      - "Operational leaders"
+      
+  # Technical environment
+  platform: "HEALIX (GCC Cloud - Databricks)"
+  languages: ["Python", "R", "STATA"]
+  deployment_environment: "Databricks on GCC"
 
 # =============================================================================
 # Analysis Parameters
 # =============================================================================
 
-temporal_analysis:
+# Date ranges for data extraction
+temporal:
+  start_date: "2015-01-01"
+  end_date: null  # null = current date
+  baseline_period: "2022-01-01"  # Pre-Healthier SG baseline
+  healthier_sg_launch: "2023-07-01"
+  analysis_lag_days: 7  # Wait 7 days for data completeness
+  
   # Time granularities for analysis
   granularities:
-    - hourly
     - daily
     - weekly
     - monthly
     - quarterly
-  
-  # Peak hour detection
-  peak_hours:
-    threshold: 75  # percentile threshold for peak identification
-    min_duration: 2  # minimum consecutive hours to be considered peak
-  
-  # Seasonal decomposition
-  seasonality:
-    model: additive  # Options: additive, multiplicative
-    period: 365  # days
-    include_weekday_effect: true
-    include_holiday_effect: true
+    - yearly
 
-geographic_analysis:
-  # Geographic aggregation levels
-  levels:
-    - polyclinic  # Individual facility
-    - region  # North, South, East, West, Central
-    - planning_area  # Singapore URA planning areas
+# Population filters
+population:
+  min_age: 0
+  max_age: 120
+  include_inactive_patients: false  # Patients with no visits in last 12 months
+  active_patient_window_days: 365
   
-  # Catchment analysis
-  catchment:
-    distance_bands: [1, 3, 5, 10]  # km
-    travel_time_bands: [10, 20, 30, 45]  # minutes
+  # Age groups (for demographic analysis)
+  age_groups:
+    - "0-10"
+    - "11-20"
+    - "21-30"
+    - "31-40"
+    - "41-50"
+    - "51-60"
+    - "61-64"
+    - "65+"
+
+# Geographic scope
+geography:
+  regions: ["North", "South", "East", "West", "Central"]
+  include_all_planning_areas: true
   
-  # Accessibility metrics
-  accessibility:
-    population_weighted: true
-    include_transport_mode: true
+  # Distance calculations
+  distance_bands: [1, 3, 5, 10]  # km
+  travel_time_bands: [10, 20, 30, 45]  # minutes
+
+# Chronic conditions (ICD-10 codes)
+chronic_conditions:
+  diabetes: ["E11", "E11.0", "E11.9"]
+  hypertension: ["I10", "I11", "I12", "I13", "I15"]
+  hyperlipidemia: ["E78", "E78.0", "E78.5"]
+  copd: ["J44", "J44.9"]
+  ckd: ["N18", "N18.9"]
+  depression: ["F32", "F32.9", "F33"]
+  osteoporosis: ["M81", "M81.0"]
+
+# Subsidy programs
+subsidy_programs:
+  pioneer:
+    name: "Pioneer Generation"
+    eligibility_birth_year_max: 1949
+    eligibility_nationality: ["Singaporean"]
+  merdeka:
+    name: "Merdeka Generation"
+    eligibility_birth_year_min: 1950
+    eligibility_birth_year_max: 1959
+    eligibility_nationality: ["Singaporean"]
+  chas:
+    name: "Community Health Assist Scheme"
+    eligibility_residential_status: ["HDB"]  # Proxy for lower-middle income
 
 queue_optimization:
-  # Queue performance metrics
+  # Legacy queue metrics (maintained for operational analysis)
   metrics:
     - waiting_time_mean
     - waiting_time_median
     - waiting_time_95th_percentile
     - service_time_mean
-    - queue_length_mean
-    - queue_length_max
   
-  # Service level targets
   targets:
     waiting_time_target: 20  # minutes
     service_level: 0.80  # 80% of patients seen within target
+
+# =============================================================================
+# Data Quality Thresholds
+# =============================================================================
+data_quality:
+  completeness:
+    critical_fields_min_pct: 100  # patient_id, attendance_id must be 100% complete
+    important_fields_min_pct: 95  # age, gender, region should be 95%+ complete
+    optional_fields_min_pct: 80
   
-  # Simulation parameters
-  simulation:
-    replications: 1000
-    warmup_period: 30  # days
-    run_length: 365  # days
-    confidence_level: 0.95
+  validity:
+    date_min: "2015-01-01"
+    date_max_future_days: 0  # No future dates allowed
+    age_min: 0
+    age_max: 120
+    
+  outliers:
+    max_chronic_conditions_per_patient: 10  # Flag for review
+    max_visits_per_patient_per_year: 100  # Flag for review
+    max_medications_per_patient: 20  # Flag for review
+
+# =============================================================================
+# Statistical Parameters
+# =============================================================================
+statistics:
+  confidence_level: 0.95
+  significance_alpha: 0.05
+  test_power: 0.80
+  minimum_sample_size: 30
+  
+  # Matching parameters for causal inference
+  propensity_matching:
+    caliper: 0.01  # Maximum propensity score difference for matching
+    ratio: 1  # 1:1 matching (treatment:control)
+    replacement: false
+  
+  # Time series parameters
+  time_series:
+    seasonality_period: 12  # Monthly seasonality
+    trend_window: 12  # 12-month moving average for trends
+    forecast_horizon: 12  # Forecast 12 months ahead
 
 predictive_modeling:
   # Forecasting horizons
   horizons:
-    short_term: 7  # days
-    medium_term: 30  # days
+    short_term: 30  # days
+    medium_term: 90  # days
     long_term: 365  # days
   
-  # Model selection
+  # Model selection for policy forecasting
   models:
     - arima
     - prophet
-    - xgboost
-    - lstm
-  
-  # Feature engineering
-  features:
-    lag_features: [1, 7, 14, 28, 365]  # days
-    rolling_windows: [7, 14, 30]  # days
-    calendar_features: true
-    weather_features: false  # set true if weather data available
+    - linear_regression
+    - random_forest
   
   # Cross-validation
   cv:
@@ -95,7 +187,49 @@ predictive_modeling:
     test_size: 0.2
 
 # =============================================================================
-# Output Configuration
+# Visualization Parameters
+# =============================================================================
+visualization:
+  color_schemes:
+    categorical: "Set2"
+    sequential: "Blues"
+    diverging: "RdYlGn"
+  
+  figure_size:
+    default_width: 12
+    default_height: 8
+    dashboard_width: 16
+    dashboard_height: 10
+  
+  export_formats:
+    static: ["png", "pdf"]
+    interactive: ["html"]
+    
+  map_settings:
+    default_zoom: 11  # Singapore
+    center_lat: 1.3521
+    center_lon: 103.8198
+
+# =============================================================================
+# Performance Parameters
+# =============================================================================
+performance:
+  spark:
+    executor_memory: "8g"
+    executor_cores: 4
+    driver_memory: "4g"
+    shuffle_partitions: 200
+  
+  pandas:
+    max_rows_in_memory: 1000000  # Switch to Spark if larger
+    chunksize: 10000  # For iterative processing
+  
+  caching:
+    enable_disk_cache: true
+    cache_expiry_days: 7
+
+# =============================================================================
+# Output Paths
 # =============================================================================
 
 output:

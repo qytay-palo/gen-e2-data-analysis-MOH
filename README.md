@@ -1,63 +1,114 @@
-# MOH Polyclinic Queue Optimization & Visitation Analysis
+# MOH Polyclinic Patient Analysis & Policy Intelligence
 
-Analyzing polyclinic visitation patterns across time and location to design effective queue management systems.
+Comprehensive analysis of polyclinic patient demographics, health trends, and service utilization to identify policy intervention opportunities and inform healthcare governance.
 
 ## Overview
 
-This project analyzes how polyclinic visitations vary across time and location to develop data-driven strategies for queue optimization and resource allocation. Built on Singapore's Ministry of Health polyclinic data, this analysis supports improved patient experience, operational efficiency, and healthcare accessibility.
+This project delivers data-driven insights into Singapore's polyclinic patient population, analyzing distribution patterns, temporal trends, and healthcare utilization to support evidence-based policy development and strategic healthcare planning. Built on Singapore's Ministry of Health polyclinic data, this analysis enables proactive identification of healthcare gaps requiring policy intervention.
 
 ### Project Objectives
 
-- **Primary Goal**: Analyze polyclinic visitation patterns across temporal and geographic dimensions
-- **Secondary Goal**: Design and recommend effective queue management systems to reduce wait times
-- **Impact**: Improve patient satisfaction, optimize resource utilization, and enhance healthcare service delivery
+#### Main Goals
+- **Understand Patient Population**: Comprehensive analysis of patient demographics, distribution patterns, and temporal trends across Singapore polyclinics
+- **Identify Policy Intervention Needs**: Detect healthcare problems, service gaps, and governance issues requiring regulatory or policy intervention
+
+#### Measurable Success Criteria
+- **Patient Understanding**: Complete demographic profiling covering 100% of polyclinic patients with distribution analysis by age, gender, ethnicity, and socioeconomic status
+- **Trend Detection**: Identify and quantify temporal trends in disease prevalence, service utilization, and patient access patterns
+- **Policy Problem Identification**: Detect and prioritize at least 5 high-impact policy intervention opportunities with quantified impact assessments
+- **Evidence Quality**: Deliver statistically significant findings with confidence intervals for all key metrics
+
+#### Business Decisions Informed
+- **Policy Development**: Evidence-based healthcare policies, regulatory interventions, and governance frameworks
+- **Resource Allocation**: Strategic planning for polyclinic capacity, staffing, and service distribution
+- **Health Equity**: Targeted interventions to address geographic and demographic healthcare disparities
+- **Program Effectiveness**: Assessment of existing healthcare initiatives (e.g., Healthier SG program)
 
 ### Key Stakeholders
 
-- **Patients**: Reduced wait times, improved service experience, better access to care
-- **CEO/Leadership**: Data-driven operational insights, strategic resource planning, performance metrics
+- **Government Agencies**: Ministry of Health policy makers, healthcare regulators, and public health officials requiring evidence for governance decisions
+- **Business Decision Makers**: Healthcare administrators, hospital executives, and operational leaders requiring strategic insights for planning and resource allocation
 
 ### Key Features
 
-- 📊 **Temporal Analysis** - Visitation patterns by hour, day, week, month, season
-- 📍 **Geographic Analysis** - Location-based demand across 15 polyclinics and planning areas
-- ⏱️ **Queue Analytics** - Wait time analysis, bottleneck identification, capacity planning
-- 🤖 **Predictive Modeling** - Demand forecasting and resource optimization recommendations
+- � **Patient Demographics Analysis** - Age, gender, ethnicity, socioeconomic distribution patterns
+- 📊 **Disease Burden Assessment** - Chronic condition prevalence, comorbidity analysis, disease trends
+- 📍 **Geographic Health Equity** - Regional disparities, access patterns, underserved populations
+- 🏥 **Service Utilization Patterns** - Visit frequency, care-seeking behavior, program enrollment trends
+- 🎯 **Policy Gap Identification** - Healthcare problems requiring intervention, regulatory opportunities
 - 🔄 **Automated ETL** - API-based data extraction with validation and processing
-- 📈 **Real-time Dashboards** - Interactive visualizations for stakeholder insights
+- 📈 **Executive Dashboards** - Interactive visualizations for government and business decision makers
 
 ## Quick Start
 
 ### 1. Environment Setup
+
+**Option A: Using Conda (Recommended for HEALIX/Databricks)**
 ```bash
 # Clone the repository
 git clone <repository-url>
 cd gen-e2-data-analysis-MOH
 
-# Install dependencies
+# Create conda environment
+conda env create -f environment.yml
+conda activate moh-polyclinic-analysis
+```
+
+**Option B: Using pip**
+```bash
+# Clone and install dependencies
+git clone <repository-url>
+cd gen-e2-data-analysis-MOH
 pip install -r requirements.txt
 ```
 
-### 2. Configure Data Connection
+### 2. Configure Environment Variables
 ```bash
-# Set up API configuration
-cp config/database.yml.example config/database.yml
-# Edit config/database.yml with your API credentials
+# Copy environment template
+cp .env.example .env
+
+# Edit .env with your credentials
+# - MOH_API_KEY: Your MOH data API key
+# - DATABRICKS_HOST: Your Databricks workspace URL
+# - DATABRICKS_TOKEN: Your personal access token
+nano .env
 ```
 
-### 3. Run Initial Data Extraction
+### 3. Configure Data Connection
 ```bash
-# Extract polyclinic data
+# Review and update API configuration
+nano config/database.yml
+
+# Update analysis parameters
+nano config/analysis.yml
+```
+
+### 4. Run Initial Data Extraction
+```bash
+# Extract recent polyclinic attendance data
 python scripts/run_extraction.py --sources attendances --last-n-days 30
+
+# Extract all core data sources
+python scripts/run_extraction.py --sources all --start-date 2025-01-01
 ```
 
-### 4. Explore Data
+### 5. Explore Data
 ```bash
 # Launch Jupyter for exploratory analysis
-jupyter notebook notebooks/1_exploratory/
+jupyter lab
+
+# Navigate to notebooks/1_exploratory/ and open:
+# - patient_profiling.ipynb
+# - data_quality_check.ipynb
 ```
 
-📖 **[Full Documentation](docs/)** | 🎯 **[Project Objectives](docs/objectives/opportunities.md)**
+### 6. Review Strategic Epics
+Review prioritized analytics initiatives in `docs/objectives/epics/`:
+- **EPIC-001**: Patient Population Segmentation (Foundation - Start here)
+- **EPIC-002**: Temporal Trend Detection & Forecasting
+- **EPIC-003**: Geographic Health Equity Analysis
+
+📖 **[Full Documentation](docs/)** | 🎯 **[Project Objectives](docs/objectives/)** | 📊 **[Data Dictionary](docs/data_dictionary/)**
 
 ## Technical Stack
 

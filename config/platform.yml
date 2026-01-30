@@ -1,0 +1,238 @@
+# Platform Configuration
+# Deployment environment and tool specifications
+# Version: 1.0
+# Last Updated: 2026-01-30
+
+# =============================================================================
+# Deployment Environment
+# =============================================================================
+
+deployment:
+  primary_platform: "HEALIX"
+  environment: "GCC Cloud"
+  
+  # Platform-specific settings
+  healix:
+    platform: "Databricks"
+    workspace_url: ${DATABRICKS_WORKSPACE_URL}
+    access_token: ${DATABRICKS_TOKEN}
+    cluster_id: ${DATABRICKS_CLUSTER_ID}
+    
+    # Databricks runtime configuration
+    runtime:
+      version: "13.3 LTS ML"  # Recommended for ML workloads
+      node_type: "Standard_DS3_v2"
+      num_workers: 2
+      autoscaling:
+        min_workers: 1
+        max_workers: 4
+    
+    # Storage configuration
+    storage:
+      mount_point: "/mnt/polyclinic-data"
+      raw_data_path: "dbfs:/mnt/polyclinic-data/raw"
+      processed_data_path: "dbfs:/mnt/polyclinic-data/processed"
+      results_path: "dbfs:/mnt/polyclinic-data/results"
+  
+  # Alternative: On-premise MCDR platform
+  mcdr:
+    platform: "Cloudera CDSW"
+    environment: "On-Premise Compute Cluster"
+    analytics_engine: "Apache Spark"
+    file_system: "HDFS"
+    
+    # CDSW configuration
+    cdsw:
+      base_url: ${CDSW_URL}
+      api_key: ${CDSW_API_KEY}
+      project: ${CDSW_PROJECT}
+      
+    # HUE for SQL interface
+    hue:
+      url: ${HUE_URL}
+      username: ${HUE_USERNAME}
+      password: ${HUE_PASSWORD}
+    
+    # HDFS paths
+    hdfs:
+      base_path: "/user/analytics/polyclinic-data"
+      raw_data_path: "/user/analytics/polyclinic-data/raw"
+      processed_data_path: "/user/analytics/polyclinic-data/processed"
+      results_path: "/user/analytics/polyclinic-data/results"
+
+# =============================================================================
+# Programming Languages & Tools
+# =============================================================================
+
+languages:
+  primary:
+    - "Python"
+    - "R"
+  
+  python:
+    version: "3.9+"
+    package_manager: "pip"
+    virtual_env: "venv"
+    
+  r:
+    version: "4.0+"
+    package_manager: "CRAN"
+    ide: "RStudio Server"
+  
+  sql:
+    dialect: "HiveQL"  # For MCDR/HUE
+    tools:
+      - "HUE"
+      - "Databricks SQL"
+
+statistical_tools:
+  - name: "STATA"
+    version: "17+"
+    use_cases:
+      - "Econometric modeling"
+      - "Statistical analysis"
+      - "Policy research"
+
+# =============================================================================
+# Data Processing Framework
+# =============================================================================
+
+data_processing:
+  framework: "Apache Spark"
+  spark:
+    version: "3.3+"
+    deployment_mode: "cluster"
+    
+    # Spark configuration
+    config:
+      spark.executor.memory: "4g"
+      spark.driver.memory: "2g"
+      spark.sql.shuffle.partitions: "200"
+      spark.sql.adaptive.enabled: "true"
+  
+  batch_processing:
+    tool: "PySpark"
+    scheduler: "Databricks Jobs"  # or Airflow for MCDR
+  
+  streaming:
+    enabled: false
+    tool: "Spark Structured Streaming"
+
+# =============================================================================
+# Analytics Libraries
+# =============================================================================
+
+analytics_stack:
+  python_libraries:
+    data_manipulation:
+      - pandas
+      - numpy
+      - polars  # High-performance alternative to pandas
+    
+    machine_learning:
+      - scikit-learn
+      - xgboost
+      - lightgbm
+      - statsmodels
+    
+    visualization:
+      - matplotlib
+      - seaborn
+      - plotly
+      - altair
+    
+    big_data:
+      - pyspark
+      - dask  # Parallel computing
+    
+    statistical:
+      - scipy
+      - statsmodels
+      - pingouin  # Statistical tests
+  
+  r_packages:
+    data_manipulation:
+      - dplyr
+      - tidyr
+      - data.table
+    
+    visualization:
+      - ggplot2
+      - plotly
+      - shiny
+    
+    statistical:
+      - survival
+      - lme4  # Mixed effects models
+      - glmnet  # Regularized regression
+    
+    machine_learning:
+      - caret
+      - randomForest
+      - xgboost
+
+# =============================================================================
+# Development Tools
+# =============================================================================
+
+development:
+  ide:
+    python: "Databricks Notebooks / JupyterLab"
+    r: "RStudio Server"
+  
+  version_control:
+    system: "Git"
+    platform: "GitHub"
+  
+  collaboration:
+    notebooks: "Databricks Collaborative Notebooks"
+    documentation: "Markdown / MkDocs"
+
+# =============================================================================
+# Deployment & Automation
+# =============================================================================
+
+deployment:
+  scheduler:
+    healix: "Databricks Jobs"
+    mcdr: "Apache Airflow"
+  
+  ci_cd:
+    platform: "GitHub Actions"
+    workflows:
+      - "data_quality_checks"
+      - "scheduled_extraction"
+      - "model_validation"
+  
+  monitoring:
+    platform: "Databricks Monitoring"
+    alerts:
+      - "Data quality failures"
+      - "ETL pipeline errors"
+      - "Model performance degradation"
+
+# =============================================================================
+# Security & Compliance
+# =============================================================================
+
+security:
+  authentication:
+    method: "OAuth 2.0"
+    mfa_required: true
+  
+  data_encryption:
+    at_rest: true
+    in_transit: true
+  
+  access_control:
+    rbac: true
+    data_masking: true  # For sensitive fields
+  
+  compliance:
+    standards:
+      - "PDPA (Singapore Personal Data Protection Act)"
+      - "HIPAA-equivalent healthcare data protection"
+    
+  audit:
+    logging: true
+    retention_days: 365

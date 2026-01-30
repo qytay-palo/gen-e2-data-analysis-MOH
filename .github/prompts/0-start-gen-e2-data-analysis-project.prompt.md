@@ -16,51 +16,59 @@ We will be starting a new Gen-e2 Project
 Ask the following questions before proceeding:
 ## Questions to Ask
 1. **Project Objectives**: 
-   - What are the main goals and deliverables of this project?
+   - What are the main goals and measurable success criteria?
+   - What business decisions will this analysis inform?
 
-2. **Data Sources**: 
-   - What datasets will be used, and where are they located?
-   - Which layers are the datasets stored in (bronze, silver, gold)?
-   - How will we connect to the datasets (APIs, databases, files)?
-
-3. **Stakeholders**: 
+2. **Stakeholders**: 
    - Who are the key stakeholders, and what are their expectations?
-
-4. **Tools & Technologies**: 
-   - What tools, libraries, or platforms will be utilized for analysis?
 
 ## Actions Based on Answers
 1. **Update Project Folder Structure**:
 Below is the base folder structure:
 ```
 .
-├── README.md
+├── .env.example      # [PHASE 0] Template for environment variables (DB credentials, API keys)
+├── .gitignore        # [PHASE 0] Files to exclude from version control
+├── README.md         # [PHASE 0] Project overview and setup instructions
 ├── requirements.txt  # [PHASE 0] Python dependencies
 ├── environment.yml   # [PHASE 0] Conda environment (optional)
+├── .github/          # [PHASE 0] GitHub Actions & CI/CD
+│   └── workflows/
+│       ├── data_quality_checks.yml  # → Automated data validation
+│       └── scheduled_extraction.yml # → Scheduled ETL jobs
 ├── docs/             # [PHASE 1] Context & Understanding
 │   ├── index.md         # → 1: Central documentation hub (navigation)
 │   ├── objectives/      # → 2: PROJECT GOALS: What to achieve
 │   ├── data_dictionary/ # → 3: Understand data: schemas, fields, definitions
 │   └── methodology/     # → 4: Understand approach: statistical methods, frameworks
+|   └── problem_statements.md #→ Analytics opportunities and use cases
 ├── config/           # [PHASE 2] Project Configuration
 │   └── *.yml, *.json       # → Parameters, settings, environment configs
+├── sql/              # [PHASE 2] SQL Queries & Database Scripts
+│   ├── views/         # → SQL views for common queries
+│   ├── procedures/    # → Stored procedures
+│   └── extractions/   # → Data extraction queries
 ├── data/             # [PHASE 3] Data Acquisition & Preparation
-│   ├── raw/           # → 1: Original immutable source data
-│   ├── external/      # → 2: External reference data (demographics, benchmarks)
-│   ├── interim/       # → 3: Intermediate transformation outputs
-│   └── processed/     # → 4: Final cleaned datasets (analysis-ready)
+│   ├── 1_raw/         # → 1: Original immutable source data
+│   ├── 2_external/    # → 2: External reference data (demographics, benchmarks)
+│   ├── 3_interim/     # → 3: Intermediate transformation outputs
+│   ├── 4_processed/   # → 4: Final cleaned datasets (analysis-ready)
+│   └── schemas/       # → Data schemas, contracts, and lineage documentation
 ├── notebooks/        # [PHASE 4] Interactive Exploration & Analysis
 │   ├── 1_exploratory/   # → 1: Initial EDA, data profiling, hypothesis generation
 │   └── 2_analysis/      # → 2: Deep-dive analysis, final insights, documentation
 │   └── 3_feature_engineering/ # → 3: Feature creation, variable transformations 
 ├── src/              # [PHASE 5] Production Code Development
 │   ├── utils/           # → Foundation: Helper functions, common utilities
-│   ├── data/            # → Pipeline 1: ETL, cleaning, validation
+│   ├── data_processing/ # → Pipeline 1: ETL, cleaning, validation
 │   ├── features/        # → Pipeline 2: Feature engineering, variable transformations
-│   ├── analysis/        # → Pipeline 3: Statistical analysis, algorithms, visualizations
+│   ├── analysis/        # → Pipeline 3: Statistical analysis, algorithms
+│   ├── visualization/   # → Pipeline 4: Chart generation, plotting utilities
 │   └── models/          # → Pipeline 5: Model training, hyperparameter tuning
 ├── tests/            # [PHASE 6] Quality Assurance
-│   └── *.py             # → Unit tests, integration tests, data validation tests
+│   ├── unit/          # → Unit tests for individual functions
+│   ├── integration/   # → Integration tests for pipelines
+│   └── data/          # → Data validation tests
 ├── models/           # [PHASE 7] Model Development & Storage
 │   └── *.pkl, *.h5, *.joblib # → Trained models, model artifacts, serialized objects
 ├── results/          # [PHASE 8] Analysis Outputs
@@ -71,6 +79,10 @@ Below is the base folder structure:
 │   ├── figures/       # → Component 1: Static visualizations (PNG/PDF)
 │   ├── dashboards/    # → Component 2: Interactive dashboards (HTML/Streamlit)
 │   └── presentations/ # → Component 3: Executive summaries (PPTX/PDF)
+├── logs/             # [PHASE 10] Execution Logs & Audit Trails
+│   ├── etl/           # → ETL pipeline execution logs
+│   ├── errors/        # → Error logs and stack traces
+│   └── audit/         # → Audit trails for data access and changes
 └── scripts/          # [PHASE 10] Automation & Deployment
     └── *.py, *.R, *.sh  # → End-to-end pipelines, deployment scripts, automation
 ```
@@ -78,8 +90,16 @@ Below is the base folder structure:
    - Update the README.md file, docs/index.md, and create necessary configuration files in the config/ directory to reflect the technical environment and project specifics.
 
 2. **Identification of Machine Learning & Analytics Opportunities**:
-   - identify relevant machine learning and analytics opportunities. Specify the problem framing, target variable, potential features, recommended modeling or analytical methods, data requirements, and evaluation metrics. Prioritize opportunities by expected impact and technical feasibility.
-   - Document these opportunities in `docs/objectives/opportunities.md`.
+  1. Review all documentation in [`docs/project_context/data_sources.md`](../docs/project_context/data_sources.md) for available data assets and approved technical stack in [`docs/project_context/tech_stack.md`](../docs/project_context/tech_stack.md).
+  2. Identify potential strategic epics that leverage existing infrastructure that captures end-to-end data life cycle from ingestion to actionable insights meeting goals defined above, each formatted as: 
+      (1) Epic title and business objective, 
+      (2) Specific data requirements citing actual tables/fields
+      (3) Technical approach using only approved tools
+      (4) Measurable success criteria
+      (5) Estimated complexity and dependencies. 
+  3. Ensure each epic is independent, prioritized by impact and feasibility, and detailed enough for a data analyst to begin implementation planning without requiring additional clarification. 
+  4. Create separate markdown files for each problem statements. Save the output in `docs/objectives/epics` folder. 
+
 
 3.**Technical Stack Reference**
    - Preferred Technologies:** 
@@ -90,7 +110,7 @@ Below is the base folder structure:
       2. **Exception**: Propose alternatives only when the approved stack has clear limitations for specific use cases (e.g., specialized libraries, performance constraints, integration requirements)
       3. **Justification Required**: When suggesting alternatives, explicitly state why the approved stack is insufficient and how the alternative addresses the gap
 
-   -Implementation:
+   -Actions:
       - Update project dependencies, environment setup, and documentation based on selected technologies
       - Ensure compatibility with target deployment environment (HEALIX/GCC or MCDR/on-premise)
       - set up appropriate configuration files for the chosen technologies
@@ -98,8 +118,15 @@ Below is the base folder structure:
       - include language specific dependencies in requirements.txt or environment.yml
 
 4. **Data Dictionary Creation**:
-   - Compile a comprehensive data dictionary in `docs/data_dictionary/` that details all datasets, including field definitions, data types, value ranges, and any relevant notes on data quality or transformations needed.
-   - Ensure the data dictionary is easily navigable and linked from the main documentation index.
+   - Compile a comprehensive data dictionary in `docs/data_dictionary/` that details all datasets, including:
+     - Field definitions, data types, and value ranges
+     - Data quality notes and known limitations
+     - Lineage tracking (source system → transformations → final table)
+     - Business owners or subject matter experts for each data domain
+     - Refresh frequency and update schedules
+     - Sample data and example values
+   - Create a master index file that links to individual data dictionary files for each major data domain
+   - Ensure the data dictionary is easily navigable and linked from the main documentation index (docs/index.md)
 
 ---
 

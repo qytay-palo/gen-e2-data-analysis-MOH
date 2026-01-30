@@ -1,12 +1,28 @@
-# MOH Polyclinic Queue Optimization & Visitation Analysis - Documentation Hub
+# MOH Polyclinic Patient Analysis & Policy Intelligence - Documentation Hub
 
 ## Project Overview
 
-**Objective**: Analyze polyclinic visitation patterns across time and location to design effective queue management systems.
+**Objective**: Analyze and understand polyclinic patient populations (demographics, distribution, temporal trends) to identify healthcare problems requiring policy intervention and governance.
+
+### Main Goals
+- **Understand Patient Population**: Comprehensive analysis of patient demographics, distribution patterns, and temporal trends across Singapore polyclinics
+- **Identify Policy Intervention Needs**: Detect healthcare problems, service gaps, and governance issues requiring regulatory or policy intervention
+
+### Measurable Success Criteria
+- **Patient Understanding**: Complete demographic profiling covering 100% of polyclinic patients with distribution analysis by age, gender, ethnicity, and socioeconomic status
+- **Trend Detection**: Identify and quantify temporal trends in disease prevalence, service utilization, and patient access patterns
+- **Policy Problem Identification**: Detect and prioritize at least 5 high-impact policy intervention opportunities with quantified impact assessments
+- **Evidence Quality**: Deliver statistically significant findings with confidence intervals for all key metrics
+
+### Business Decisions Informed
+- **Policy Development**: Evidence-based healthcare policies, regulatory interventions, and governance frameworks
+- **Resource Allocation**: Strategic planning for polyclinic capacity, staffing, and service distribution
+- **Health Equity**: Targeted interventions to address geographic and demographic healthcare disparities
+- **Program Effectiveness**: Assessment of existing healthcare initiatives (e.g., Healthier SG program)
 
 **Key Stakeholders**: 
-- **Patients**: Improved wait times and service experience
-- **CEO/Leadership**: Data-driven operational insights and resource optimization
+- **Government Agencies**: Ministry of Health policy makers, healthcare regulators, and public health officials requiring evidence for governance decisions
+- **Business Decision Makers**: Healthcare administrators, hospital executives, and operational leaders requiring strategic insights for planning and resource allocation
 
 **Platform**: HEALIX (GCC Databricks) | **Languages**: Python, R, STATA
 
@@ -15,41 +31,66 @@
 ## 🎯 Project Objectives
 
 ### Primary Goals
-- [ML & Analytics Opportunities](objectives/opportunities.md) - Machine learning and analytical approaches
+- [Analytics Opportunities Overview](objectives/opportunities.md) - Machine learning and analytical approaches
 - Problem framing, modeling methods, and evaluation metrics
 - Temporal and geographic analysis strategies
+
+### Strategic Epics
+**Policy-Driven Analytics Initiatives** (Prioritized by Impact & Feasibility)
+
+1. **[EPIC-001: Patient Population Segmentation](objectives/epics/epic-001-patient-segmentation.md)** ⭐ CRITICAL
+   - Comprehensive demographic profiling and patient segmentation
+   - Complexity: MEDIUM | Duration: 4-6 weeks
+   - **Foundation epic** - Required for downstream analyses
+
+2. **[EPIC-002: Temporal Trend Detection](objectives/epics/epic-002-temporal-trends.md)** ⭐ HIGH
+   - Disease prevalence trends and healthcare utilization patterns (2015-2026)
+   - Complexity: HIGH | Duration: 6-8 weeks
+   - Depends on: EPIC-001
+
+3. **[EPIC-003: Geographic Health Equity Analysis](objectives/epics/epic-003-geographic-equity.md)** ⭐ CRITICAL
+   - Spatial accessibility, disparity quantification, and underserved area identification
+   - Complexity: MEDIUM-HIGH | Duration: 5-7 weeks
+   - Independent - Can run in parallel
 
 ---
 
 ## 📊 Data Documentation
 
 ### Data Sources & Context
-- [Data Sources](project_context/data_sources.md) - MOH polyclinic data via API (complete schema)
-- [Tech Stack](project_context/tech_stack.md) - Approved technologies and platform specifications
+- [Data Sources Overview](project_context/data_sources.md) - Complete schema documentation for all MOH polyclinic tables
+- [Tech Stack Specifications](project_context/tech_stack.md) - Approved technologies (HEALIX/Databricks, Python, R, STATA)
+- [Data Connections Guide](project_context/data_connections.md) - API and database connectivity
+
+### Data Dictionary (Comprehensive)
+- **[Master Index](data_dictionary/00_master_index.md)** - Complete data dictionary navigation
+- [Patient Demographics Table](data_dictionary/06_patient_demographics.md) - Demographic information, segmentation fields
+- [Polyclinic Attendances Table](data_dictionary/01_polyclinic_attendances.md) - Visit records, waiting times, operational metrics
+- Additional tables: Diagnoses, Procedures, Medications, Lab Results, Polyclinic Master (see Master Index)
 
 ---
 
 ## 🔬 Analysis Focus Areas
 
-### 1. Temporal Pattern Analysis
-- **Objectives**: Understand how visitation varies by time
-- **Methods**: Time-series decomposition, seasonality analysis, trend detection
-- **Deliverables**: Peak hour identification, seasonal forecasts, demand curves
+### 1. Patient Demographics & Distribution Analysis
+- **Objectives**: Understand patient population characteristics and distribution patterns
+- **Methods**: Descriptive statistics, cohort analysis, demographic segmentation
+- **Deliverables**: Patient profiles, population pyramids, socioeconomic distributions
 
-### 2. Geographic Analysis
-- **Objectives**: Understand spatial demand distribution
-- **Methods**: Geographic clustering, catchment analysis, accessibility metrics
-- **Deliverables**: Regional demand maps, facility utilization rates, equity analysis
+### 2. Disease Burden & Health Trends
+- **Objectives**: Analyze chronic disease prevalence, comorbidities, and temporal trends
+- **Methods**: Epidemiological analysis, time-series trend detection, disease clustering
+- **Deliverables**: Disease prevalence reports, trend forecasts, risk stratification models
 
-### 3. Queue Optimization
-- **Objectives**: Design effective queue management systems
-- **Methods**: Queuing theory, discrete-event simulation, optimization algorithms
-- **Deliverables**: Wait time reduction strategies, capacity planning recommendations
+### 3. Geographic Health Equity Analysis
+- **Objectives**: Identify regional disparities and access gaps requiring policy intervention
+- **Methods**: Spatial analysis, equity metrics, accessibility modeling
+- **Deliverables**: Health equity maps, underserved area identification, disparity quantification
 
-### 4. Predictive Modeling
-- **Objectives**: Forecast future demand and optimize resources
-- **Methods**: Time-series forecasting (ARIMA, Prophet), ML regression, ensemble methods
-- **Deliverables**: Demand forecasts, resource allocation models, scenario planning tools
+### 4. Policy Problem Identification
+- **Objectives**: Detect healthcare problems and gaps requiring regulatory intervention
+- **Methods**: Outlier detection, pattern recognition, comparative benchmarking
+- **Deliverables**: Policy recommendations, intervention priorities, evidence briefs for government
 
 ---
 
