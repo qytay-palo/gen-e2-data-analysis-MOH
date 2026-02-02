@@ -1,5 +1,9 @@
 # Generate User Stories from Epics
 
+#***** LOOK AT THE GEN-E2 User story prompt
+#***** TEST BY TAKING a theme and go to end (OUTPUT)
+#***** python to run 6 sessions for 6 epics (make it dynamic)
+
 ## Your Role
 You are a **senior data analyst** with expertise in:
 - Translating analytical objectives into actionable user stories
@@ -18,6 +22,16 @@ These user stories will:
 
 **CRITICAL**: This task must be completed for ALL epics in the project, not just a subset. Generate comprehensive user stories for every epic file you find.
 
+## EXECUTION MODE
+**THIS IS AN ACTIVE EXECUTION REQUEST** - You must complete the full task now:
+1. Identify all epics in `docs/objectives/epics/`
+2. For EACH epic, generate all user stories (one epic at a time)
+3. After completing each epic, confirm progress before moving to the next
+4. Create the master README.md index only after ALL epic stories are complete
+5. Do NOT stop until all epics are processed - if you hit limits, continue in your next response
+
+**Work systematically through each epic. Do not stop after examples.**
+
 ---
 ## Inputs
 You have access to the following project documentation files:
@@ -30,7 +44,6 @@ You have access to the following project documentation files:
      - Technical stack and platform constraints
      - Other project background that may influence story design
    - Review `docs/data_dictionary/` for data field definitions and structures
-   - Review `docs/methodology/data_flow_strategy.md` for the designed data flow and pipeline architecture
 
 ### Expected Epic Format
 
@@ -63,35 +76,6 @@ Each epic file in `docs/objectives/epics/` should contain:
 3. **Ensure Value Delivery**: Each story should deliver demonstrable value or learning
 4. **Size Appropriately**: Target 3-12 stories per epic, but prioritize story size over count
 5. **Consider Dependencies**: Sequence stories to enable incremental delivery
-
-### Story Sizing Guidelines
-
-**Sprint Duration**: Assume 1-2 week sprints (5-10 working days)
-
-**Small Story (1-3 days)**:
-- Single dataset exploration and profiling
-- One specific visualization or dashboard view
-- Targeted data quality check or validation rule
-- Documentation of findings from exploratory analysis
-- Example: "Profile customer transaction data to identify data quality issues"
-
-**Medium Story (3-7 days)**:
-- Feature engineering for a model
-- ETL pipeline for one data source
-- Statistical analysis with multiple variables
-- Interactive dashboard with 3-5 related views
-- Example: "Build ETL pipeline to extract and transform sales data from source system"
-
-**Large Story (7-10 days)**:
-- Complete model development cycle (training, validation, tuning)
-- Multi-source data integration pipeline
-- Comprehensive analysis with multiple methodologies
-- Example: "Develop and validate predictive model for customer churn"
-
-**Too Large (>10 days)**:
-- Break it down further into smaller stories
-- Consider if it should be an epic instead
-- Split by data source, methodology, or deliverable phase
 
 ### Analytics-Specific Story Types
 - **Exploratory/Spike Stories**: Research and investigation (time-boxed)

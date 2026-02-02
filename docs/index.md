@@ -1,96 +1,124 @@
-# MOH Polyclinic Patient Analysis & Policy Intelligence - Documentation Hub
+# MOH Healthcare System Analysis & Public Health Intelligence - Documentation Hub
 
 ## Project Overview
 
-**Objective**: Analyze and understand polyclinic patient populations (demographics, distribution, temporal trends) to identify healthcare problems requiring policy intervention and governance.
+**Objective**: Deliver actionable intelligence for healthcare system optimization and public health protection through comprehensive analysis of Singapore's healthcare data.
 
-### Main Goals
-- **Understand Patient Population**: Comprehensive analysis of patient demographics, distribution patterns, and temporal trends across Singapore polyclinics
-- **Identify Policy Intervention Needs**: Detect healthcare problems, service gaps, and governance issues requiring regulatory or policy intervention
+**Project Period**: 2 February 2026 - 13 April 2026 (10 weeks)  
+**Platform**: HEALIX (GCC Databricks) | **Languages**: Python, R, STATA
 
-### Measurable Success Criteria
-- **Patient Understanding**: Complete demographic profiling covering 100% of polyclinic patients with distribution analysis by age, gender, ethnicity, and socioeconomic status
-- **Trend Detection**: Identify and quantify temporal trends in disease prevalence, service utilization, and patient access patterns
-- **Policy Problem Identification**: Detect and prioritize at least 5 high-impact policy intervention opportunities with quantified impact assessments
-- **Evidence Quality**: Deliver statistically significant findings with confidence intervals for all key metrics
+### Four Critical Outcomes
 
-### Business Decisions Informed
-- **Policy Development**: Evidence-based healthcare policies, regulatory interventions, and governance frameworks
-- **Resource Allocation**: Strategic planning for polyclinic capacity, staffing, and service distribution
-- **Health Equity**: Targeted interventions to address geographic and demographic healthcare disparities
-- **Program Effectiveness**: Assessment of existing healthcare initiatives (e.g., Healthier SG program)
+1. **Disease Outbreak Detection & Surveillance**: Establish early warning systems to identify potential disease outbreaks and emerging health threats
+2. **Healthcare Facility Utilization Analysis**: Understand distribution of patient visitation patterns across polyclinics and healthcare facilities
+3. **Policy Need Identification**: Identify gaps in healthcare system requiring government policy intervention or regulatory action
+4. **Process Improvement Opportunities**: Analyze hospitalization and polyclinic processes to identify efficiency gains and patient experience improvements
+
+### Success Metrics
+
+1. **Bottleneck Identification**: Identify minimum 10 critical operational bottlenecks with quantified impact
+2. **Government Intervention Points**: Identify minimum 8 high-impact intervention opportunities requiring government action
+3. **Improvement Opportunities**: Document minimum 15 validated improvement opportunities with quantified business value
 
 **Key Stakeholders**: 
-- **Government Agencies**: Ministry of Health policy makers, healthcare regulators, and public health officials requiring evidence for governance decisions
-- **Business Decision Makers**: Healthcare administrators, hospital executives, and operational leaders requiring strategic insights for planning and resource allocation
+- **Business Decision Makers**: Healthcare administrators, hospital executives, and operational leaders
+- **Policy Makers**: Ministry of Health officials, healthcare regulators, and public health leaders
 
-**Platform**: HEALIX (GCC Databricks) | **Languages**: Python, R, STATA
+📖 **[Detailed Project Objectives & Success Criteria](objectives/project_objectives.md)**
 
 ---
 
-## 🎯 Project Objectives
+## 🎯 Project Objectives & Analysis Areas
 
-### Primary Goals
-- [Analytics Opportunities Overview](objectives/opportunities.md) - Machine learning and analytical approaches
-- Problem framing, modeling methods, and evaluation metrics
-- Temporal and geographic analysis strategies
+### Strategic Documentation
+- **[Project Objectives & Success Criteria](objectives/project_objectives.md)** - Detailed outcomes, metrics, stakeholder expectations, and timeline
+- [Problem Statements & Analytics Opportunities](objectives/problem_statements.md) - 13 use cases mapped to project outcomes
+- **[Analytics Epics Portfolio](objectives/epics/README.md)** - 6 strategic initiatives with implementation roadmap
 
-### Strategic Epics
-**Policy-Driven Analytics Initiatives** (Prioritized by Impact & Feasibility)
+### Strategic Epics (Prioritized)
 
-1. **[EPIC-001: Patient Population Segmentation](objectives/epics/epic-001-patient-segmentation.md)** ⭐ CRITICAL
-   - Comprehensive demographic profiling and patient segmentation
-   - Complexity: MEDIUM | Duration: 4-6 weeks
-   - **Foundation epic** - Required for downstream analyses
+**Critical Priority** (Start Immediately):
 
-2. **[EPIC-002: Temporal Trend Detection](objectives/epics/epic-002-temporal-trends.md)** ⭐ HIGH
-   - Disease prevalence trends and healthcare utilization patterns (2015-2026)
-   - Complexity: HIGH | Duration: 6-8 weeks
-   - Depends on: EPIC-001
+1. **[EPIC-001: Facility Utilization & Bottleneck Analysis](objectives/epics/epic-001-facility-utilization-bottleneck-analysis.md)** ⭐ CRITICAL
+   - Identify 10+ operational bottlenecks, profile all facilities
+   - Duration: 2-3 weeks | Dependencies: None
+   
+2. **[EPIC-002: Disease Outbreak Surveillance System](objectives/epics/epic-002-disease-outbreak-surveillance-system.md)** ⭐ CRITICAL
+   - Real-time disease surveillance, anomaly detection, spatial clustering
+   - Duration: 4-5 weeks | Dependencies: None
+   
+3. **[EPIC-003: Healthcare System Gap Analysis](objectives/epics/epic-003-healthcare-system-gap-analysis.md)** ⭐ CRITICAL
+   - Identify 8+ policy intervention opportunities with impact assessments
+   - Duration: 3-4 weeks | Dependencies: None
 
-3. **[EPIC-003: Geographic Health Equity Analysis](objectives/epics/epic-003-geographic-equity.md)** ⭐ CRITICAL
-   - Spatial accessibility, disparity quantification, and underserved area identification
-   - Complexity: MEDIUM-HIGH | Duration: 5-7 weeks
-   - Independent - Can run in parallel
+**High Priority**:
+
+4. **[EPIC-004: Process Optimization & Improvement](objectives/epics/epic-004-process-optimization-improvement.md)** ⭐ HIGH
+   - Document 15+ improvement opportunities, patient journey mapping
+   - Duration: 3-4 weeks | Depends: EPIC-001 (recommended)
+   
+5. **[EPIC-005: Geographic Access & Equity Analysis](objectives/epics/epic-005-geographic-access-equity.md)** ⭐ HIGH
+   - Identify 3+ underserved areas, quantify health disparities
+   - Duration: 3-4 weeks | Dependencies: None
+
+**Medium Priority**:
+
+6. **[EPIC-006: Predictive Demand Forecasting](objectives/epics/epic-006-predictive-demand-forecasting.md)**
+   - 1-year and 5-year demand forecasts for capacity planning
+   - Duration: 4-5 weeks | Depends: EPIC-001 (baseline)
+
+📖 **[Complete Epic Portfolio & Roadmap](objectives/epics/README.md)**
+
+### Analysis Focus Areas
+
+**1. Disease Outbreak Detection & Surveillance** → EPIC-002
+- Real-time disease incidence monitoring and anomaly detection
+- Geographic and temporal outbreak risk mapping
+- Early warning systems for public health threats
+
+**2. Healthcare Facility Utilization Analysis** → EPIC-001, EPIC-005, EPIC-006
+- Patient distribution patterns across polyclinics and facilities
+- Geographic access analysis and underserved population identification
+- Demand forecasting and capacity planning models
+
+**3. Policy Need Identification** → EPIC-003
+- Systematic gap analysis across care continuum
+- Evidence-based policy recommendations with impact assessments
+- Priority ranking of intervention opportunities
+
+**4. Process Improvement Opportunities** → EPIC-001, EPIC-004
+- Patient journey mapping and bottleneck identification
+- Service efficiency metrics and wait time analysis
+- Best practice identification from high-performing facilities
 
 ---
 
 ## 📊 Data Documentation
 
 ### Data Sources & Context
-- [Data Sources Overview](project_context/data_sources.md) - Complete schema documentation for all MOH polyclinic tables
+- **[Data Sources Overview](project_context/data_sources.md)** - Kaggle MOH dataset documentation (35 tables, 1990-2020)
 - [Tech Stack Specifications](project_context/tech_stack.md) - Approved technologies (HEALIX/Databricks, Python, R, STATA)
-- [Data Connections Guide](project_context/data_connections.md) - API and database connectivity
 
-### Data Dictionary (Comprehensive)
-- **[Master Index](data_dictionary/00_master_index.md)** - Complete data dictionary navigation
-- [Patient Demographics Table](data_dictionary/06_patient_demographics.md) - Demographic information, segmentation fields
-- [Polyclinic Attendances Table](data_dictionary/01_polyclinic_attendances.md) - Visit records, waiting times, operational metrics
-- Additional tables: Diagnoses, Procedures, Medications, Lab Results, Polyclinic Master (see Master Index)
+### Data Dictionary
+- **[Comprehensive Data Catalog](data_dictionary/COMPREHENSIVE_DATA_CATALOG.md)** - Complete dataset documentation with 35 tables
+- [Table Quick Reference](data_dictionary/TABLE_QUICK_REFERENCE.md) - Summary view of all available tables
+- [Kaggle Data Source Analysis](data_dictionary/kaggle_data_source_analysis.md) - Dataset structure and metadata
 
 ---
 
-## 🔬 Analysis Focus Areas
+## 🔬 Analysis Methodology
 
-### 1. Patient Demographics & Distribution Analysis
-- **Objectives**: Understand patient population characteristics and distribution patterns
-- **Methods**: Descriptive statistics, cohort analysis, demographic segmentation
-- **Deliverables**: Patient profiles, population pyramids, socioeconomic distributions
+### Statistical Methods
+- Descriptive statistics and exploratory data analysis
+- Time-series analysis and trend detection
+- Spatial analysis and geographic equity assessment
+- Comparative benchmarking and performance analysis
 
-### 2. Disease Burden & Health Trends
-- **Objectives**: Analyze chronic disease prevalence, comorbidities, and temporal trends
-- **Methods**: Epidemiological analysis, time-series trend detection, disease clustering
-- **Deliverables**: Disease prevalence reports, trend forecasts, risk stratification models
-
-### 3. Geographic Health Equity Analysis
-- **Objectives**: Identify regional disparities and access gaps requiring policy intervention
-- **Methods**: Spatial analysis, equity metrics, accessibility modeling
-- **Deliverables**: Health equity maps, underserved area identification, disparity quantification
-
-### 4. Policy Problem Identification
-- **Objectives**: Detect healthcare problems and gaps requiring regulatory intervention
-- **Methods**: Outlier detection, pattern recognition, comparative benchmarking
-- **Deliverables**: Policy recommendations, intervention priorities, evidence briefs for government
+### Analytical Approaches
+- Population health analytics and disease burden assessment
+- Process mining and bottleneck analysis
+- Predictive modeling for demand forecasting
+- Anomaly detection for outbreak surveillance
 
 ---
 
@@ -98,6 +126,32 @@
 
 1. **Setup Environment**
    ```bash
+   # Create conda environment
+   conda env create -f environment.yml
+   conda activate moh-polyclinic-analysis
+   ```
+
+2. **Load Data from Kaggle**
+   ```bash
+   # Explore dataset structure
+   python scripts/explore_kaggle_dataset.py
+   
+   # Load full dataset
+   python scripts/load_kaggle_data.py
+   ```
+
+3. **Begin Exploratory Analysis**
+   ```bash
+   # Launch Jupyter
+   jupyter lab
+   
+   # Navigate to notebooks/1_exploratory/
+   ```
+
+4. **Review Documentation**
+   - Start with [Project Objectives](objectives/project_objectives.md)
+   - Review [Data Sources](project_context/data_sources.md)
+   - Explore [Data Dictionary](data_dictionary/COMPREHENSIVE_DATA_CATALOG.md)
    pip install -r requirements.txt
    ```
 

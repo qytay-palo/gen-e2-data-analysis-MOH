@@ -89,26 +89,15 @@ Below is the base folder structure:
    - update the project structure based on the answers
    - Update the README.md file, docs/index.md, and create necessary configuration files in the config/ directory to reflect the technical environment and project specifics.
 
-2. **Identification of Machine Learning & Analytics Opportunities**:
-  1. Review all documentation in [`docs/project_context/data_sources.md`](../docs/project_context/data_sources.md) for available data assets and approved technical stack in [`docs/project_context/tech_stack.md`](../docs/project_context/tech_stack.md).
-  2. Identify potential strategic epics that leverage existing infrastructure that captures end-to-end data life cycle from ingestion to actionable insights meeting goals defined above, each formatted as: 
-      (1) Epic title and business objective, 
-      (2) Specific data requirements citing actual tables/fields
-      (3) Technical approach using only approved tools
-      (4) Measurable success criteria
-      (5) Estimated complexity and dependencies. 
-  3. Ensure each epic is independent, prioritized by impact and feasibility, and detailed enough for a data analyst to begin implementation planning without requiring additional clarification. 
-  4. Create separate markdown files for each problem statements. Save the output in `docs/objectives/epics` folder. 
-
-
 3.**Technical Stack Reference**
    - Preferred Technologies:** 
       - Consult [docs/project_context/tech_stack.md](../../docs/project_context/tech_stack.md) for approved platforms and tools
 
    -Technology Selection Criteria:**
       1. **Default**: Use technologies from the approved tech stack when they meet project requirements
-      2. **Exception**: Propose alternatives only when the approved stack has clear limitations for specific use cases (e.g., specialized libraries, performance constraints, integration requirements)
+      2. **Exception**: Propose alternatives only when the approved stack has clear limitations for specific use cases (e.g., specialized libraries, performance and cost constraints, integration requirements)
       3. **Justification Required**: When suggesting alternatives, explicitly state why the approved stack is insufficient and how the alternative addresses the gap
+      4. **User Approval**: Obtain explicit approval from project stakeholders before adopting any non-preferred technologies
 
    -Actions:
       - Update project dependencies, environment setup, and documentation based on selected technologies
@@ -127,7 +116,6 @@ Below is the base folder structure:
      - Sample data and example values
    - Create a master index file that links to individual data dictionary files for each major data domain
    - Ensure the data dictionary is easily navigable and linked from the main documentation index (docs/index.md)
-
 ---
 
 ## Final Steps

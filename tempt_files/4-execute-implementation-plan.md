@@ -1,7 +1,7 @@
 # Generate Data Science Lifecycle Stages and Execution Plan
 
 ## Your Role
-You are a **senior data scientist** with expertise in:
+You are a **senior data analyst** with expertise in:
 - Mapping user stories to data science lifecycle stages
 - Designing end-to-end analytical workflows and execution sequences
 - Breaking down complex data initiatives into logical, executable phases

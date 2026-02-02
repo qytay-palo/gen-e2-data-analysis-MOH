@@ -1,43 +1,55 @@
-# MOH Polyclinic Patient Analysis & Policy Intelligence
+# MOH Healthcare System Analysis & Public Health Intelligence
 
-Comprehensive analysis of polyclinic patient demographics, health trends, and service utilization to identify policy intervention opportunities and inform healthcare governance.
+Comprehensive healthcare system analysis to detect disease outbreaks, optimize facility utilization, identify policy needs, and improve patient care processes across Singapore's healthcare network.
 
 ## Overview
 
-This project delivers data-driven insights into Singapore's polyclinic patient population, analyzing distribution patterns, temporal trends, and healthcare utilization to support evidence-based policy development and strategic healthcare planning. Built on Singapore's Ministry of Health polyclinic data, this analysis enables proactive identification of healthcare gaps requiring policy intervention.
+This project delivers actionable intelligence for healthcare policy makers and business decision makers to optimize Singapore's healthcare system and protect public health. Using Ministry of Health data, we analyze patient populations, disease patterns, facility utilization, and care processes to enable evidence-based healthcare governance and operational excellence.
 
-### Project Objectives
+**Project Period**: 2 February 2026 - 13 April 2026 (10 weeks)  
+**Platform**: HEALIX (GCC Databricks) | **Languages**: Python, R, STATA
 
-#### Main Goals
-- **Understand Patient Population**: Comprehensive analysis of patient demographics, distribution patterns, and temporal trends across Singapore polyclinics
-- **Identify Policy Intervention Needs**: Detect healthcare problems, service gaps, and governance issues requiring regulatory or policy intervention
+### Project Outcomes
 
-#### Measurable Success Criteria
-- **Patient Understanding**: Complete demographic profiling covering 100% of polyclinic patients with distribution analysis by age, gender, ethnicity, and socioeconomic status
-- **Trend Detection**: Identify and quantify temporal trends in disease prevalence, service utilization, and patient access patterns
-- **Policy Problem Identification**: Detect and prioritize at least 5 high-impact policy intervention opportunities with quantified impact assessments
-- **Evidence Quality**: Deliver statistically significant findings with confidence intervals for all key metrics
+This analysis enables four critical healthcare outcomes:
 
-#### Business Decisions Informed
-- **Policy Development**: Evidence-based healthcare policies, regulatory interventions, and governance frameworks
-- **Resource Allocation**: Strategic planning for polyclinic capacity, staffing, and service distribution
-- **Health Equity**: Targeted interventions to address geographic and demographic healthcare disparities
-- **Program Effectiveness**: Assessment of existing healthcare initiatives (e.g., Healthier SG program)
+#### 1. Disease Outbreak Detection & Surveillance
+Establish early warning systems to identify potential disease outbreaks and emerging health threats through real-time surveillance dashboards, anomaly detection models, and geographic risk mapping.
+
+#### 2. Healthcare Facility Utilization Analysis
+Understand distribution of patient visitation patterns across polyclinics and healthcare facilities through comprehensive utilization profiles, geographic access analysis, and demand forecasting models.
+
+#### 3. Policy Need Identification
+Identify gaps in healthcare system requiring government policy intervention or regulatory action through systematic gap analysis, evidence-based recommendations, and priority ranking frameworks.
+
+#### 4. Process Improvement Opportunities
+Analyze hospitalization and polyclinic processes to identify efficiency gains and patient experience improvements through patient journey mapping, bottleneck analysis, and best practice identification.
+
+📖 **[Detailed Project Objectives](docs/objectives/project_objectives.md)**
+
+### Success Metrics
+
+The project's effectiveness will be measured through three core metrics:
+
+1. **Bottleneck Identification**: Identify minimum 10 critical operational bottlenecks with quantified impact and documented root causes
+2. **Government Intervention Points**: Identify minimum 8 high-impact intervention opportunities requiring government action across policy, resource allocation, programs, and governance
+3. **Improvement Opportunities**: Document minimum 15 validated improvement opportunities with quantified business value across process efficiency, resource optimization, quality, and patient experience
 
 ### Key Stakeholders
 
-- **Government Agencies**: Ministry of Health policy makers, healthcare regulators, and public health officials requiring evidence for governance decisions
 - **Business Decision Makers**: Healthcare administrators, hospital executives, and operational leaders requiring strategic insights for planning and resource allocation
+- **Policy Makers**: Ministry of Health officials, healthcare regulators, and public health leaders requiring evidence-based policy guidance and strategic planning
 
-### Key Features
+### Key Capabilities
 
-- � **Patient Demographics Analysis** - Age, gender, ethnicity, socioeconomic distribution patterns
-- 📊 **Disease Burden Assessment** - Chronic condition prevalence, comorbidity analysis, disease trends
-- 📍 **Geographic Health Equity** - Regional disparities, access patterns, underserved populations
-- 🏥 **Service Utilization Patterns** - Visit frequency, care-seeking behavior, program enrollment trends
-- 🎯 **Policy Gap Identification** - Healthcare problems requiring intervention, regulatory opportunities
-- 🔄 **Automated ETL** - API-based data extraction with validation and processing
-- 📈 **Executive Dashboards** - Interactive visualizations for government and business decision makers
+- 🚨 **Disease Outbreak Detection** - Real-time surveillance, anomaly detection, geographic risk mapping
+- 🏥 **Facility Utilization Analysis** - Patient distribution patterns, demand forecasting, capacity optimization
+- 📋 **Policy Gap Identification** - Systematic gap analysis, intervention priorities, impact assessments
+- ⚡ **Process Optimization** - Bottleneck analysis, efficiency improvements, patient journey mapping
+- 📊 **Population Health Analytics** - Disease burden, demographic patterns, temporal trends
+- 🗺️ **Geographic Health Equity** - Regional disparities, access patterns, underserved populations
+- 🔄 **Automated ETL** - API-based data extraction with validation and processing (Kaggle MOH dataset)
+- 📈 **Executive Dashboards** - Interactive visualizations for policy makers and business leaders
 
 ## Quick Start
 
@@ -85,11 +97,14 @@ nano config/analysis.yml
 
 ### 4. Run Initial Data Extraction
 ```bash
-# Extract recent polyclinic attendance data
-python scripts/run_extraction.py --sources attendances --last-n-days 30
+# Explore Kaggle dataset structure
+python scripts/explore_kaggle_dataset.py
 
-# Extract all core data sources
-python scripts/run_extraction.py --sources all --start-date 2025-01-01
+# Load full dataset from Kaggle
+python scripts/load_kaggle_data.py
+
+# Run automated ETL pipeline
+python scripts/run_extraction.py
 ```
 
 ### 5. Explore Data
@@ -97,18 +112,18 @@ python scripts/run_extraction.py --sources all --start-date 2025-01-01
 # Launch Jupyter for exploratory analysis
 jupyter lab
 
-# Navigate to notebooks/1_exploratory/ and open:
-# - patient_profiling.ipynb
-# - data_quality_check.ipynb
+# Navigate to notebooks/1_exploratory/ for initial data exploration
+# Navigate to notebooks/2_analysis/ for detailed analytics
 ```
 
-### 6. Review Strategic Epics
-Review prioritized analytics initiatives in `docs/objectives/epics/`:
-- **EPIC-001**: Patient Population Segmentation (Foundation - Start here)
-- **EPIC-002**: Temporal Trend Detection & Forecasting
-- **EPIC-003**: Geographic Health Equity Analysis
+### 6. Review Project Deliverables
+Key documentation to guide your work:
+- **[Project Objectives](docs/objectives/project_objectives.md)**: Detailed outcomes and success metrics
+- **[Data Sources](docs/project_context/data_sources.md)**: Kaggle MOH dataset documentation
+- **[Data Dictionary](docs/data_dictionary/)**: Field definitions and data schemas
+- **[Tech Stack](docs/project_context/tech_stack.md)**: Platform and tool specifications
 
-📖 **[Full Documentation](docs/)** | 🎯 **[Project Objectives](docs/objectives/)** | 📊 **[Data Dictionary](docs/data_dictionary/)**
+📖 **[Full Documentation Hub](docs/index.md)**
 
 ## Technical Stack
 

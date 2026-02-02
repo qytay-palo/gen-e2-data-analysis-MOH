@@ -1,0 +1,107 @@
+# Epic 001: Facility Utilization & Bottleneck Analysis Configuration
+# Last Updated: 2 February 2026
+
+# Data Source Configuration
+data_source:
+  type: kaggle
+  dataset_id: "subhamjain/health-dataset-complete-singapore"
+  cache_dir: ~/.cache/kagglehub
+  
+# Table Names (CSV files from Kaggle dataset)
+tables:
+  attendance_by_hospitals: "admission-and-outpatient-attendances-by-restructured-hospitals"
+  bed_capacity: "number-of-hospital-beds"
+  clinic_registry: "facilities-in-the-registry-of-medical-clinics-and-dental-clinics"
+  
+# Analysis Parameters
+analysis:
+  year_range:
+    start: 2006
+    end: 2020
+  
+  utilization_thresholds:
+    underutilized: 50.0  # Below 50%
+    optimal_low: 70.0     # 70-85% is optimal
+    optimal_high: 85.0
+    high_utilization: 90.0  # 85-90%
+    overutilized: 90.0    # Above 90%
+  
+  bottleneck_detection:
+    min_utilization_rate: 90.0  # Minimum % to be considered bottleneck
+    min_severity_score: 5.0     # Minimum severity to flag
+    recent_years_only: True     # Only analyze recent data (2015+)
+    recent_year_threshold: 2015
+  
+  performance_tiers:
+    top_performer: 90  # Top 10%
+    high_performer: 75  # Top 25%
+    average_low: 25    # Middle 50%
+    below_average: 10  # Bottom 15%
+    low_performer: 0   # Bottom 10%
+
+# Feature Engineering
+features:
+  calculate_utilization_rate: True
+  calculate_percentiles: True
+  create_temporal_features: True
+  identify_bottlenecks: True
+  
+  capacity_assumptions:
+    days_per_year: 365
+    optimal_utilization: 0.85  # 85% is considered optimal
+  
+# Output Paths (relative to epic-001/)
+paths:
+  raw_data: "data/raw"
+  processed_data: "data/processed"
+  features: "data/features"
+  results: "results"
+  metrics: "results/metrics"
+  tables: "results/tables"
+  exports: "results/exports"
+  figures: "reports/figures"
+  dashboards: "reports/dashboards"
+  documents: "reports/documents"
+  logs: "logs"
+
+# Logging Configuration
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+  log_files:
+    extraction: "logs/extraction.log"
+    pipeline: "logs/pipeline.log"
+    errors: "logs/errors.log"
+
+# Visualization Settings
+visualization:
+  color_palette:
+    primary: "#003366"
+    secondary: "#0066CC"
+    accent: "#FF6600"
+    success: "#00CC66"
+    warning: "#FFCC00"
+    danger: "#CC0000"
+    neutral: "#666666"
+  
+  export_formats:
+    - png
+    - html
+    - pdf
+  
+  figure_dpi: 300
+  figure_size:
+    width: 12
+    height: 8
+
+# Reporting
+reporting:
+  min_bottlenecks_to_report: 10
+  include_recommendations: True
+  generate_executive_summary: True
+  
+  output_formats:
+    - html
+    - pdf
+    - csv

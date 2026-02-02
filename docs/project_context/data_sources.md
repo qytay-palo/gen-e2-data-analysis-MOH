@@ -1,291 +1,364 @@
 # Data Sources: MOH Polyclinic Data Analysis
 
-**Source**: Ministry of Health (MOH) Singapore Data  
-**URL**: https://data.gov.sg/datasets?agencies=Ministry+of+Health+(MOH)&resultId=522  
-**Last Updated**: 2026-01-26  
-**Data Domain**: Healthcare - Primary Care (Polyclinics)
+**Last Updated:** 30 January 2026  
+**Status:** Active, Fully Documented
 
 ---
 
-## Initialization
+## Primary Data Source: Kaggle Health Dataset (Singapore)
 
-When analyzing this dataset, you are working with **Singapore's Ministry of Health polyclinic healthcare data**, which contains comprehensive patient visit records, diagnoses, treatments, and demographic information from public polyclinics. The data structure follows a **relational database model** with multiple interconnected tables capturing the patient journey from registration to treatment outcomes.
+### Overview
 
-**Key Relationships**:
-- Each **patient** can have multiple **attendances** (visits)
-- Each **attendance** can have multiple **diagnoses**, **procedures**, **medications**, and **lab results**
-- All tables link through common identifiers: `patient_id`, `attendance_id`, `polyclinic_id`
+**Source**: Kaggle Public Dataset  
+**Dataset ID**: `subhamjain/health-dataset-complete-singapore`  
+**URL**: https://www.kaggle.com/datasets/subhamjain/health-dataset-complete-singapore  
+**Original Source**: Ministry of Health Singapore (via data.gov.sg)  
+**Last Dataset Update**: 2020-04-20  
+**Data Domain**: Comprehensive Singapore Healthcare Data  
+**Access Method**: Kaggle Hub API  
+**Format**: CSV files (35 data tables)  
+**Total Size**: ~3.5 MB  
+**Data Quality**: 100% completeness (no missing values)
 
-**Data Characteristics**:
-- **Temporal range**: 2015-01-01 to present
-- **Update frequency**: Daily incremental extraction
-- **Geographic scope**: Singapore polyclinics
-- **Privacy**: De-identified patient data with anonymized IDs
+### Dataset Composition
 
----
+**Total Files**: 70
+- **Data Tables (CSV)**: 35 files
+- **Metadata Files (TXT)**: 28 files
+- **Documentation (PDF)**: 1 file (National Nutrition Survey 2010)
+- **Other**: 6 files
 
-## Table Schema Overview
+### Data Categories & Coverage
 
-### **1. POLYCLINIC_ATTENDANCES** (Patient Visits)
-**Purpose**: Records every patient visit/attendance at a polyclinic  
-**Primary Key**: `attendance_id`  
-**Incremental**: Yes (by `attendance_date`)
-
-| Column Name | Data Type | Description | Example Values | Business Logic |
-|-------------|-----------|-------------|----------------|----------------|
-| `attendance_id` | INTEGER | Unique identifier for each visit | 1001234 | Primary key |
-| `patient_id` | INTEGER | Links to patient demographics | 500123 | Foreign key to patient |
-| `polyclinic_id` | INTEGER | Which polyclinic was visited | 101-115 | Foreign key to polyclinic |
-| `attendance_date` | DATE | Date of visit | 2025-12-15 | Used for time-series analysis |
-| `attendance_time` | TIME | Scheduled appointment time | 09:30:00 | Appointment slot |
-| `visit_type` | VARCHAR | Type of medical visit | 'acute', 'chronic', 'preventive', 'follow-up' | Categorizes care type |
-| `appointment_type` | VARCHAR | How visit was scheduled | 'walk-in', 'appointment', 'emergency' | Access pathway |
-| `visit_status` | VARCHAR | Completion status | 'completed', 'cancelled', 'no-show' | Operational metric |
-| `arrival_time` | TIME | Actual patient arrival | 09:25:00 | Calculate lateness |
-| `consultation_start_time` | TIME | When doctor started | 09:45:00 | Service delivery start |
-| `consultation_end_time` | TIME | When consultation ended | 10:15:00 | Service delivery end |
-| `waiting_time_minutes` | INTEGER | Time from arrival to consultation | 20 | Key performance metric |
-| `consultation_duration_minutes` | INTEGER | Length of doctor consultation | 30 | Service quality metric |
-| `referring_source` | VARCHAR | Who referred the patient | 'self', 'GP', 'hospital', 'A&E' | Referral pathway |
-| `created_at` | TIMESTAMP | Record creation timestamp | 2025-12-15 10:30:00 | Audit trail |
-| `updated_at` | TIMESTAMP | Last modification timestamp | 2025-12-15 11:00:00 | Change tracking |
-
-**LLM Analysis Prompts**:
-- *"Calculate average waiting times by polyclinic and time of day"*
-- *"Identify peak attendance hours and days of the week"*
-- *"Compare walk-in vs appointment visit patterns"*
-- *"Analyze no-show rates by appointment type"*
+| Category | Tables | Time Span | Records |
+|----------|--------|-----------|---------|
+| Healthcare Workforce | 7 | 2006-2019 | 390 |
+| Healthcare Facilities | 4 | 2009-2020 | 408 |
+| Health Outcomes & Mortality | 3 | 1990-2019 | 90 |
+| Public Health & Prevention | 6 | 2003-2020 | 213 |
+| Healthcare Utilization | 3 | 2006-2020 | 353 |
+| Healthcare Expenditure | 1 | 2006-2018 | 13 |
+| Nutrition Surveys | 3 | 2004, 2010 | 54 |
+| **Total** | **27** | **1990-2020** | **1,521** |
 
 ---
 
-### **2. PATIENT_DEMOGRAPHICS** (Patient Information)
-**Purpose**: Stores anonymized demographic information for each patient  
-**Primary Key**: `patient_id`  
-**Incremental**: Yes (by `updated_at`)
+## Data Access & Connection
 
-| Column Name | Data Type | Description | Example Values | Business Logic |
-|-------------|-----------|-------------|----------------|----------------|
-| `patient_id` | INTEGER | Unique patient identifier (anonymized) | 500123 | Primary key |
-| `birth_year` | INTEGER | Year of birth (not full DOB for privacy) | 1975 | Calculate age |
-| `age_group` | VARCHAR | Binned age category | '0-10', '11-20', '21-30', '65+' | Population segmentation |
-| `gender` | VARCHAR | Biological sex | 'M', 'F' | Demographic analysis |
-| `race` | VARCHAR | Ethnic group | 'Chinese', 'Malay', 'Indian', 'Others' | Singapore demographics |
-| `nationality` | VARCHAR | Citizenship status | 'Singaporean', 'PR', 'Foreigner' | Eligibility categories |
-| `residential_status` | VARCHAR | Housing status | 'HDB', 'Private', 'Others' | Socioeconomic proxy |
-| `postal_code` | VARCHAR | First 2 digits only (privacy) | '60', '73', '11' | Geographic distribution |
-| `planning_area` | VARCHAR | Singapore planning area | 'Ang Mo Kio', 'Tampines', 'Jurong' | Geographic analysis |
-| `region` | VARCHAR | Geographic region | 'North', 'South', 'East', 'West', 'Central' | Macro geography |
-| `registration_date` | DATE | First registration at polyclinic | 2018-03-12 | Patient tenure |
-| `healthier_sg_enrolled` | BOOLEAN | Enrolled in Healthier SG program | TRUE, FALSE | National health initiative |
-| `healthier_sg_enrolment_date` | DATE | When enrolled in program | 2023-07-01 | Program tracking |
-| `chronic_conditions_count` | INTEGER | Number of chronic conditions | 0, 1, 2, 3+ | Disease burden metric |
-| `subsidy_category` | VARCHAR | Government subsidy tier | 'Pioneer', 'CHAS', 'Merdeka', 'None' | Financial assistance |
-| `created_at` | TIMESTAMP | Record creation | 2018-03-12 09:00:00 | Audit trail |
-| `updated_at` | TIMESTAMP | Last update | 2025-11-20 14:30:00 | Change tracking |
+### Method 1: Download Full Dataset (Recommended)
 
----
+```python
+import kagglehub
+import pandas as pd
+from pathlib import Path
 
-### **3. DIAGNOSIS_RECORDS** (Medical Diagnoses)
-**Purpose**: Records medical diagnoses made during each visit  
-**Primary Key**: `diagnosis_id`  
-**Incremental**: Yes (by `diagnosis_date`)
+# Download entire dataset (cached locally)
+dataset_path = kagglehub.dataset_download(
+    "subhamjain/health-dataset-complete-singapore"
+)
 
-| Column Name | Data Type | Description | Example Values | Business Logic |
-|-------------|-----------|-------------|----------------|----------------|
-| `diagnosis_id` | INTEGER | Unique diagnosis record ID | 2001234 | Primary key |
-| `attendance_id` | INTEGER | Links to visit record | 1001234 | Foreign key to attendance |
-| `patient_id` | INTEGER | Links to patient | 500123 | Foreign key to patient |
-| `diagnosis_date` | DATE | When diagnosis was made | 2025-12-15 | Temporal tracking |
-| `diagnosis_type` | VARCHAR | Category of diagnosis | 'primary', 'secondary', 'complication' | Diagnostic hierarchy |
-| `icd_code` | VARCHAR | ICD-10 diagnosis code | 'J06.9', 'E11.9', 'I10' | International standard |
-| `icd_version` | VARCHAR | ICD coding version | 'ICD-10-CM', 'ICD-11' | Version control |
-| `diagnosis_description` | TEXT | Human-readable diagnosis | 'Acute upper respiratory infection' | Clinical interpretation |
-| `condition_category` | VARCHAR | Disease grouping | 'Respiratory', 'Cardiovascular', 'Metabolic' | Disease classification |
-| `is_chronic` | BOOLEAN | Is this a chronic condition | TRUE, FALSE | Care type indicator |
-| `is_primary_diagnosis` | BOOLEAN | Main reason for visit | TRUE, FALSE | Chief complaint |
-| `diagnosis_sequence` | INTEGER | Order of diagnosis | 1, 2, 3 | Priority ranking |
-| `created_at` | TIMESTAMP | Record creation | 2025-12-15 10:45:00 | Audit trail |
-| `updated_at` | TIMESTAMP | Last modification | 2025-12-15 11:00:00 | Change tracking |
+print(f"Dataset cached at: {dataset_path}")
 
-**Common ICD-10 Codes**:
-- `J06.9` - Upper respiratory infection (acute)
-- `E11.9` - Type 2 diabetes mellitus
-- `I10` - Essential hypertension
-- `E78.5` - Hyperlipidemia
-- `M54.5` - Low back pain
-
----
-
-### **4. PROCEDURE_RECORDS** (Medical Procedures)
-**Purpose**: Documents procedures, treatments, and interventions performed  
-**Primary Key**: `procedure_id`  
-**Incremental**: Yes (by `procedure_date`)
-
-| Column Name | Data Type | Description | Example Values | Business Logic |
-|-------------|-----------|-------------|----------------|----------------|
-| `procedure_id` | INTEGER | Unique procedure record | 3001234 | Primary key |
-| `attendance_id` | INTEGER | Associated visit | 1001234 | Foreign key to attendance |
-| `patient_id` | INTEGER | Patient identifier | 500123 | Foreign key to patient |
-| `procedure_date` | DATE | When procedure performed | 2025-12-15 | Temporal tracking |
-| `procedure_code` | VARCHAR | Standardized procedure code | 'CPT-99213', 'HCPCS-G0008' | Billing/clinical code |
-| `procedure_description` | TEXT | What was done | 'Blood glucose test', 'ECG', 'Wound dressing' | Clinical detail |
-| `procedure_type` | VARCHAR | Category of procedure | 'Diagnostic', 'Therapeutic', 'Preventive' | Service classification |
-| `provider_id` | INTEGER | Healthcare provider ID | 7001 | Anonymized clinician |
-| `procedure_cost` | DECIMAL | Total cost (SGD) | 45.00 | Financial metric |
-| `patient_charge` | DECIMAL | Amount charged to patient | 15.00 | Out-of-pocket cost |
-| `subsidy_amount` | DECIMAL | Government subsidy | 30.00 | Public funding |
-| `created_at` | TIMESTAMP | Record creation | 2025-12-15 11:00:00 | Audit trail |
-| `updated_at` | TIMESTAMP | Last modification | 2025-12-15 11:15:00 | Change tracking |
-
----
-
-### **5. MEDICATION_PRESCRIPTIONS** (Medications)
-**Purpose**: Records all medications prescribed during visits  
-**Primary Key**: `prescription_id`  
-**Incremental**: Yes (by `prescription_date`)
-
-| Column Name | Data Type | Description | Example Values | Business Logic |
-|-------------|-----------|-------------|----------------|----------------|
-| `prescription_id` | INTEGER | Unique prescription record | 4001234 | Primary key |
-| `attendance_id` | INTEGER | Associated visit | 1001234 | Foreign key to attendance |
-| `patient_id` | INTEGER | Patient identifier | 500123 | Foreign key to patient |
-| `prescription_date` | DATE | When prescribed | 2025-12-15 | Temporal tracking |
-| `medication_code` | VARCHAR | Drug classification code | 'ATC-C09AA01' | WHO ATC system |
-| `medication_name` | VARCHAR | Drug name | 'Metformin', 'Lisinopril', 'Paracetamol' | Generic/brand name |
-| `medication_category` | VARCHAR | Drug class | 'Antidiabetic', 'Antihypertensive', 'Analgesic' | Therapeutic category |
-| `dosage` | VARCHAR | Strength per unit | '500mg', '10mg', '325mg' | Clinical dose |
-| `frequency` | VARCHAR | How often taken | 'BD' (twice daily), 'TDS' (3x), 'PRN' (as needed) | Dosing schedule |
-| `duration_days` | INTEGER | Length of prescription | 30, 60, 90 | Supply duration |
-| `quantity` | INTEGER | Total units prescribed | 60 (tablets) | Inventory count |
-| `medication_cost` | DECIMAL | Total medication cost | 25.00 | Financial metric |
-| `patient_charge` | DECIMAL | Patient pays | 8.00 | Out-of-pocket |
-| `subsidy_amount` | DECIMAL | Government subsidy | 17.00 | Public funding |
-| `is_chronic_medication` | BOOLEAN | For chronic disease | TRUE, FALSE | Long-term therapy |
-| `created_at` | TIMESTAMP | Record creation | 2025-12-15 11:00:00 | Audit trail |
-| `updated_at` | TIMESTAMP | Last modification | 2025-12-15 11:15:00 | Change tracking |
-
----
-
-### **6. LABORATORY_RESULTS** (Lab Tests)
-**Purpose**: Stores laboratory test orders and results  
-**Primary Key**: `lab_result_id`  
-**Incremental**: Yes (by `result_date`)
-
-| Column Name | Data Type | Description | Example Values | Business Logic |
-|-------------|-----------|-------------|----------------|----------------|
-| `lab_result_id` | INTEGER | Unique lab result record | 5001234 | Primary key |
-| `attendance_id` | INTEGER | Associated visit | 1001234 | Foreign key to attendance |
-| `patient_id` | INTEGER | Patient identifier | 500123 | Foreign key to patient |
-| `test_date` | DATE | When test was ordered | 2025-12-15 | Order date |
-| `result_date` | DATE | When result was available | 2025-12-17 | Turnaround time |
-| `test_code` | VARCHAR | LOINC or local code | 'LOINC-2345-7', 'GLU-001' | Test identifier |
-| `test_name` | VARCHAR | Test description | 'Fasting glucose', 'HbA1c', 'Lipid panel' | Clinical name |
-| `test_category` | VARCHAR | Test grouping | 'Biochemistry', 'Hematology', 'Microbiology' | Laboratory section |
-| `result_value` | VARCHAR | Numeric or qualitative result | '6.5', '98', 'Positive' | Test outcome |
-| `result_unit` | VARCHAR | Measurement unit | 'mmol/L', 'mg/dL', '%' | SI units |
-| `reference_range` | VARCHAR | Normal value range | '3.9-6.1', '<140', '4-10' | Clinical reference |
-| `is_abnormal` | BOOLEAN | Outside normal range | TRUE, FALSE | Clinical flag |
-| `abnormal_flag` | VARCHAR | Type of abnormality | 'High', 'Low', 'Critical' | Severity indicator |
-| `created_at` | TIMESTAMP | Record creation | 2025-12-17 14:00:00 | Audit trail |
-| `updated_at` | TIMESTAMP | Last modification | 2025-12-17 14:30:00 | Change tracking |
-
----
-
-### **7. POLYCLINIC_MASTER** (Reference Data)
-**Purpose**: Master list of all polyclinics with facility information  
-**Primary Key**: `polyclinic_id`  
-**Incremental**: No (reference data, monthly refresh)
-
-| Column Name | Data Type | Description | Example Values | Business Logic |
-|-------------|-----------|-------------|----------------|----------------|
-| `polyclinic_id` | INTEGER | Unique polyclinic identifier | 101, 102, 103 | Primary key |
-| `polyclinic_name` | VARCHAR | Official name | 'Ang Mo Kio Polyclinic', 'Bedok Polyclinic' | Facility name |
-| `cluster` | VARCHAR | Healthcare cluster | 'Central', 'Eastern', 'National' | MOH grouping |
-| `region` | VARCHAR | Geographic region | 'North', 'East', 'West' | Location |
-| `postal_code` | VARCHAR | Full postal code | '560123' | Address |
-| `address` | TEXT | Street address | 'Blk 123 Ang Mo Kio Ave 3' | Full address |
-| `operating_hours` | VARCHAR | Business hours | 'Mon-Fri 8am-9pm, Sat 8am-1pm' | Service hours |
-| `total_doctors` | INTEGER | Staff count - doctors | 25 | Capacity indicator |
-| `total_nurses` | INTEGER | Staff count - nurses | 45 | Capacity indicator |
-| `annual_capacity` | INTEGER | Max patient visits/year | 150000 | Throughput metric |
-| `establishment_date` | DATE | When polyclinic opened | 1995-06-01 | Facility age |
-| `last_renovation_date` | DATE | Most recent renovation | 2020-03-15 | Facility condition |
-| `facility_grade` | VARCHAR | Facility tier | 'A', 'B', 'C' | Service level |
-| `services_offered` | TEXT | List of services | 'GP, Dental, Pharmacy, Lab' | Service scope |
-| `is_active` | BOOLEAN | Currently operational | TRUE, FALSE | Status flag |
-
----
-
-### **8. CONDITION_MASTER** (Reference Data)
-**Purpose**: Master list of medical conditions and disease classifications  
-**Primary Key**: `condition_code`  
-**Incremental**: No (reference data)
-
-| Column Name | Data Type | Description | Example Values | Business Logic |
-|-------------|-----------|-------------|----------------|----------------|
-| `condition_code` | VARCHAR | Unique condition identifier | 'COND-001', 'COND-002' | Primary key |
-| `condition_name` | VARCHAR | Medical condition name | 'Type 2 Diabetes', 'Hypertension' | Human-readable |
-| `condition_category` | VARCHAR | Disease system | 'Metabolic', 'Cardiovascular', 'Respiratory' | Classification |
-| `is_chronic` | BOOLEAN | Chronic vs acute | TRUE, FALSE | Care model |
-| `is_preventable` | BOOLEAN | Preventable condition | TRUE, FALSE | Public health flag |
-| `severity_level` | VARCHAR | Clinical severity | 'Mild', 'Moderate', 'Severe' | Risk stratification |
-| `icd_10_codes` | TEXT | Related ICD codes | 'E11, E11.0, E11.9' | Code mapping |
-| `healthier_sg_priority` | BOOLEAN | Priority condition | TRUE, FALSE | National program |
-| `description` | TEXT | Detailed information | 'Chronic metabolic disorder...' | Clinical definition |
-
----
-
-## Table Relationships (Entity-Relationship)
-
-```
-PATIENT_DEMOGRAPHICS (1) ─────< (M) POLYCLINIC_ATTENDANCES
-                                         │
-                                         ├─< DIAGNOSIS_RECORDS (M)
-                                         │
-                                         ├─< PROCEDURE_RECORDS (M)
-                                         │
-                                         ├─< MEDICATION_PRESCRIPTIONS (M)
-                                         │
-                                         └─< LABORATORY_RESULTS (M)
-
-POLYCLINIC_MASTER (1) ─────< (M) POLYCLINIC_ATTENDANCES
-
-CONDITION_MASTER (1) ─────< (M) DIAGNOSIS_RECORDS
+# Load specific table
+doctors_df = pd.read_csv(
+    Path(dataset_path) / "number-of-doctors" / "number-of-doctors.csv"
+)
 ```
 
-**Relationship Key**:
-- `(1) ──< (M)` = One-to-Many relationship
-- **Primary joins**: `patient_id`, `attendance_id`, `polyclinic_id`
+**Advantages:**
+- ✓ Faster for multiple table access
+- ✓ Works offline after first download
+- ✓ Full directory structure preserved
+- ✓ Includes metadata files
+
+### Method 2: Direct Pandas Loading (Individual Tables)
+
+```python
+import kagglehub
+from kagglehub import KaggleDatasetAdapter
+
+# Load single table directly into pandas
+df = kagglehub.load_dataset(
+    KaggleDatasetAdapter.PANDAS,
+    "subhamjain/health-dataset-complete-singapore",
+    file_path="number-of-doctors/number-of-doctors.csv"
+)
+```
+
+**Advantages:**
+- ✓ Simpler for single table
+- ✓ Direct to DataFrame
+- ✓ Less disk space
+
+### Method 3: Automated ETL Pipeline
+
+```python
+# Use project's ETL pipeline
+from src.data_processing.kaggle_connector import KaggleConnector
+
+connector = KaggleConnector()
+all_tables = connector.extract_all()
+
+# or load specific categories
+workforce_tables = connector.extract_category('workforce')
+```
+
+**Advantages:**
+- ✓ Standardized column names
+- ✓ Automatic validation
+- ✓ Logging and error handling
+- ✓ Database loading included
 
 ---
 
-## Data Quality Standards
+## Authentication Setup
 
-**Completeness**:
-- Critical fields (`patient_id`, `attendance_id`) must have 100% fill rate
-- Max 5% null values in non-critical fields
+### Prerequisites
 
-**Validity**:
-- Dates must be between 2015-01-01 and today
-- Future dates trigger validation errors
-- Referential integrity enforced on all foreign keys
+1. **Kaggle Account** (free): https://www.kaggle.com/
+2. **Python 3.7+**
+3. **Required packages**:
+   ```bash
+   pip install kagglehub pandas
+   ```
 
-**Consistency**:
-- Attendance times: `arrival_time` < `consultation_start_time` < `consultation_end_time`
-- Costs: `patient_charge` + `subsidy_amount` = `total_cost`
+### Option A: API Key File (Recommended)
+
+**Step 1**: Generate API Key
+1. Login to Kaggle → Account Settings
+2. Scroll to "API" section
+3. Click "Create New API Token"
+4. Download `kaggle.json`
+
+**Step 2**: Install API Key
+```bash
+# Create Kaggle directory
+mkdir -p ~/.kaggle
+
+# Move downloaded file
+mv ~/Downloads/kaggle.json ~/.kaggle/
+
+# Set permissions (security requirement)
+chmod 600 ~/.kaggle/kaggle.json
+```
+
+**File contents** (`~/.kaggle/kaggle.json`):
+```json
+{
+  "username": "your_kaggle_username",
+  "key": "your_api_key_here"
+}
+```
+
+### Option B: Environment Variables
+
+```bash
+# Add to ~/.bashrc or ~/.zshrc
+export KAGGLE_USERNAME="your_username"
+export KAGGLE_KEY="your_api_key"
+
+# Or set for current session
+export KAGGLE_USERNAME="your_username"
+export KAGGLE_KEY="your_api_key"
+```
+
+### Verification
+
+```python
+import kagglehub
+
+# Test connection
+try:
+    dataset_path = kagglehub.dataset_download(
+        "subhamjain/health-dataset-complete-singapore"
+    )
+    print("✓ Authentication successful!")
+    print(f"Dataset location: {dataset_path}")
+except Exception as e:
+    print(f"✗ Authentication failed: {e}")
+```
 
 ---
 
-## 📖 Glossary of Healthcare Terms
+## Data Documentation Resources
 
-- **Polyclinic**: Singapore's public primary care clinics (outpatient)
-- **Healthier SG**: National preventive health program (launched 2023)
-- **CHAS**: Community Health Assist Scheme (subsidy program)
-- **ICD-10**: International Classification of Diseases, 10th revision
-- **Chronic condition**: Long-term disease requiring ongoing management
-- **Acute visit**: One-time treatment for short-term illness
-- **Walk-in**: No prior appointment, immediate care
-- **BD/TDS**: Medical dosing frequency (twice/three times daily)
+### Quick References
+
+| Document | Purpose | Location |
+|----------|---------|----------|
+| **Comprehensive Data Catalog** | Complete table schemas & descriptions | [`docs/data_dictionary/COMPREHENSIVE_DATA_CATALOG.md`](../data_dictionary/COMPREHENSIVE_DATA_CATALOG.md) |
+| **Table Quick Reference** | Fast lookup & code templates | [`docs/data_dictionary/TABLE_QUICK_REFERENCE.md`](../data_dictionary/TABLE_QUICK_REFERENCE.md) |
+| **Extraction Automation Guide** | ETL pipelines & scheduling | [`docs/DATA_EXTRACTION_AUTOMATION_GUIDE.md`](../DATA_EXTRACTION_AUTOMATION_GUIDE.md) |
+| **Kaggle Quick Start** | Step-by-step setup | [`docs/KAGGLE_QUICK_START.md`](../KAGGLE_QUICK_START.md) |
+| **Dataset Exploration (JSON)** | Machine-readable metadata | [`data/dataset_exploration.json`](../../data/dataset_exploration.json) |
+
+### Key Tables by Use Case
+
+**Workforce Planning:**
+- `number-of-doctors.csv` (78 records, 2006-2019)
+- `number-of-nurses-and-midwives.csv` (126 records, 2008-2019)
+- `number-of-pharmacists.csv` (42 records, 2006-2019)
+
+**Capacity Management:**
+- `health-facilities-and-beds-in-inpatient-facilities-public-not-for-profit-private.csv` (180 records)
+- `health-facilities-primary-care-dental-clinics-and-pharmacies.csv` (96 records)
+
+**Disease Burden Analysis:**
+- `age-standardised-mortality-rate-for-cancer.csv` (30 years, 1990-2019)
+- `age-standardised-mortality-rate-for-stroke.csv` (30 years, 1990-2019)
+- `age-standardised-mortality-rate-for-ischaemic-heart-disease.csv` (30 years)
+
+**Public Health Programs:**
+- `common-health-problems-of-students-examined-obesity-annual.csv` (48 records)
+- `vaccination-and-immunisation-of-students-annual.csv` (33 records)
+- `dental-index-dental-health-status-of-the-school-children-at-12-and-15-years-old.csv` (36 records)
+
+**Financial Analysis:**
+- `government-health-expenditure.csv` (13 years, 2006-2018)
+
+**Healthcare Utilization:**
+- `hospital-admission-rate-by-age-and-sex.csv` (216 records, detailed demographics)
+- `residential-long-term-care-admissions.csv` (25 records)
 
 ---
-Update date: 2026-01-26*
+
+## Data Quality & Characteristics
+
+### Quality Metrics
+
+| Metric | Value |
+|--------|-------|
+| Completeness | 100% (no missing values) |
+| Consistency | High (standardized formats) |
+| Timeliness | Annual updates (most recent: 2020) |
+| Accuracy | Official government source |
+| Granularity | Annual, with demographic breakdowns |
+
+### Data Limitations
+
+1. **Update Frequency**: Annual (not real-time)
+2. **Latest Data**: 2019-2020 (dataset last updated April 2020)
+3. **Geographic Granularity**: National level only (no regional breakdowns)
+4. **Limited Demographics**: Primarily age, gender, race
+5. **Sparse Data**: Some tables have limited years (e.g., physiotherapists: 2014-2019)
+
+### Known Issues
+
+- **Column naming**: Inconsistent capitalization/spacing across tables
+- **Year alignment**: Expenditure uses `financial_year`, others use `year`
+- **Rate bases**: Some rates per 1,000, others per 10,000
+- **Sector naming**: Slight variations ("Public Sector" vs "Public")
+
+---
+
+## Integration Points
+
+### Database Schema Mapping
+
+```yaml
+# Recommended database structure
+schemas:
+  kaggle_raw:
+    description: "Raw data as extracted from Kaggle"
+    tables: 35
+    
+  kaggle_staging:
+    description: "Standardized column names, data types"
+    tables: 35
+    
+  kaggle_analytics:
+    description: "Aggregated views, derived metrics"
+    views: 15+
+```
+
+### Project Integration
+
+**Config Files:**
+```yaml
+# config/database.yml
+data_sources:
+  kaggle:
+    dataset_id: "subhamjain/health-dataset-complete-singapore"
+    schema: "kaggle_raw"
+    refresh_schedule: "daily"
+    priority: "high"
+```
+
+**ETL Scripts:**
+- [`scripts/load_kaggle_data.py`](../../scripts/load_kaggle_data.py) - Main extraction script
+- [`scripts/explore_kaggle_dataset.py`](../../scripts/explore_kaggle_dataset.py) - Dataset exploration
+- [`src/data_processing/kaggle_connector.py`](../../src/data_processing/kaggle_connector.py) - Connector class
+
+---
+
+## Usage Examples
+
+### Example 1: Quick Data Exploration
+
+```python
+import kagglehub
+import pandas as pd
+
+# Download dataset
+dataset_path = kagglehub.dataset_download(
+    "subhamjain/health-dataset-complete-singapore"
+)
+
+# Load and explore doctors data
+doctors = pd.read_csv(f"{dataset_path}/number-of-doctors/number-of-doctors.csv")
+
+print(f"Data shape: {doctors.shape}")
+print(f"Years covered: {doctors['year'].min()} - {doctors['year'].max()}")
+print(f"\nSector distribution (latest year):\n{doctors[doctors['year'] == doctors['year'].max()]['sector'].value_counts()}")
+```
+
+### Example 2: Multi-Table Analysis
+
+```python
+# Load related workforce tables
+doctors = pd.read_csv(f"{dataset_path}/number-of-doctors/number-of-doctors.csv")
+nurses = pd.read_csv(f"{dataset_path}/number-of-nurses-and-midwives/number-of-nurses-and-midwives.csv")
+
+# Aggregate by year and sector
+workforce_trend = pd.concat([
+    doctors.groupby(['year', 'sector'])['count'].sum().rename('doctors'),
+    nurses.groupby(['year', 'sector'])['count'].sum().rename('nurses')
+], axis=1).reset_index()
+
+print(workforce_trend.head())
+```
+
+### Example 3: Automated ETL
+
+```bash
+# Run full ETL pipeline
+python scripts/load_kaggle_data.py
+
+# Or use project's ETL module
+python -c "from src.data_processing.etl_pipeline import run_kaggle_etl; run_kaggle_etl()"
+```
+
+---
+
+## Support & Contact
+
+**Dataset Issues**: https://www.kaggle.com/datasets/subhamjain/health-dataset-complete-singapore/discussion  
+**Original Data Source**: Ministry of Health Singapore (data.gov.sg)  
+**Project Documentation**: See [`docs/`](../) directory  
+**Technical Support**: Contact project data team
+
+---
+
+## Version History
+
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0 | 2026-01-30 | Initial comprehensive documentation |
+| 0.1 | 2020-04-20 | Dataset first documented by source |
+
+---
+
+**Document maintained by:** Data Analytics Team  
+**Last verified:** 30 January 2026  
+**Next review:** Quarterly or when dataset updates
+

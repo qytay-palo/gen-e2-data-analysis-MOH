@@ -10,6 +10,13 @@ Rule Version: 2.0
 Output: Per-epics implementation specifications for code generation
 -->
 
+#****data pipeline, (transformation, feature eng)
+#******** data_source, transformation needed (a form needed to gain insights)
+#********* how do i get data to a form to gain insights / or if there no insights (not big pipelines)
+#******* each user story may have their own pipeline 
+#******** explore the data first, to determine the different exploration to do => experiment with 2 prompts, and generate with transformation to me done (without code statements), look at user story myself and think how i do it (and then create a prompt to identify the different data transformation => data cleaning)
+#********** no longer data flow strategy, but a data pipeline to create a dashboards / mL model etc.
+
 Your prompt instructions start here:
 
 ## Context and Role
@@ -23,6 +30,44 @@ You are a **senior data analyst** with deep expertise in end-to-end analytics pr
 
 Your mission: Design complete, executable data flow strategies relevant to each user story such as data cleaning, analysis, visualization, and potentially machine learning models. Think through every decision a data analyst would make when executing a project.
 (e.g. user story involving data extraction should reference to data extraction flow)
+
+## Execution Instructions
+
+**EXECUTE THIS PROMPT SYSTEMATICALLY FOR ALL EPICS AND USER STORIES:**
+
+When this prompt is invoked, you must:
+
+1. **Discover all epics**: Use `file_search` or `list_dir` to find all files in `docs/objectives/epics/`
+2. **For each epic discovered**:
+   - Read the epic file completely
+   - Find its corresponding user stories folder in `docs/objectives/user_stories/epic-XX-*/`
+   - List all user story files in that folder
+   - Read each user story file
+3. **Process systematically**: Work through each epic sequentially (epic-001, epic-002, etc.)
+4. **Create data flow files**: Generate one comprehensive data flow file per epic in `docs/methodology/data_flows/`
+5. **Create integration artifacts**: After all epics are processed, create `shared_components.md` and `execution_plan.md`
+
+**Step-by-step execution workflow:**
+
+```
+Step 1: List all epic files
+  → file_search: docs/objectives/epics/epic-*.md
+
+Step 2: For Epic-001:
+  → Read: docs/objectives/epics/epic-001-*.md
+  → List: docs/objectives/user_stories/epic-001-*/
+  → Read all user story files: e01-s01-*.md, e01-s02-*.md, etc.
+  → Create: docs/methodology/data_flows/epic-001-[name]-flow.md
+  
+Step 3: Repeat Step 2 for Epic-002, Epic-003, etc.
+
+Step 4: Create integration files:
+  → Create: docs/methodology/data_flows/shared_components.md
+  → Create: docs/methodology/data_flows/execution_plan.md
+  → Create: docs/methodology/data_flows/README.md (index)
+```
+
+**Progress tracking**: Use the `manage_todo_list` tool to track progress through each epic and provide visibility into the systematic processing.
 
 ## Input
 
@@ -45,7 +90,7 @@ You will receive the following documents:
 
 ## Your Task: Create Implementation-Ready Data Flow Specifications
 
-For **EACH user story**, create a detailed data flow specification by adapting the reference templates below. These templates provide comprehensive frameworks covering all aspects of data analysis workflows—from extraction to delivery. 
+For **EACH user story**, create a detailed data flow specification by adapting the reference templates below. These templates provide comprehensive frameworks covering all aspects of data analysis workflows—from extraction to delivery.
 
 **Important Guidelines**:
 - Use these templates as **reference structures**, not rigid requirements
@@ -57,7 +102,7 @@ For **EACH user story**, create a detailed data flow specification by adapting t
 
 ---
 
-## User Story → Template Mapping
+## User Story → Template Mapping (for reference)
 
 | User Story Type | Use Section(s) | Example |
 |----------------|----------------|---------|
@@ -74,7 +119,6 @@ For **EACH user story**, create a detailed data flow specification by adapting t
 
 **Phase 1**: Document each user story  
 **Phase 2**: Create `shared_components.md`, `execution_plan.md`, `unified_architecture.md`
-
 
 Below are the reference templates to guide your implementation planning:
 
@@ -861,6 +905,8 @@ delivery_plan:
 
 ### 5. Implementation Metadata
 
+Below is a reference of implementation template:
+
 ```yaml
 user_story_id: "e01-s01"
 epic_id: "EPIC-001"
@@ -875,21 +921,104 @@ code_files_to_generate:
 
 ## File Organization Structure
 
-Create ONE file per user story, with reference to the following structure:
+Create **ONE comprehensive file per epic** that documents the complete end-to-end data flow for all user stories within that epic. Each file should be structured sequentially to show how data flows through the entire pipeline from extraction to final deliverable.
 
 ```
 docs/methodology/data_flows/
-├── epic-01-demographic-profiling/
-│   ├── e01-s01-data-extraction-flow.md
-│   ├── e01-s02-profiling-flow.md
-│   └── ...
-├── epic-02-chronic-disease-burden/
-│   ├── e02-s01-clinical-extraction-flow.md
-│   └── ...
-└── README.md (index of all flows)
+├── epic-01-demographic-profiling
+├── epic-02-chronic-disease-burden
+└── README.md (index of all epic flows)
 ```
 
-**File Naming Convention**: `{user_story_id}-{short-description}-flow.md`
+**File Naming Convention**: `epic-{number}-{short-description}-flow.md`
+
+**File Structure Requirements**:
+
+Each epic flow file must be organized in the following format:
+
+```markdown
+# Epic [Number]: [Epic Title]
+
+## Epic Overview
+- Epic ID: [ID]
+- Business Objective: [From epic file]
+- Success Criteria: [From epic file]
+- User Stories Included: [List all user story IDs in execution order]
+
+## End-to-End Data Flow Pipeline
+
+### Pipeline Overview
+[Mermaid diagram showing complete flow from extraction → transformation → analysis → output]
+
+### Execution Sequence
+[Table showing execution order, dependencies, and outputs for each user story]
+
+---
+
+## User Story [ID]: [Title]
+
+### Story Context
+- Story ID: e0X-s0Y
+- Depends On: [prerequisite stories]
+- Blocks: [downstream stories]
+- Complexity: low/medium/high
+
+### 1. Data Extraction Specification
+[Complete YAML spec from template section 1]
+
+### 2. Data Transformation Pipeline
+[Complete YAML spec and Mermaid diagram from template section 2]
+
+### 3. Analysis Specification
+[Complete YAML spec from template section 3]
+
+### 4. Output Specification
+[Complete YAML spec from template section 4]
+
+### 5. Implementation Metadata
+[Complete YAML spec from template section 5]
+
+---
+
+## User Story [Next ID]: [Next Title]
+[Repeat structure above for each user story in the epic]
+
+---
+
+## Epic Integration & Artifacts
+
+### Shared Components Used
+[List reusable components from shared_components.md]
+
+### Epic-Level Outputs
+- Final dashboard/report combining all user story outputs
+- Comprehensive data pipeline diagram
+- Complete data lineage documentation
+
+### Quality Gates
+- Data quality thresholds for the epic
+- Validation checkpoints across user stories
+- Final acceptance criteria verification
+```
+
+**Key Structuring Principles**:
+
+1. **Sequential Organization**: User stories appear in dependency order (foundational → intermediate → advanced)
+2. **Complete Specifications**: Each user story section includes ALL relevant template sections with concrete values
+3. **Clear Delimiters**: Use `---` to separate user stories, making it easy to parse individual components
+4. **YAML Formatting**: All specifications use valid YAML with concrete values (no placeholders)
+5. **Code-Ready Details**: Include exact table names, field names, file paths, and library imports
+6. **Mermaid Diagrams**: Visual flow representations with proper syntax for diagram rendering
+7. **Cross-References**: Explicit links between dependent user stories and shared components
+
+This structure will serve as a guide to:
+- Parse each user story as a discrete unit
+- Generate SQL queries directly from extraction specs
+- Generate Python transformation scripts from pipeline specs
+- Generate analysis notebooks from analysis specs
+- Generate dashboard code from output specs
+- Understand execution order and dependencies
+- Identify reusable components across stories
 
 ## Cross-Cutting Concerns
 
@@ -961,6 +1090,8 @@ Before completing, verify:
 3. Every field referenced is defined in data dictionary
 4. All dependencies between user stories are documented
 5. Shared components are identified and documented
+6. Each epic has an end-to-end integration flow documented in `docs/methodology/data_flows/epic-XX-*/README.md` showing how user stories connect to deliver epic outcomes
+7. **Each epic folder contains data flows that form sequential execution stages** - when run consecutively in the specified order, they produce a complete end-to-end data flow for that epic (extraction → cleaning → analysis → visualization → delivery)
 
 ## Success Criteria
 
@@ -969,5 +1100,8 @@ Your output is ready for code generation when:
 - A developer can generate codes and scripts with minimal ambiguity
 - A developer knows exactly which libraries and functions to use
 - The execution plan clearly shows what to build in what order
+- Each epic has a complete end-to-end flow documented that traces from data extraction → transformation → analysis → outputs → stakeholder delivery
+- **Each epic's data flows form a complete pipeline**: The data flows within each `docs/methodology/data_flows/epic-XX-*/` folder represent consecutive processing stages that, when executed in dependency order, transform raw data into the epic's final deliverable outputs (e.g., dashboards, reports, models)
+
 
 This is a systematic, detailed exercise—take your time to review every document thoroughly and produce precise, actionable specifications.

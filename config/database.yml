@@ -1,14 +1,53 @@
-# API Configuration for MOH Polyclinic Data Extraction
-# Version: 2.0
-# Last Updated: 2026-01-28
-# Platform: HEALIX (GCC Databricks)
+# Data Source Configuration for MOH Health Data Analysis
+# Version: 3.0
+# Last Updated: 2026-01-30
+# Platform: HEALIX (GCC Databricks) + Kaggle
 
 # =============================================================================
-# API Connections
+# PRIMARY DATA SOURCE: Kaggle
+# =============================================================================
+
+kaggle_connection:
+  # Primary data source for Singapore health dataset
+  dataset_id: "subhamjain/health-dataset-complete-singapore"
+  source_type: "kaggle"
+  adapter: "pandas"  # Options: pandas, spark, dask
+  
+  # Authentication (uses ~/.kaggle/kaggle.json or environment variables)
+  # Set KAGGLE_USERNAME and KAGGLE_KEY in environment
+  auth_method: "kaggle_api"  # Reads from ~/.kaggle/kaggle.json
+  
+  # Data loading configuration
+  cache_enabled: true
+  cache_directory: "data/raw/kaggle"
+  force_download: false  # Set true to bypass cache
+  
+  # File paths (if dataset has multiple files)
+  files:
+    primary: ""  # Empty string loads default file
+    # Add specific files if needed:
+    # - "healthcare_data.csv"
+    # - "patient_records.csv"
+  
+  # Data validation
+  validation:
+    enabled: true
+    check_duplicates: true
+    check_missing_threshold: 0.5  # Flag if >50% missing
+    check_empty_columns: true
+  
+  # Metadata extraction
+  metadata:
+    auto_extract: true
+    save_path: "data/metadata/kaggle"
+    format: "yaml"  # Options: yaml, json
+
+# =============================================================================
+# LEGACY/SECONDARY SOURCES
 # =============================================================================
 
 api_connections:
-  # MOH Singapore Open Data API
+  # MOH Singapore Open Data API (Secondary/Reference)
   moh_data_api:
     base_url: https://data.gov.sg/api/action
     endpoint: datastore_search
@@ -17,6 +56,7 @@ api_connections:
     timeout: 30
     retry_attempts: 3
     retry_delay: 5  # seconds
+    status: "legacy"  # Not primary source
     
   # Alternative: Direct database connection (if available)
   polyclinic_db:
@@ -30,6 +70,7 @@ api_connections:
     ssl_mode: require
     connection_timeout: 30
     pool_size: 5
+    status: "backup"  # Backup source
 
 # =============================================================================
 # Extraction Configuration

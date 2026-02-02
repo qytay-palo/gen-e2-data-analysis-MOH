@@ -1,40 +1,110 @@
 # Analysis Configuration Parameters
-# Configuration for polyclinic patient analysis and policy intelligence project
-# Version: 2.0
-# Last Updated: 2026-01-30
-# Project: MOH Polyclinic Patient Analysis & Policy Intelligence
+# Configuration for MOH Healthcare System Analysis & Public Health Intelligence
+# Version: 2.1
+# Last Updated: 2026-02-02
+# Project: MOH Healthcare System Analysis & Public Health Intelligence
 
 # =============================================================================
 # Project Metadata
 # =============================================================================
 project:
-  name: "MOH Polyclinic Patient Analysis & Policy Intelligence"
-  version: "2.0"
+  name: "MOH Healthcare System Analysis & Public Health Intelligence"
+  version: "2.1"
   owner: "Data Analytics Team"
-  focus: "Patient demographics, disease burden, health equity, policy intelligence"
-  last_updated: "2026-01-30"
+  focus: "Disease outbreak detection, facility utilization, policy needs, process improvement"
+  last_updated: "2026-02-02"
+  project_period: "2026-02-02 to 2026-04-13"
+  duration_weeks: 10
   
-  # Project objectives
-  objectives:
-    primary:
-      - "Analyze and understand polyclinic patient population demographics, distribution patterns, and temporal trends"
-      - "Identify healthcare problems requiring policy intervention and governance"
-    measurable_success_criteria:
-      - "Complete demographic profiling covering 100% of polyclinic patients"
-      - "Identify and quantify temporal trends in disease prevalence and service utilization"
-      - "Detect and prioritize at least 5 high-impact policy intervention opportunities"
-      - "Deliver statistically significant findings with confidence intervals for all key metrics"
+  # Project outcomes (4 critical outcomes)
+  outcomes:
+    - name: "Disease Outbreak Detection & Surveillance"
+      description: "Establish early warning systems to identify potential disease outbreaks and emerging health threats"
+      deliverables:
+        - "Real-time surveillance dashboards monitoring disease incidence patterns"
+        - "Anomaly detection models flagging unusual disease clusters"
+        - "Geographic and temporal outbreak risk mapping"
+        - "Alert mechanisms for policy makers when outbreak thresholds are exceeded"
+        
+    - name: "Healthcare Facility Utilization Analysis"
+      description: "Understand distribution of patient visitation patterns across polyclinics and healthcare facilities"
+      deliverables:
+        - "Comprehensive facility utilization profiles (visits by location, time, demographics)"
+        - "Geographic access analysis identifying underserved populations"
+        - "Demand forecasting models for capacity planning"
+        - "Comparative benchmarking across facilities and regions"
+        
+    - name: "Policy Need Identification"
+      description: "Identify gaps in healthcare system requiring government policy intervention or regulatory action"
+      deliverables:
+        - "Systematic gap analysis across care continuum"
+        - "Evidence-based policy recommendations with quantified impact assessments"
+        - "Priority ranking framework for intervention opportunities"
+        - "Cost-benefit analysis for proposed policy interventions"
+        
+    - name: "Process Improvement Opportunities"
+      description: "Analyze hospitalization and polyclinic processes to identify efficiency gains and patient experience improvements"
+      deliverables:
+        - "Patient journey mapping identifying friction points and delays"
+        - "Process bottleneck analysis with root cause identification"
+        - "Wait time analysis and service efficiency metrics"
+        - "Best practice identification from high-performing facilities"
+  
+  # Success metrics (3 core metrics)
+  success_metrics:
+    - metric: "Bottleneck Identification"
+      target: "Identify minimum 10 critical operational bottlenecks"
+      requirements:
+        - "Quantify impact of each bottleneck (patient wait times, throughput reduction, cost impact)"
+        - "Prioritize bottlenecks by severity score"
+        - "Document root causes with supporting evidence for top 5 bottlenecks"
+        
+    - metric: "Government Intervention Points"
+      target: "Identify minimum 8 high-impact intervention opportunities"
+      breakdown:
+        - "Policy Interventions: 3+ gaps requiring new regulations or policy changes"
+        - "Resource Allocation: 2+ areas requiring increased investment or reallocation"
+        - "Program Implementation: 2+ opportunities for new healthcare programs"
+        - "System Governance: 1+ structural governance improvements"
+      requirements:
+        - "Quantified problem statement (affected population, severity, cost)"
+        - "Evidence-based recommendation with expected outcomes"
+        - "Implementation feasibility assessment"
+        - "Success metrics for monitoring intervention effectiveness"
+        
+    - metric: "Improvement Opportunities"
+      target: "Document minimum 15 validated improvement opportunities"
+      breakdown:
+        - "Process Efficiency: 5+ opportunities to reduce wait times, streamline workflows"
+        - "Resource Optimization: 3+ opportunities for better capacity utilization"
+        - "Quality Enhancement: 4+ opportunities to improve care quality and patient outcomes"
+        - "Patient Experience: 3+ opportunities to enhance patient satisfaction and accessibility"
+      requirements:
+        - "Current state baseline metrics"
+        - "Expected improvement (quantified outcome)"
+        - "Implementation complexity (low/medium/high)"
+        - "Expected ROI or cost savings"
+        - "Implementation roadmap"
     
   # Key stakeholders
   stakeholders:
-    government:
-      - "Ministry of Health policy makers"
-      - "Healthcare regulators"
-      - "Public health officials"
     business_decision_makers:
-      - "Healthcare administrators"
-      - "Hospital executives"
-      - "Operational leaders"
+      description: "Healthcare administrators, hospital executives, and operational leaders"
+      expectations:
+        - "Operational Intelligence: Clear insights into facility performance, resource utilization, and operational efficiency"
+        - "Data-Driven Planning: Evidence-based recommendations for capacity planning, staffing, and service expansion"
+        - "Benchmarking: Comparative performance metrics to identify best practices and improvement opportunities"
+        - "ROI Justification: Quantified business cases for proposed investments and process changes"
+        - "Dashboard Access: Real-time interactive dashboards for monitoring key performance indicators"
+        
+    policy_makers:
+      description: "Ministry of Health officials, healthcare regulators, and public health leaders"
+      expectations:
+        - "Population Health Intelligence: Comprehensive understanding of disease burden, health trends, and public health threats"
+        - "Policy Evidence: Rigorous analysis supporting policy development and regulatory interventions"
+        - "Equity Assessment: Identification of healthcare disparities requiring government action"
+        - "Impact Forecasting: Predictive analysis of policy intervention outcomes and population-level impacts"
+        - "Strategic Guidance: Long-term healthcare system planning and governance recommendations"
       
   # Technical environment
   platform: "HEALIX (GCC Cloud - Databricks)"
@@ -47,11 +117,10 @@ project:
 
 # Date ranges for data extraction
 temporal:
-  start_date: "2015-01-01"
-  end_date: null  # null = current date
-  baseline_period: "2022-01-01"  # Pre-Healthier SG baseline
-  healthier_sg_launch: "2023-07-01"
-  analysis_lag_days: 7  # Wait 7 days for data completeness
+  start_date: "1990-01-01"  # Kaggle dataset starts from 1990
+  end_date: "2020-12-31"  # Kaggle dataset ends at 2020
+  baseline_period: "2015-01-01"  # Historical baseline
+  analysis_lag_days: 0  # Historical data, no lag needed
   
   # Time granularities for analysis
   granularities:
@@ -88,7 +157,61 @@ geography:
   distance_bands: [1, 3, 5, 10]  # km
   travel_time_bands: [10, 20, 30, 45]  # minutes
 
-# Chronic conditions (ICD-10 codes)
+# Analysis focus areas aligned with project outcomes
+analysis_focus:
+  disease_outbreak_detection:
+    enabled: true
+    methods:
+      - "Real-time disease incidence monitoring"
+      - "Anomaly detection for unusual disease clusters"
+      - "Geographic and temporal outbreak risk mapping"
+      - "Early warning system development"
+    key_metrics:
+      - "Disease incidence rate changes"
+      - "Cluster detection (spatial and temporal)"
+      - "Outbreak risk scores by location"
+      - "Alert threshold sensitivity"
+      
+  facility_utilization:
+    enabled: true
+    methods:
+      - "Patient distribution analysis across facilities"
+      - "Geographic access and equity assessment"
+      - "Demand forecasting models"
+      - "Comparative facility benchmarking"
+    key_metrics:
+      - "Facility utilization rates"
+      - "Patient access scores by geography"
+      - "Capacity vs demand ratios"
+      - "Performance benchmarks"
+      
+  policy_needs:
+    enabled: true
+    methods:
+      - "Gap analysis across care continuum"
+      - "Evidence-based policy recommendations"
+      - "Priority ranking frameworks"
+      - "Cost-benefit analysis"
+    key_metrics:
+      - "Number of gaps identified"
+      - "Impact assessments (affected population, severity)"
+      - "Feasibility scores"
+      - "ROI estimates"
+      
+  process_improvement:
+    enabled: true
+    methods:
+      - "Patient journey mapping"
+      - "Bottleneck identification and root cause analysis"
+      - "Wait time and service efficiency analysis"
+      - "Best practice identification"
+    key_metrics:
+      - "Number of bottlenecks identified"
+      - "Bottleneck severity scores"
+      - "Improvement opportunity value"
+      - "Implementation complexity ratings"
+
+# Chronic conditions (ICD-10 codes for disease outbreak surveillance)
 chronic_conditions:
   diabetes: ["E11", "E11.0", "E11.9"]
   hypertension: ["I10", "I11", "I12", "I13", "I15"]
@@ -97,8 +220,16 @@ chronic_conditions:
   ckd: ["N18", "N18.9"]
   depression: ["F32", "F32.9", "F33"]
   osteoporosis: ["M81", "M81.0"]
+  
+# Acute conditions (for outbreak detection)
+acute_conditions:
+  influenza: ["J09", "J10", "J11"]
+  dengue: ["A90", "A91"]
+  gastroenteritis: ["A09", "K52.9"]
+  respiratory_infections: ["J00", "J06", "J20", "J22"]
+  covid19: ["U07.1", "U07.2"]
 
-# Subsidy programs
+# Subsidy programs (for equity analysis)
 subsidy_programs:
   pioneer:
     name: "Pioneer Generation"
@@ -113,17 +244,29 @@ subsidy_programs:
     name: "Community Health Assist Scheme"
     eligibility_residential_status: ["HDB"]  # Proxy for lower-middle income
 
-queue_optimization:
-  # Legacy queue metrics (maintained for operational analysis)
-  metrics:
+# Process optimization parameters (aligned with process improvement outcome)
+process_optimization:
+  bottleneck_analysis:
+    min_bottleneck_severity_score: 3  # On scale of 1-5
+    bottleneck_detection_methods:
+      - "Wait time analysis"
+      - "Throughput rate analysis"
+      - "Capacity utilization assessment"
+      - "Process mining"
+    
+  efficiency_metrics:
     - waiting_time_mean
     - waiting_time_median
     - waiting_time_95th_percentile
     - service_time_mean
+    - patient_throughput
+    - staff_utilization
+    - resource_utilization
   
-  targets:
-    waiting_time_target: 20  # minutes
-    service_level: 0.80  # 80% of patients seen within target
+  improvement_targets:
+    waiting_time_reduction_pct: 20  # Target 20% reduction
+    throughput_increase_pct: 15  # Target 15% increase
+    patient_satisfaction_target: 85  # Target 85% satisfaction rate
 
 # =============================================================================
 # Data Quality Thresholds
@@ -135,7 +278,7 @@ data_quality:
     optional_fields_min_pct: 80
   
   validity:
-    date_min: "2015-01-01"
+    date_min: "1990-01-01"  # Kaggle dataset starts from 1990
     date_max_future_days: 0  # No future dates allowed
     age_min: 0
     age_max: 120
