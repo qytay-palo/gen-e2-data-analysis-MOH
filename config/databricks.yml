@@ -1,0 +1,89 @@
+# Databricks Configuration
+# HEALIX/GCC Cloud Environment
+
+# Cluster Configuration
+cluster:
+  name: "moh-analytics-cluster"
+  spark_version: "13.3.x-scala2.12"  # LTS version
+  node_type_id: "Standard_DS3_v2"    # Adjust based on workload
+  
+  driver_node_type_id: "Standard_DS3_v2"
+  num_workers: 2  # Auto-scaling recommended for production
+  
+  autoscale:
+    min_workers: 1
+    max_workers: 4
+  
+  spark_conf:
+    "spark.databricks.delta.preview.enabled": "true"
+    "spark.sql.adaptive.enabled": "true"
+    "spark.sql.adaptive.coalescePartitions.enabled": "true"
+  
+  # Autotermination after inactivity (minutes)
+  autotermination_minutes: 30
+
+# Libraries to install on cluster
+libraries:
+  pypi:
+    - pandas==2.1.0
+    - numpy==1.24.3
+    - matplotlib==3.7.2
+    - seaborn==0.12.2
+    - plotly==5.17.0
+    - scikit-learn==1.3.0
+    - scipy==1.11.2
+    - statsmodels==0.14.0
+    - kagglehub==0.2.0
+    - openpyxl==3.1.2
+  
+  # R packages (if using R notebooks)
+  cran:
+    - dplyr
+    - ggplot2
+    - tidyr
+    - lubridate
+
+# Job Configurations
+jobs:
+  data_extraction:
+    name: "MOH Data Extraction"
+    schedule:
+      quartz_cron_expression: "0 0 2 * * ?"  # Daily at 2 AM
+      timezone_id: "Asia/Singapore"
+    max_concurrent_runs: 1
+    timeout_seconds: 3600
+    
+  data_quality_check:
+    name: "Data Quality Validation"
+    schedule:
+      quartz_cron_expression: "0 30 2 * * ?"  # Daily at 2:30 AM
+      timezone_id: "Asia/Singapore"
+    max_concurrent_runs: 1
+    timeout_seconds: 1800
+
+# Workspace Configuration
+workspace:
+  base_path: "/Workspace/Users/moh-analytics"
+  notebooks_path: "/Workspace/Users/moh-analytics/notebooks"
+  data_path: "/mnt/moh-analytics/data"
+  results_path: "/mnt/moh-analytics/results"
+
+# Delta Lake Configuration
+delta:
+  database: "moh_analytics"
+  tables:
+    raw_data: "raw_health_data"
+    processed_data: "processed_health_data"
+    aggregated_metrics: "health_metrics"
+
+# Logging
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+# Security & Compliance
+security:
+  gcc_compliant: true
+  data_classification: "Official-Closed"
+  encryption_at_rest: true
+  encryption_in_transit: true

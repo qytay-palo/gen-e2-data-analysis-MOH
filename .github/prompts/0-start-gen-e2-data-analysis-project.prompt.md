@@ -16,13 +16,20 @@ We will be starting a new Gen-e2 Project
 Ask the following questions before proceeding:
 ## Questions to Ask
 1. **Project Objectives**: 
-   - What are the main goals and measurable success criteria?
-   - What business decisions will this analysis inform?
+   - What specific business decision will this analysis drive? What happens if we don't do this?
+   - Success Metrics: How will we measure if this project succeeded? What does "good enough" look like?
 
-2. **Stakeholders**: 
+2. **Technical Environment** (review: tech-stack.md)
+   - Target platform: HEALIX/Databricks or MCDR/CDSW?
+   - Expected data volume and processing needs?
+
+3. **Problem Discovery**:
    - Who are the key stakeholders, and what are their expectations?
+   - Who will participate in problem identification workshops?
+   - What pain points or questions have stakeholders raised?
 
 ## Actions Based on Answers
+
 1. **Update Project Folder Structure**:
 Below is the base folder structure:
 ```
@@ -89,24 +96,24 @@ Below is the base folder structure:
    - update the project structure based on the answers
    - Update the README.md file, docs/index.md, and create necessary configuration files in the config/ directory to reflect the technical environment and project specifics.
 
-3.**Technical Stack Reference**
-   - Preferred Technologies:** 
-      - Consult [docs/project_context/tech_stack.md](../../docs/project_context/tech_stack.md) for approved platforms and tools
+2. **Technical Stack Reference**
+   - **Preferred Technologies**: 
+      - Consult `docs/project_context/tech-stack.md` for approved platforms and tools
 
-   -Technology Selection Criteria:**
+   - **Technology Selection Criteria**:
       1. **Default**: Use technologies from the approved tech stack when they meet project requirements
       2. **Exception**: Propose alternatives only when the approved stack has clear limitations for specific use cases (e.g., specialized libraries, performance and cost constraints, integration requirements)
       3. **Justification Required**: When suggesting alternatives, explicitly state why the approved stack is insufficient and how the alternative addresses the gap
       4. **User Approval**: Obtain explicit approval from project stakeholders before adopting any non-preferred technologies
 
-   -Actions:
+   - **Actions**:
       - Update project dependencies, environment setup, and documentation based on selected technologies
       - Ensure compatibility with target deployment environment (HEALIX/GCC or MCDR/on-premise)
       - set up appropriate configuration files for the chosen technologies
       - document the chosen platform in README.md and docs/index.md
       - include language specific dependencies in requirements.txt or environment.yml
 
-4. **Data Dictionary Creation**:
+3. **Data Dictionary Creation**:
    - Compile a comprehensive data dictionary in `docs/data_dictionary/` that details all datasets, including:
      - Field definitions, data types, and value ranges
      - Data quality notes and known limitations
@@ -116,6 +123,44 @@ Below is the base folder structure:
      - Sample data and example values
    - Create a master index file that links to individual data dictionary files for each major data domain
    - Ensure the data dictionary is easily navigable and linked from the main documentation index (docs/index.md)
+
+4. **Code Quality**:
+   - Suggest tools for code quality checks, such as linters and formatters.
+
+5. **Create TODO.md**:
+   - Create the `TODO.md` file and split it in a way that makes sense for this project.
+   - Format:
+     ```
+     ## Domain
+     [ ] Task to be done (owner)
+     ```
+   - Add tasks for each area of the project, like front-end, back-end, infra, etc.
+   - Ensure tasks are detailed and small enough to be done in a few hours.
+   - Include tasks outside of development, like DevOps tasks, security tasks, etc.
+   - Add lines regarding reviewing all generated files (like Architecture or API doc) and updating them as needed.
+
+6. **Documentation**:
+   - If the project is API-First or has an API, suggest a swagger file `docs/apidoc.yaml` .
+   - In the `docs/objectives/` folder, create a file for each feature that will be developed in this project.
+
+7. **Tools and Dependencies**:
+   - Suggest tools that could be useful for this project, like a specific database, etc.
+   - Create all necessary files for the project, like the .gitignore, the .gitattributes, etc.
+   - Depending on the selected language, create the necessary files for it (like a requirements.txt for python).
+   - If a virtual environment is needed, suggest it and create it. Load all dependencies needed for the project.
+
+8. **Version Control**:
+   - Ensure to initialize a Git repository and create an initial commit.
+
+9. **Testing**:
+   - Set up testing frameworks and write initial test cases.
+
+10. **Environment Configuration**:
+   - Provide guidelines for handling environment variables and secrets (e.g., using .env files).
+
+11. **Code Quality**:
+   - Suggest tools for code quality checks, such as linters and formatters.
+
 ---
 
 ## Final Steps
@@ -128,3 +173,12 @@ Below is the base folder structure:
 2. **Install Project Dependencies**:
    - Install all necessary packages and libraries as per the chosen technical stack
    - Document installation steps in README.md and requirements.txt/environment.yml
+
+3. **Review**:
+   - Once all the other files are created, and you're clear on the requirements, review the gitignore files, as you might want to add more (like venv or node_modules).
+
+4. **Check File Creation**:
+   - Ensure that all the necessary files and folders have been created as per the project structure.
+
+5. **Deploy Requirements**:
+   - Run the necessary commands to deploy all the dependencies listed in the requirements files (e.g., `npm install` for Node.js, `pip install -r requirements.txt` for Python).

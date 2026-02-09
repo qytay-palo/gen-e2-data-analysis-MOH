@@ -1,0 +1,237 @@
+# MOH Healthcare Analytics - Git Ignore
+# Last Updated: 4 February 2026
+
+# ============================================================================
+# Environment & Credentials
+# ============================================================================
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+credentials.json
+secrets.yaml
+
+# ============================================================================
+# Python
+# ============================================================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+test-results/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+profile_default/
+ipython_config.py
+
+# IPython
+.ipython/
+
+# pyenv
+.python-version
+
+# Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+moh-analytics/
+
+# ============================================================================
+# Data Files (IMPORTANT - Don't commit large data files)
+# ============================================================================
+# Raw data (downloaded from sources)
+data/1_raw/
+data/2_external/
+data/3_interim/
+data/4_processed/
+
+# Keep directory structure but not files
+!data/*/.gitkeep
+!data/*/*/.gitkeep
+
+# Data exports
+results/tables/*.csv
+results/tables/*.xlsx
+results/exports/*
+!results/**/.gitkeep
+
+# Large model files
+models/*.pkl
+models/*.h5
+models/*.joblib
+models/*.pt
+models/*.pth
+models/*.onnx
+!models/.gitkeep
+
+# ============================================================================
+# Logs
+# ============================================================================
+logs/
+*.log
+*.log.*
+!logs/.gitkeep
+!logs/*/.gitkeep
+
+# ============================================================================
+# Reports & Outputs
+# ============================================================================
+reports/figures/*.png
+reports/figures/*.jpg
+reports/figures/*.pdf
+reports/figures/*.svg
+reports/dashboards/*.html
+reports/presentations/*.pptx
+reports/presentations/*.pdf
+!reports/**/.gitkeep
+
+# ============================================================================
+# IDE & Editor
+# ============================================================================
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Eclipse
+.project
+.pydevproject
+.settings/
+
+# ============================================================================
+# Operating System
+# ============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================================================
+# Databricks
+# ============================================================================
+.databricks/
+databricks.cfg
+cluster-config.json
+
+# ============================================================================
+# R
+# ============================================================================
+.Rhistory
+.RData
+.Rapp.history
+.Rproj.user/
+*.Rproj
+
+# ============================================================================
+# Temporary Files
+# ============================================================================
+*.tmp
+*.temp
+*.bak
+*.swp
+*~.nib
+*.orig
+
+# ============================================================================
+# Archives (don't commit large archives)
+# ============================================================================
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# ============================================================================
+# Kaggle Cache
+# ============================================================================
+.kaggle/
+kaggle.json
+~/.cache/kagglehub/
+
+# ============================================================================
+# Documentation Build
+# ============================================================================
+site/
+docs/_build/
+docs/.doctrees/
+
+# ============================================================================
+# Misc
+# ============================================================================
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/

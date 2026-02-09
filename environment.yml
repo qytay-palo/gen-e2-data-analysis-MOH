@@ -1,0 +1,73 @@
+# MOH Healthcare Analytics - Conda Environment
+# Last Updated: 4 February 2026
+# Platform: HEALIX/Databricks compatible
+
+name: moh-analytics
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  # Python version
+  - python=3.11
+
+  # Core Data Processing
+  - pandas=2.1.4
+  - numpy=1.26.2
+  - pyarrow=14.0.1
+
+  # Spark & Big Data
+  - pyspark=3.5.0
+  
+  # Scientific Computing & Statistics
+  - scipy=1.11.4
+  - scikit-learn=1.3.2
+  
+  # Visualization
+  - matplotlib=3.8.2
+  - seaborn=0.13.0
+  - plotly=5.18.0
+  
+  # Jupyter
+  - jupyter=1.0.0
+  - ipykernel=6.27.1
+  - notebook=7.0.6
+  
+  # Utilities
+  - pyyaml=6.0.1
+  - requests=2.31.0
+  - tqdm=4.66.1
+  - openpyxl=3.1.2
+  
+  # Development Tools
+  - pytest=7.4.3
+  - black=23.12.1
+  - flake8=7.0.0
+  - mypy=1.7.1
+  - isort=5.13.2
+  
+  # R support (optional - for R notebooks)
+  - r-base=4.3.2
+  - r-essentials=4.3
+  - r-tidyverse=2.0.0
+  - r-ggplot2=3.4.4
+  - r-dplyr=1.1.4
+
+  # PIP packages (not available via conda)
+  - pip
+  - pip:
+    - kagglehub==0.2.9
+    - databricks-sql-connector==3.0.2
+    - databricks-connect==13.3.0
+    - statsmodels==0.14.1
+    - great-expectations==0.18.8
+    - pandera==0.17.2
+    - python-json-logger==2.0.7
+    - loguru==0.7.2
+    - python-dotenv==1.0.0
+    - pydantic==2.5.3
+    - mkdocs==1.5.3
+    - mkdocs-material==9.5.3
+    - imbalanced-learn==0.11.0
+    - kaleido==0.2.1

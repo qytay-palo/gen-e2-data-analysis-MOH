@@ -95,6 +95,80 @@ When analyzing MOH data, the focus should be on:
 7. **Improving patient outcomes** through data-driven insights
 8. **Monitoring health equity** and ensuring no population groups are left behind
 
+## Current Project Focus (2026)
+
+### Primary Analysis Goals
+
+#### 1. Disease Outbreak Detection
+**Objective**: Identify potential disease outbreaks through early warning signals in healthcare utilization data.
+
+**Approach**:
+- Syndromic surveillance using hospital admissions and polyclinic visits
+- Time series anomaly detection for unusual disease patterns
+- Geographic clustering analysis for localized outbreaks
+- Seasonal trend analysis to distinguish normal variation from genuine threats
+
+**Success Metrics**:
+- Early detection capability (days before traditional surveillance)
+- Reduction in false positive alerts
+- Improved outbreak response time
+
+#### 2. Clinic Visitation Distribution Analysis
+**Objective**: Understand distribution of healthcare demand across polyclinics and identify capacity imbalances.
+
+**Approach**:
+- Spatial analysis of clinic locations vs. population distribution
+- Capacity utilization metrics (visits per clinic, staffing ratios)
+- Peak demand period identification
+- Accessibility mapping (travel time, public transport access)
+
+**Success Metrics**:
+- Identification of underserved areas
+- Capacity utilization optimization
+- Reduced wait times in high-demand clinics
+
+#### 3. Policy Intervention Identification
+**Objective**: Pinpoint specific areas where government intervention or policy changes could have maximum impact.
+
+**Approach**:
+- Gap analysis comparing actual vs. target health outcomes
+- Equity assessment across demographic groups and regions
+- Cost-effectiveness analysis of potential interventions
+- Benchmarking against international best practices
+
+**Success Metrics**:
+- Prioritized list of intervention opportunities
+- Evidence-based policy recommendations
+- Projected impact assessments
+
+#### 4. Process Improvement in Healthcare Facilities
+**Objective**: Analyze and identify bottlenecks in hospital and polyclinic patient flow processes.
+
+**Approach**:
+- Wait time analysis across different service points
+- Patient flow modeling (registration → consultation → discharge)
+- Resource utilization efficiency metrics
+- Comparative analysis of high-performing vs. low-performing facilities
+
+**Success Metrics**:
+- Identification of process bottlenecks
+- Quantified improvement opportunities
+- Best practice recommendations
+
+### Stakeholder Pain Points Addressed
+
+**Challenge**: Policy makers find it difficult to make comprehensive, well-rounded decisions due to:
+- Fragmented data sources making holistic analysis difficult
+- Lack of integrated insights across different healthcare domains
+- Difficulty identifying root causes vs. symptoms
+- Uncertainty about prioritization of interventions
+
+**Project Solution**: Provide integrated analysis that:
+- Connects multiple data domains (facilities, utilization, outcomes)
+- Identifies systemic patterns rather than isolated incidents
+- Quantifies relative importance of different issues
+- Offers evidence-based prioritization frameworks
+
 ## Success Metrics
 
 - Improved population health indicators (life expectancy, disease rates)

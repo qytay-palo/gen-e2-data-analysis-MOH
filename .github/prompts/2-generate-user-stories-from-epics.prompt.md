@@ -1,10 +1,14 @@
-# Generate User Stories from Epics
+---
+description: Generate User Stories from Problem Statements for Data Science and Analytics
+stage: Project Management
+subcategory: subcategory-agile-tools
+rule_name: user-stories
+rule_version: latest
+---
 
-#***** LOOK AT THE GEN-E2 User story prompt
-#***** TEST BY TAKING a theme and go to end (OUTPUT)
-#***** python to run 6 sessions for 6 epics (make it dynamic)
+# Generate User Stories from Problem Statements
 
-## Your Role
+## Role
 You are a **senior data analyst** with expertise in:
 - Translating analytical objectives into actionable user stories
 - Breaking down complex data initiatives into iterative, deliverable increments
@@ -12,7 +16,7 @@ You are a **senior data analyst** with expertise in:
 - Designing analytics workflows that follow best practices in data science and engineering
 
 ## Objective
-Decompose **ALL epics into high-quality, manageable user stories** for data science and analytics work. You must process every epic found in `docs/objectives/epics/` directory. Each epic represents a large body of work that must be broken down into actionable stories completable within a sprint (1-2 weeks).
+Decompose **ALL problem statements into high-quality, manageable user stories** for data science and analytics work. You must process every problem statement found in `docs/objectives/problem_statements/` directory. Analyze the problem statements and generate a list of user stories for each problem statement. The stories should represent distinct pieces of functionality or value from an end-user perspective.
 
 These user stories will:
 - Drive an automated analytics planning system
@@ -20,23 +24,18 @@ These user stories will:
 - Enable incremental value delivery to stakeholders
 - Form the basis for technical implementation
 
-**CRITICAL**: This task must be completed for ALL epics in the project, not just a subset. Generate comprehensive user stories for every epic file you find.
-
-## EXECUTION MODE
-**THIS IS AN ACTIVE EXECUTION REQUEST** - You must complete the full task now:
-1. Identify all epics in `docs/objectives/epics/`
-2. For EACH epic, generate all user stories (one epic at a time)
-3. After completing each epic, confirm progress before moving to the next
-4. Create the master README.md index only after ALL epic stories are complete
-5. Do NOT stop until all epics are processed - if you hit limits, continue in your next response
-
-**Work systematically through each epic. Do not stop after examples.**
+**CRITICAL**: This task must be completed for ALL problem statements in the project, not just a subset. Generate comprehensive user stories for every problem statement file you find.
 
 ---
-## Inputs
+
+## Instructions
+
+### Step 1: Analyze Project Context
+
+#### Inputs
 You have access to the following project documentation files:
-   - **Read ALL files** from `docs/objectives/epics/` directory to understand:
-      - Each epic's scope, objectives, and expected outcomes
+   - **Read ALL files** from `docs/objectives/problem_statements/` directory to understand:
+      - Each problem statement's scope, objectives, and expected outcomes
       - Stakeholders and their needs
       - Business priorities and success criteria
    - Review `docs/project_context/` folder for additional context on:
@@ -45,207 +44,524 @@ You have access to the following project documentation files:
      - Other project background that may influence story design
    - Review `docs/data_dictionary/` for data field definitions and structures
 
-### Expected Epic Format
+**CRITICAL CONSTRAINT**: All problem statements must be **grounded in available data sources** documented in [docs/project_context/data_sources.md](../../../docs/project_context/data_sources.md) and **feasible with the current tech stack** documented in [docs/project_context/tech_stack.md](../../../docs/project_context/tech_stack.md). Do not propose problems that require unavailable data or exceed technical capabilities.
 
-Each epic file in `docs/objectives/epics/` should contain:
-- **Epic Title and ID**: Clear, descriptive name with unique identifier
-- **Business Objective**: What business problem this epic solves
+#### Expected Problem Statement Format
+
+Each problem statement file in `docs/objectives/problem_statements/` should contain:
+- **Problem Statement Title and ID**: Clear, descriptive name with unique identifier
+- **Business Objective**: What business problem this problem statement solves
 - **Success Criteria**: Measurable outcomes that define completion
 - **Stakeholders**: Who benefits and who needs to be involved
 - **Scope**: What is included and explicitly excluded
 - **Assumptions and Constraints**: Technical, data, or resource limitations
 
-**If epics are incomplete or poorly defined**: Make reasonable assumptions based on project context and document them in the generated user stories.
+**If problem statements are incomplete or poorly defined**: Make reasonable assumptions based on project context and document them in the generated user stories.
 
 ---
-## Understanding Epics vs User Stories
 
-**Epic**: A large body of work that delivers significant business value but is too large to complete in a single sprint (1-2 weeks). Examples:
-- "Build customer churn prediction system"
-- "Create executive dashboard for operational metrics"
-- "Implement automated data quality monitoring"
+### Step 2: Extract Stakeholders and Gather Domain Knowledge
 
-**User Story**: A specific, actionable piece of work completable within one sprint. Examples:
-- "Clean and validate customer transaction data"
-- "Create churn rate visualization by segment"
-- "Set up data quality alerts for null values"
+This step ensures that domain expertise is captured and made available to guide feature engineering and analysis decisions throughout the project.
 
-### Decomposition Strategy
-1. **Identify Epic Phases**: Break the epic into major phases (e.g., data exploration, data preparation, analysis/modeling, visualization)
-2. **Create Stories per Phase**: Generate independent stories for each phase
-3. **Ensure Value Delivery**: Each story should deliver demonstrable value or learning
-4. **Size Appropriately**: Target 3-12 stories per epic, but prioritize story size over count
-5. **Consider Dependencies**: Sequence stories to enable incremental delivery
+#### a. Identify Stakeholders
 
-### Analytics-Specific Story Types
-- **Exploratory/Spike Stories**: Research and investigation (time-boxed)
-- **Data Pipeline Stories**: ETL, data quality, validation
-- **Analysis Stories**: Statistical analysis, modeling, experiments
-- **Visualization Stories**: Dashboards, reports, presentations
-- **Infrastructure Stories**: Setup, deployment, monitoring
-- **Documentation Stories**: Knowledge transfer, technical docs
+For each problem statement:
+- Extract all stakeholder types mentioned (e.g., healthcare operations manager, policy analyst, clinician)
+- Document their roles, expertise areas, and analytical perspectives
+- Group stakeholders by domain (e.g., healthcare operations, policy, clinical practice, public health)
+- Note specific expertise or concerns each stakeholder brings
 
----
-## Instructions
+#### b. Assess Domain Knowledge Requirements
 
-### STEP 0: Identify All Epics
-   - **MANDATORY FIRST STEP**: List all epic files in `docs/objectives/epics/` directory
-   - Create a checklist of all epics that need user stories generated
-   - Verify you have identified every epic before proceeding
+For each stakeholder group and problem statement, identify relevant domain knowledge areas needed for:
+- Understanding context, terminology, and domain-specific concepts
+- Feature engineering and variable selection
+- Interpreting analytical results and validating assumptions
+- Identifying relevant metrics, KPIs, and benchmarks
+- Recognizing data quality issues specific to the domain
 
-1. **Generate User Stories for ALL Epics**
-   - Process every epic identified in Step 0 - no exceptions
-   - Ensure stories follow the decomposition strategy above
-   - Create user stories for each epic using the standard format:
-     ```
-     As a [role/stakeholder],
-     I want to [action/capability],
-     So that [business value/outcome].
-     ```
-   - Include appropriate acceptance criteria for each story
-   - Consider technical and operational feasibility
-   - Sequence stories to enable incremental value delivery
+#### c. Check Existing Domain Knowledge Files
 
-2. **Structure and Prioritization**
-   - Assign priority labels (High/Medium/Low) based on:
-     - Expected business impact
-     - Technical complexity
-     - Dependencies on other work
-     - Data readiness
-   - Suggest implementation phases or sprints
+Search the `/docs` directory structure for existing domain knowledge documentation:
+- Look in `docs/domain_knowledge/` (create if doesn't exist)
+- Search for files matching patterns:
+  - `stakeholder-{role}-expertise.md`
+  - `{domain}-terminology-glossary.md`
+  - `{domain}-metrics-kpis.md`
+  - `{domain}-feature-engineering-guide.md`
+  - `{analytical-area}-best-practices.md`
+- Review existing files for:
+  - Completeness relative to problem statement needs
+  - Currency of information (check last updated date)
+  - Coverage of relevant metrics and features
 
-4. **Technical Considerations**
-   - Include stories for data validation and quality checks
-   - Address infrastructure and pipeline setup needs
-   - Consider monitoring, testing, and deployment requirements
-   - Account for stakeholder communication and documentation
-   - Avoid implementation details (e.g., tools, models, dashboards).
-   Focus on *intent*, not *how*.
+#### d. Update or Create Domain Knowledge Files
 
----
-## Output Format
-   - Create separate markdown files for each User Story
-   - Use a two-digit sequential number prefix followed by kebab-case based on the story's core goal for e.g. [sequential_number]-[short-user-story-name].md
-   - Include estimated effort/complexity where relevant
-   - Provide a recommended implementation sequence within each epic
+**If relevant files exist:**
+- Review content against current problem statement requirements
+- Update with more new concepts, metrics, or terminology referenced in problem statements
+- Add cross-references to new problem statements
+- Enhance feature engineering guidance if gaps are identified
+- Update the "Last Updated" section with date and reason
 
-## File Organization
+**If files don't exist:**
+- Use web search to gather authoritative domain knowledge from:
+  - Government health agencies (e.g., MOH, CDC, WHO)
+  - Academic publications and healthcare journals
+  - Industry standard frameworks and guidelines
+  - Healthcare analytics best practice documentation
+- Focus search on:
+  - Industry-standard metrics, KPIs, and benchmarks
+  - Common feature engineering patterns for the domain
+  - Domain-specific terminology, concepts, and calculations
+  - Data quality considerations and validation approaches
+  - Analytical methodologies commonly used in the domain
+- Create new documentation files following the naming convention and structure below
 
-**Base Directory**: `docs/objectives/user_stories/`
+#### e. File Naming Convention for Domain Knowledge
 
-**Folder Structure**: Organize user stories by epic - each epic gets its own folder:
-```
-docs/objectives/user_stories/
-├── README.md                                    # Index file with navigation to all epics
-├── epic-01-[epic-name]/                        # Folder for Epic 1
-│   ├── e01-s01-[user-story-name].md           # User Story 1 for Epic 1
-│   ├── e01-s02-[user-story-name].md           # User Story 2 for Epic 1
-│   └── e01-s03-[user-story-name].md           # User Story 3 for Epic 1
-├── epic-02-[epic-name]/                        # Folder for Epic 2
-│   ├── e02-s01-[user-story-name].md           # User Story 1 for Epic 2
-│   └── e02-s02-[user-story-name].md           # User Story 2 for Epic 2
-└── epic-03-[epic-name]/                        # Folder for Epic 3
-    ├── e03-s01-[user-story-name].md           # User Story 1 for Epic 3
-    └── e03-s02-[user-story-name].md           # User Story 2 for Epic 3
-```
+Use clear, descriptive names that enable easy identification of content:
 
-**Naming Conventions**:
-- Epic folders: `epic-[number]-[short-name]/` (e.g., `epic-01-foundation/`)
-- User story files: `[epic-number]-[story-number]-[short-name].md` (e.g., `e01-s01-data-quality-validation.md`)
-- Story numbers restart at 01 for each epic (e.g., Epic 1 has E01-S01, E01-S02; Epic 2 has E02-S01, E02-S02)
-- Use lowercase 'e' and 's' in filenames for consistency
+**Stakeholder Expertise:**
+- `stakeholder-{role}-expertise.md`
+- Examples: 
+  - `stakeholder-healthcare-operations-manager-expertise.md`
+  - `stakeholder-clinical-director-expertise.md`
+  - `stakeholder-health-policy-analyst-expertise.md`
 
-**Index File** (`docs/objectives/user_stories/README.md`):
-- Groups and lists all user stories under their parent epic
-- Shows the recommended implementation order within each epic
-- Summarizes total epic count, story count, and estimated effort
-- Provides navigation links to each user story file
-- Includes a quick reference table of story priorities across all epics
+**Domain Terminology:**
+- `{domain}-terminology-glossary.md`
+- Examples:
+  - `healthcare-terminology-glossary.md`
+  - `public-health-terminology-glossary.md`
 
-## User Story File Structure
+**Metrics and KPIs:**
+- `{domain}-metrics-kpis.md`
+- Examples:
+  - `polyclinic-utilization-metrics-kpis.md`
+  - `patient-flow-metrics-kpis.md`
+  - `disease-surveillance-metrics-kpis.md`
 
-Each user story file should include ALL of these sections:
-- add other relevant sections needed for this user story
+**Feature Engineering Guides:**
+- `{domain}-feature-engineering-guide.md`
+- Examples:
+  - `patient-flow-feature-engineering-guide.md`
+  - `healthcare-capacity-feature-engineering-guide.md`
+  - `disease-outbreak-feature-engineering-guide.md`
+
+**Best Practices:**
+- `{analytical-area}-best-practices.md`
+- Examples:
+  - `time-series-forecasting-best-practices.md`
+  - `geospatial-health-analysis-best-practices.md`
+  - `healthcare-equity-analysis-best-practices.md`
+
+#### f. File Content Structure for Domain Knowledge
+
+Store all domain knowledge files in `docs/domain_knowledge/` directory. Each file should follow this structure:
 
 ```markdown
-# E[XX]-S[YY]: [Descriptive Title]
+# Domain Knowledge: {Descriptive Title}
 
-**Story ID**: E[XX]-S[YY]  
-**Epic**: [Epic ID and Name]
+## Overview
+Brief description of the domain area covered, its relevance to the project, and key stakeholders who need this knowledge.
 
-## Parent Epic
-[Name and brief description of the parent epic this story belongs to]
+## Related Problem Statements
+- [Problem Statement {ID} - {Name}](../objectives/problem_statements/{file}.md)
+- [Problem Statement {ID} - {Name}](../objectives/problem_statements/{file}.md)
 
-## Overview and Statement
+## Related Stakeholders
+- **{Stakeholder Role}**: {How they use this knowledge in their analysis or decision-making}
+- **{Stakeholder Role}**: {Context and application}
 
-[2-3 sentences describing the story's purpose and business context]
+## Key Concepts and Terminology
 
-**As a** [role/stakeholder]
-**I want** [action/capability]
-**So that** [business value/outcome]
+### {Concept 1}
+**Definition**: Clear explanation of the concept
+**Relevance**: How this applies to data analysis and feature engineering
+**Example**: Concrete example in healthcare context
 
-### Acceptance Criteria
-- [ ] Criterion 1
-- [ ] Criterion 2
-- [ ] [Additional criteria as needed...]
+### {Concept 2}
+**Definition**: Clear explanation
+**Relevance**: Application to analytics
+**Example**: Practical example
 
-### Technical Notes
-[Implementation considerations, data requirements, etc.]
+## Standard Metrics and KPIs
 
-### Estimated Effort
-[Story points or time estimate]
+| Metric Name | Definition | Calculation Formula | Typical Range | Use Case | Data Requirements |
+|-------------|-----------|---------------------|---------------|----------|-------------------|
+| {Metric} | {Description} | {Formula or method} | {Normal range} | {When to use} | {Required fields} |
+| {Metric} | {Description} | {Formula} | {Range} | {Application} | {Fields needed} |
 
-### Priority
-[High/Medium/Low]
+## Feature Engineering Guidance
 
-## Dependencies
-[List any prerequisite User Stories or technical requirements]
+### Common Features for {Domain}
 
+#### {Feature Category 1}
+- **{Feature Name}**: 
+  - **Description**: What this feature represents
+  - **Calculation**: How to derive it from raw data
+  - **Interpretation**: What values indicate
+  - **Use Cases**: When this feature is valuable
+  - **Example**: Concrete calculation example
+
+#### {Feature Category 2}
+- **{Feature Name}**: {Complete description as above}
+
+### Domain-Specific Patterns
+
+#### {Pattern 1}
+**Description**: {What the pattern is}
+**When to Apply**: {Situations where this is relevant}
+**Implementation**: {How to create features based on this pattern}
+**Example**: {Concrete example with data}
+
+#### {Pattern 2}
+{Complete pattern description}
+
+### Temporal Features
+{Specific guidance for time-based features in this domain}
+
+### Aggregation Strategies
+{How to aggregate data meaningfully in this domain}
+
+## Data Quality Considerations
+
+### {Domain-Specific Issue 1}
+- **Description**: {What to watch for}
+- **Impact**: {How it affects analysis}
+- **Detection**: {How to identify the issue}
+- **Mitigation**: {How to handle it}
+
+### {Domain-Specific Issue 2}
+{Complete data quality guidance}
+
+## Analytical Methodologies
+
+### {Method 1}
+- **Application**: {When to use this method}
+- **Assumptions**: {Key assumptions that must hold}
+- **Implementation Notes**: {Practical guidance}
+- **Interpretation**: {How to read results}
+
+## Common Pitfalls and Best Practices
+
+### Pitfalls to Avoid
+- {Pitfall 1}: {Why it's problematic and how to avoid}
+- {Pitfall 2}: {Description and prevention}
+
+### Best Practices
+- {Practice 1}: {Why it's important and how to implement}
+- {Practice 2}: {Guidance}
+
+## References and Sources
+
+### Authoritative Sources
+- **{Source Name}**: {URL} - {Brief description of content}
+- **{Source Name}**: {URL} - {What's covered}
+
+### Academic References
+- {Citation 1}
+- {Citation 2}
+
+### Industry Standards
+- {Standard 1}: {Description and link}
+
+## Cross-References
+
+### Related Domain Knowledge Files
+- [{File Name}]({relative-path}) - {How it relates}
+
+### Related Data Dictionary Entries
+- [{Data Source}](../data_dictionary/{file}.md) - {Relevant fields}
+
+## Metadata
+
+**Created**: {Date}
+**Last Updated**: {Date}
+**Updated By**: {Who made changes}
+**Update Reason**: {Why the update was made}
+**Version**: {Version number}
+
+## Notes
+
+{Any additional context, open questions, or areas needing further research}
 ```
-## Key Principles
-1. **Value-focused:**: Each story must deliver tangible value to a specific end-user, stakeholder, or the system itself (e.g., improving performance, security). Clearly articulate the "so that" benefit.
-2. **Small**: User stories must be able to be completed within a sprint. Avoid overly broad, vague or complex stories
-3. **Testable**: Include clear acceptance criteria
-4. **Independent**: Minimize dependencies between stories where possible
-5. **Traceable**: Clear numbering system allows easy reference and tracking
-6. **Negotiable**: A user story is not a contract; its a placeholder for conversation and refinement
-7. **Iterative**: Enable incremental progress and early wins
 
-## QUALITY BAR (IMPORTANT):
+#### g. Integration with User Story Generation
 
-- Write stories that a senior data analyst would respect.
-- Each story should naturally map to a different analytics workflow.
-- Avoid generic filler (e.g., “get insights”, “understand data”).
-- If assumptions are needed, make reasonable ones silently.
+The domain knowledge gathered in this step should inform:
+- **Feature engineering tasks** in user stories (reference specific features from domain knowledge)
+- **Acceptance criteria** (use standard metrics and KPIs documented)
+- **Technical constraints** (apply domain-specific data quality considerations)
+- **Implementation tasks** (leverage documented analytical methodologies)
+- **Validation approaches** (use domain-appropriate benchmarks and ranges)
+
+When generating user stories in subsequent steps, explicitly reference relevant domain knowledge files to guide implementation.
 
 ---
-## Deliverable
-Generate user stories for **ALL EPICS** in the project:
 
-1. **Individual User Story files** for EVERY epic in `docs/objectives/user_stories/[epic-folder]/` following the naming convention `e[XX]-s[YY]-[short-name].md` (e.g., `e01-s01-data-profiling.md`)
-2. **An index/README file** (`docs/objectives/user_stories/README.md`) that:
-   - Lists ALL epics in the project
-   - Organizes stories by parent epic (showing all epics)
-   - Shows implementation sequence
-   - Provides effort estimates and priorities
-   - Includes a summary table showing coverage of ALL epics
-3. Each story file should:
-   - Be self-contained with all necessary context
-   - Reference its parent epic clearly
-   - Cross-reference dependent stories where needed
-   - Include clear acceptance criteria that define "done"
+### Step 3: Identify User Stories from Each Problem Statement
 
-**VERIFICATION**: Before completing this task, confirm that you have generated user stories for every single epic file found in `docs/objectives/epics/`. Missing even one epic is considered incomplete.
+Breakdown each problem statement into distinct user stories according to the following guidelines:
 
-## Final Checks
-- [ ] **ALL epics in `docs/objectives/epics/` have been identified and processed**
-- [ ] **Every single epic has user stories generated (no epics skipped)**
-- [ ] Each epic has been decomposed into 5-15 user stories
-- [ ] All stories can be completed in less than 10 days
-- [ ] Stories follow analytics workflow phases (explore → prepare → analyze → visualize)
-- [ ] Dependencies between stories are documented 
-- [ ] Each story delivers clear, testable value
-- [ ] Index file properly organizes and links all stories by epic
-- [ ] Index file includes a summary confirming all epics are covered
+#### a. Apply INVEST Principles
 
+Ensure each story adheres to the INVEST principles:
+
+1.  **Independent:** Stories should be self-contained and ideally implementable without depending on others in the same batch (though natural dependencies between features are okay). Avoid tightly coupling unrelated concepts in one story.
+2.  **Negotiable:** Stories are not contracts. They represent the essence of the requirement, leaving room for discussion and refinement of details during backlog grooming or sprint planning.
+3.  **Valuable:** Each story must deliver tangible value to a specific end-user, stakeholder, or the system itself (e.g., improving performance, security). Clearly articulate the "so that" benefit.
+4.  **Estimable:** The story should be clear and defined enough that the development team can reasonably estimate the effort required to implement it. Avoid vague or overly broad stories.
+5.  **Small:** Stories should be small enough to be completed within a single iteration (e.g., a typical sprint). Break down large problem statements or features into smaller, manageable stories.
+6.  **Testable:** Each story must have implicit or explicit acceptance criteria. It should be possible to verify that the story has been implemented correctly.
+
+#### b. Use Vertical Slicing (CRITICAL)
+
+*   **DO:** Create stories that represent a complete, thin slice of end-to-end functionality, delivering user value. Example: "As a user, I want to log in with my email and password so that I can access my account." (Touches UI, logic, potentially backend).
+*   **DO NOT:** Split stories horizontally by technical layer or component. Avoid stories like: "Create the login database table," "Build the login API endpoint," or "Design the login UI." These are tasks, not user stories.
+
+#### c. Story Format Requirements
+
+*   Assign a sequential number to each story title (e.g., `# User Story: 1 - Search Products`).
+*   Focus on extracting user-centric requirements and value propositions discussed.
+*   Ignore conversational filler, off-topic discussions, or administrative details unless they directly inform a requirement.
+*   If the problem statement mentions specific user roles, use them. Otherwise, infer logical user types (e.g., "user," "administrator," "analyst").
+*   If acceptance criteria are explicitly discussed, include them as bullet points under the relevant story.
+
+---
+
+### Step 4: Generate User Story Files
+
+#### a. File Organization
+
+1. Story files should be placed in:
+   `docs/objectives/user_stories/problem-statement-{num}-{name}/<numerical_prefix>-<story_name>.md`
+
+2. Each problem statement should have an index.md, should be updated when any story is updated, created or deleted:
+   `docs/objectives/user_stories/problem-statement-{num}-{name}/index.md`
+
+   - Lists all stories in the feature
+   - Brief description of each story
+   - Links to story files
+   - List of reusable components in the feature
+
+3. Main problem statements index should be updated:
+   `docs/objectives/problem_statements/index.md`
+
+   - Add new problem statement if needed
+   - Link to problem statement index
+   - Brief problem statement description
+   - Key stories or functionality
+   - List of reusable components
+   - Overall problem statement progress tracking
+
+#### b. File Naming Convention
+
+Use a two-digit sequential number prefix followed by kebab-case based on the story's core goal:
+- `01-analyze-visit-patterns-by-age.md`
+- `02-identify-seasonal-utilization-trends.md`
+
+#### c. File Content Structure
+
+Each markdown file should contain *one* user story following this format:
+
+```markdown
+# User Story: [Story Number] - [Brief Title Describing the Goal]
+
+**As a** [type of user/role],
+**I want** [to perform an action or achieve a goal],
+**so that** [I gain a specific benefit or value].
+
+## 1. 🎯 Acceptance Criteria
+
+*   [Criterion 1]
+*   [Criterion 2]
+*   ... (Include if discussed or clearly implied)
+
+## 2. 🔒 Technical Constraints
+
+*   [Architecture requirements]
+*   [State management approach]
+*   [Data analysis guidelines]
+
+## 3. 📚 Domain Knowledge References
+
+*   [Link to relevant domain knowledge files in docs/domain_knowledge/]
+*   [Specific metrics, KPIs, or features to leverage]
+*   [Domain-specific considerations for this story]
+
+## 4. 📦 Dependencies
+
+*   [External packages with purpose]
+*   [Internal dependencies and models]
+
+## 5. ✅ Implementation Tasks
+
+Each task has a status indicator:
+- ⬜ Not Started
+- 🟨 In Progress
+- ✅ Completed
+
+Common task groups:
+- **Data Extraction**: Source identification, data loading, API integration
+- **Data Preprocessing**: Cleaning, transformation, feature engineering
+- **Data Quality**: Validation, completeness checks, outlier detection
+- **Data Analysis**: Statistical analysis, exploratory data analysis, hypothesis testing
+- **Machine Learning**: Model selection, training, hyperparameter tuning
+- **Model Evaluation**: Validation, testing, performance metrics
+- **Visualization**: Charts, dashboards, interactive reports
+- **Documentation**: Analysis documentation, methodology notes, findings summary
+
+## 6. Notes (Optional)
+
+*   [Any relevant notes, context, or open questions]
 ```
+
+---
+
+## Reference: User Story Documentation Standards
+
+This section outlines detailed formatting guidelines for writing user stories in the project.
+
+### Story Component Details
+
+#### 1. 📝 Description
+   - Clear and concise explanation of the feature
+   - Purpose and value proposition
+   - Main functionality overview
+   - Formatted like "as a user..."
+
+#### 2. 🎯 Acceptance Criteria
+   - Numbered list of requirements (1, 2, 3...)
+   - Each major component gets its own section
+   - Include data analysis requirements
+   - Use bullet points for detailed requirements
+
+#### 3. 🔒 Technical Constraints
+   - Architecture requirements
+   - State management approach
+   - Data analysis guidelines
+
+#### 4. 📚 Domain Knowledge References
+   - Links to relevant domain knowledge files
+   - Specific metrics, KPIs, or features to leverage
+   - Domain-specific considerations
+
+#### 5. 📦 Dependencies
+   - External packages with their purpose
+   - Internal dependencies and models
+
+#### 6. ✅ Tasks
+   - Grouped by implementation layer
+   - Each task has a status indicator (⬜ Not Started / 🟨 In Progress / ✅ Completed)
+   - Tasks should be specific enough for immediate development
+   - Include data source file paths, API endpoints, or dataset references
+   - Note any code reuse opportunities from existing components
+   - Specify configuration or environment setup requirements
+
+---
+
+## Writing Style Guidelines
+
+1. **Emojis**
+   - Use consistent emojis for each section
+   - 📝 for Description
+   - 📊 for Story Metadata
+   - 🎯 for Acceptance Criteria
+   - 🔒 for Technical Constraints
+   - � for Domain Knowledge References
+   - �📦 for Dependencies
+   - ✅ for Implementation Tasks
+   - 🔍 for search results and findings
+
+2. **Formatting**
+   - Use headers for main sections
+   - Use bullet points for lists
+   - Use numbered lists for ordered requirements
+   - Add spacing between sections
+   - Use code blocks for package names and file paths
+
+3. **Content**
+   - Be specific and measurable
+   - Focus on what, not how
+   - Include both functional and non-functional requirements
+   - Define clear success criteria with measurable metrics
+   - Document data dependencies and availability explicitly
+   - Specify performance and quality thresholds
+   - Document component search results
+
+### Maintenance
+
+1. **Status Updates**
+   - Keep task status up to date
+   - Mark tasks as completed when merged
+   - Use in-progress status for active work
+   - Document component reuse decisions
+
+2. **Documentation Updates**
+   - Update documentation when requirements change
+   - Update documentation when implementation change
+   - Keep dependencies list current
+   - Add new tasks as needed
+   - Remove completed stories from active tracking
+   - Update component lists when new ones are added
+
+3. **Component Discovery**
+   - Regularly update feature indices with reusable components
+   - Document search strategies used
+   - Note modifications made to existing components
+   - Track component dependencies between features
+
+---
+
+## Example: From Problem Statement to User Stories
+
+### Input Problem Statement Snippet
+
+"...The analytics team needs to understand polyclinic utilization patterns. Sarah from MOH mentioned that tracking visit trends by age group and time period is critical for capacity planning. John added that analyzing seasonal patterns would help with resource allocation, especially during peak periods. We need to ensure the analysis is reliable and the insights are clearly communicated to stakeholders with supporting visualizations..."
+
+### Generated User Stories
+
+1.  **As a** healthcare policy analyst,
+    **I want** to analyze polyclinic visit patterns by age group and year,
+    **so that** I can identify demographic trends and inform capacity planning decisions.
+    *   Acceptance Criteria:
+        *   Data extraction includes visit counts by age group (per [`docs/data_dictionary/`](docs/data_dictionary/))
+        *   Analysis covers full historical period available in the dataset
+        *   Output includes summary statistics and trend metrics by age segment
+
+2.  **As a** healthcare operations manager,
+    **I want** to identify seasonal utilization patterns in polyclinic visits,
+    **so that** I can optimize staff scheduling and resource allocation during peak periods.
+    *   Acceptance Criteria:
+        *   Analysis identifies quarterly and monthly visit patterns
+        *   Seasonal peaks and troughs are clearly quantified
+        *   Results are presented in an interactive dashboard with drill-down capabilities
+        *   Statistical significance of seasonal variations is documented
+
+---
+
+## ✅ Completion Checklist
+
+Before finishing, verify that you have:
+
+- [ ] Read **ALL** problem statement files in `docs/objectives/problem_statements/`
+- [ ] Extracted stakeholders from each problem statement
+- [ ] Checked for existing domain knowledge files in `docs/domain_knowledge/`
+- [ ] Updated existing domain knowledge files or created new ones with web research
+- [ ] Named domain knowledge files following the prescribed naming convention
+- [ ] Cross-referenced domain knowledge in user stories for feature engineering guidance
+- [ ] Generated user stories for **EVERY** problem statement (not just a subset)
+- [ ] Applied INVEST principles to each story
+- [ ] Used vertical slicing (end-to-end value, not technical layers)
+- [ ] Created separate markdown files with correct naming convention
+- [ ] Included all required sections: Description, Acceptance Criteria, Technical Constraints, Dependencies, Tasks
+- [ ] Updated each problem statement's `index.md` with links to new stories
+- [ ] Updated the main `docs/objectives/problem_statements/index.md`
+- [ ] Ensured stories are small enough for one sprint
+- [ ] Made stories testable with clear acceptance criteria
+- [ ] Documented any assumptions made for incomplete problem statements
+
+---

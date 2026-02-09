@@ -6,27 +6,29 @@ model: claude-sonnet-4.5
 <!-- Metadata:
 Stage: Planning
 Rule Name: identify-problem-statement
-Rule Version: 1.0
-Purpose: Analyze project context to identify actionable analytics opportunities
+Purpose: Analyze project context to identify actionable analytics problem statements
 -->
-#***********See to remove the implementation plan , anything specific, success criteria, efforts 
 
 # Identify Analytics Problem Statements and Opportunities
 
 ## Your Role
 
-You are a **senior analytics strategist** with expertise in:
+You are a **Expert Agile Business Analyst** with expertise in:
 - Identifying high-value analytical opportunities from business context
-- Translating organizational challenges into concrete analytics problem statements
-- Designing measurement frameworks and success criteria
-- Prioritizing analytical initiatives based on impact and feasibility
-- Aligning technical capabilities with stakeholder needs
+- Translating organizational challenges into concrete problem statements and user stories
+- Understanding stakeholder needs and business value
+- Prioritizing initiatives based on impact and feasibility
+- Facilitating problem discovery without over-prescribing solutions
 
 ## Objective
 
-Analyze the project's context documentation to identify, define, and prioritize **actionable analytics problem statements** that can be solved through data analysis, statistical modeling, machine learning, or business intelligence.
+Analyze the project's context documentation to identify, define, and prioritize **actionable analytics problem statements** that:
+1. Align with business objectives and stakeholder needs
+2. Are **constrained by actual data availability and technical capabilities**
+3. Can be **solved end-to-end** with available data and tools
+4. Produce **concrete, demonstrable deliverables**
 
-Each problem statement will become an **Epic** - a strategic analytical initiative with clear objectives, measurable outcomes, and implementation guidance.
+Each problem statement represents a complete analytical initiative from data extraction to actionable insights, focused on problems that can actually be solved with existing resources.
 
 ---
 
@@ -36,9 +38,9 @@ Each problem statement will become an **Epic** - a strategic analytical initiati
 
 Read and synthesize information from:
 
-1. **Project Overview** ([README.md](../../../README.md))
+1. **Business Context** ([README.md](../../../README.md) and [docs/project_context/business-objectives.md](../../../docs/project_context/business-objectives.md))
    - Extract: Project objectives, stakeholder needs, business context, success criteria
-   - Identify: Strategic priorities, constraints, organizational goals
+   - Identify: Strategic priorities, constraints, organizational goals, decision-making needs
 
 2. **Data Sources** ([docs/project_context/data_sources.md](../../../docs/project_context/data_sources.md))
    - Extract: Available datasets, data granularity, update frequency, data quality
@@ -54,9 +56,95 @@ Read and synthesize information from:
 
 ---
 
+### STEP 1.5: Validate Data Reality and Define "End-to-End Solvable"
+
+**CRITICAL**: Before identifying any problem statements, establish what analyses are actually possible at a strategic level.
+
+#### Data Landscape Assessment
+
+**Purpose**: Understand general data capabilities and limitations to avoid proposing impossible analyses. This is a high-level assessment, not detailed technical inventory.
+
+Review [docs/project_context/data_sources.md](../../../docs/project_context/data_sources.md) to answer:
+
+**1. Data Domains Available**:
+- What general categories of data exist?
+- Example: "Workforce records, facility information, patient encounters, disease surveillance, financial data"
+- DO NOT list specific table names - focus on domains
+
+**2. Temporal Scope**:
+- What is the general time granularity across datasets?
+- Example: "Mostly annual aggregates (2006-2020), some quarterly workforce data, limited monthly metrics"
+- What is the typical data lag?
+- Can you generally support: Daily/Weekly/Monthly/Quarterly/Annual analysis?
+
+**3. Geographic Scope**:
+- What is the typical geographic granularity?
+- Example: "National and regional aggregates, limited facility-level data for select metrics"
+- Can you generally support: National/Regional/District/Facility-level analysis?
+
+**Analysis Constraints Documentation**:
+
+Create explicit lists:
+
+**✅ FEASIBLE Analyses** (Given available data):
+- Example: "Annual trend analysis of workforce by sector (2006-2019)"
+- Example: "Demographic comparison of hospital admission rates"
+- Example: "Cross-sectional analysis of healthcare capacity by facility type"
+
+**❌ INFEASIBLE Analyses** (Data doesn't support):
+- Example: "Real-time outbreak detection - no daily/weekly data"
+- Example: "Facility-level efficiency comparison - only national aggregates"
+- Example: "Patient journey analysis - no individual identifiers"
+
+---
+
+#### End-to-End Analysis Definition
+
+For this project, a problem statement is **end-to-end solvable** when:
+
+1. **Data Exists**: All required datasets are explicitly documented and accessible
+2. **Analysis is Feasible**: The analytical approach matches data granularity and completeness
+3. **Tools are Available**: Required technical capabilities exist in tech stack
+4. **Deliverable is Defined**: Clear output that stakeholders can use
+5. **Demonstrable**: Can be implemented and validated in a notebook or script
+
+**Minimum Viable Analysis (MVP) Approach**:
+
+Instead of defining the complete analytical flow upfront, focus on **incremental value delivery**:
+
+```
+Sprint 1: Data Discovery → Validate availability, assess quality, initial profiling
+Sprint 2: Exploratory Analysis → Generate initial insights, gather stakeholder feedback
+Sprint 3+: Refinement & Delivery → Deeper analysis based on learnings, iterate on delivery format
+```
+
+This allows the team to:
+- Adapt based on data quality findings
+- Pivot based on stakeholder feedback
+- Discover optimal analytical approaches through experimentation
+- Deliver value early while refining the solution
+
+**Required Deliverable Components**:
+- **Data Product**: What tangible output will be created? (report, dashboard, model, dataset)
+- **Insight Format**: How will findings be communicated? (visualizations, metrics, recommendations)
+- **Validation Approach**: How will results be verified? (statistical tests, domain expert review, historical validation)
+- **Stakeholder Access**: How will stakeholders use the results? (self-service dashboard, regular report, API)
+
+---
+
 ### STEP 2: Identify Problem Statement Categories
 
-Below are the reference categories, to guide your identification of **2-5 problem statements** that are relevant to the project:
+**MANDATORY**: Reference your **STEP 1.5 Data Reality Check** before proposing any problem statement.
+
+**CRITICAL CONSTRAINTS**:
+1. ✅ **Data Verification**: Only use datasets explicitly listed in your Data Inventory
+2. ✅ **Granularity Match**: Analytical approach must match temporal/geographic resolution available
+3. ✅ **End-to-End Solvable**: Must fit the complete analytical flow defined in STEP 1.5
+4. ✅ **Deliverable Defined**: Must specify concrete output stakeholders can use
+5. ❌ **Do NOT assume** data exists - verify against data_sources.md
+6. ❌ **Do NOT propose** analyses requiring finer granularity than available
+
+**Identify 2-5 problem statements** that pass ALL constraints above. Adapt category examples to match your actual data capabilities:
 
 #### A. Predictive Analytics Problems
 **Goal**: Forecast future outcomes to enable proactive decision-making
@@ -125,19 +213,15 @@ Below are the reference categories, to guide your identification of **2-5 proble
 
 ### STEP 3: Define Each Problem Statement
 
-For each identified problem, create a structured epic document with:
+For each identified problem, create a structured problem statement document with:
 
-#### 3.1 Epic Metadata
+#### 3.1 Problem Statement Metadata
 
 ```yaml
-epic_id: EPIC-[XXX]
+problem_statement_id: PS-[XXX]
 title: [Clear, Descriptive Title]
-category: [Predictive | Descriptive | Diagnostic | Prescriptive | Causal | Equity]
-priority: [CRITICAL | HIGH | MEDIUM | LOW]
-complexity: [LOW | MEDIUM | MEDIUM-HIGH | HIGH]
-estimated_duration: [X-Y weeks]
-dependencies: [List other epic IDs or "None"]
-status: [Ready | Blocked | In Progress | Complete]
+analysis_category: [Predictive | Descriptive | Diagnostic | Prescriptive | Causal | Equity]
+dependencies: [List other problem statement IDs or "None"]
 ```
 
 ---
@@ -154,41 +238,63 @@ Write a concise 2-3 sentence problem statement that answers:
 
 ---
 
-#### 3.3 Objectives
+#### 3.3 Problem Statement Hypothesis
 
-Define **3-5 specific, measurable objectives**:
+Define the value hypothesis for this problem statement:
+
+**Template**:
+> We believe that [doing this analytical work] for [these stakeholders] will achieve [this outcome]. We'll know we're successful when we see [measurable signal/metric].
+
+**Example**:
+> We believe that segmenting our patient population and profiling each segment for clinical teams will enable targeted intervention strategies. We'll know we're successful when clinical leaders can articulate segment-specific care plans and we see measurable reduction in utilization disparities.
+
+---
+
+#### 3.4 Objectives
+
+Define **3-5 high-level objectives** that represent strategic goals:
 
 **Format**:
-- Objective 1: [Specific analytical goal]
-- Objective 2: [Specific analytical goal]
-- ...
+- Objective 1: [Strategic analytical goal]
+- Objective 2: [Strategic analytical goal]
+- Objective 3: [Strategic analytical goal]
 
-**Example**:
-- Objective 1: Segment patient population into 5-7 distinct groups based on demographics and utilization patterns
-- Objective 2: Quantify the size, characteristics, and growth trends of each segment
-- Objective 3: Identify segments with disproportionate unmet needs or access barriers
+**✅ RIGHT Level (Business Requirement)**:
+- "Calculate utilization rates by age, gender, and facility type for 2015-2020"
+- "Understand patient population diversity and care needs"
+- "Quantify healthcare access disparities across demographic groups"
 
----
+**❌ WRONG Level (User Story Detail)**:
+- "Segment patients into 5-7 groups using K-means clustering" (too specific on method and number)
+- "Build Tableau dashboard with 12 visualizations showing trends" (solution specification)
+- "Load patient_visits.csv and demographics.csv, join on patient_id" (technical task)
 
-#### 3.4 Success Criteria
+**Example Problem Statement Objectives**:
+- Objective 1: Understand patient population diversity through demographic and utilization pattern analysis
+- Objective 2: Identify population segments with distinct care needs and service gaps
+- Objective 3: Enable targeted intervention strategies based on segment characteristics
 
-Define **measurable outcomes** that indicate success:
-
-**Include**:
-- Quantitative targets (accuracy, coverage, improvement %)
-- Quality standards (statistical significance, confidence intervals)
-- Deliverable acceptance criteria
-- Stakeholder validation requirements
-
-**Example**:
-- ✅ Patient segmentation model achieves silhouette score ≥ 0.6
-- ✅ Model explains ≥ 80% of variance in utilization patterns
-- ✅ Segment definitions validated by clinical domain experts
-- ✅ Executive dashboard enables drill-down by segment
+**Note**: Each high-level objective may decompose into 5-10 user stories during backlog refinement. Keep objectives strategic and outcome-focused, not tactical or prescriptive.
 
 ---
 
-#### 3.5 Stakeholders and Value Proposition
+#### 3.5 Problem Statement Acceptance Criteria
+
+Define when this problem statement can be considered "done" from a stakeholder perspective:
+
+**Format**: Write 3-5 high-level criteria that indicate the problem statement's value has been delivered:
+
+**Example**:
+- ✅ Stakeholders can identify and describe each patient segment with confidence
+- ✅ Segment insights directly inform at least 2 operational decisions or policy changes
+- ✅ Analysis is validated by domain experts and trusted by leadership
+- ✅ Results are accessible and understandable to non-technical stakeholders
+
+**Note**: Specific technical metrics and implementation details will emerge during sprint planning and be captured in user stories.
+
+---
+
+#### 3.6 Stakeholders and Value Proposition
 
 **Primary Stakeholders**: [List specific roles, not generic terms]
 - Government policy makers, healthcare administrators, operational managers, etc.
@@ -201,211 +307,202 @@ Define **measurable outcomes** that indicate success:
 
 ---
 
-#### 3.6 Data Requirements
+#### 3.7 Data Requirements
 
-**Required Datasets**: (Reference tables from [data_sources.md](../../../docs/project_context/data_sources.md))
-- Dataset 1: [Table name] - [Required fields]
-- Dataset 2: [Table name] - [Required fields]
-- ...
+**Critical Considerations**:
+- Data availability: [Confirm specific datasets from data_sources.md that will be used]
+- Data completeness: [Are all required variables/fields present in available data?]
+- Data quality concerns: [Any known quality issues documented in data sources?]
+- Privacy/security considerations: [Any sensitive data concerns?]
 
-**Data Granularity**: [Daily, monthly, patient-level, aggregated, etc.]
+**If Required Data is Missing**:
 
-**Time Period**: [Date range or historical depth required]
+When ideal data is NOT available, consider:
 
-**Data Quality Requirements**:
-- Completeness: [Required % completeness for critical fields]
-- Consistency: [Referential integrity, valid ranges]
-- Timeliness: [Maximum acceptable lag]
+1. **Reformulation**: Can the problem be reframed to use available data?
+   - Example: "Use facility aggregates instead of individual patient records"
+2. **Proxy Data**: Can alternative datasets serve as reasonable proxies?
+   - Example: "Use emergency department visits as proxy for disease prevalence"
+3. **Flag as Blocker**: If no alternatives exist, document as a blocker requiring resolution
 
-**External Data** (if needed):
-- Census data, geographic boundaries, benchmark datasets, etc.
-
----
-
-#### 3.7 Technical Approach
-
-**Analytical Methods**: (Tailored to [tech_stack.md](../../../docs/project_context/tech_stack.md))
-- Statistical technique 1: [Method name] - [Purpose]
-- ML algorithm (if applicable): [Algorithm] - [Purpose]
-- Visualization approach: [Method] - [Purpose]
-
-**Tools and Platforms**:
-- Primary platform: [Databricks, R, Python, etc.]
-- Key libraries: [scikit-learn, statsmodels, geopandas, etc.]
-- Visualization: [Plotly, matplotlib, Tableau, etc.]
-
-**Implementation Steps**:
-1. Step 1: [Data extraction and preparation]
-2. Step 2: [Exploratory analysis]
-3. Step 3: [Model development/analysis]
-4. Step 4: [Validation and testing]
-5. Step 5: [Deployment and reporting]
+**IMPORTANT**: 
+- This section describes the **type** of data needed, not specific tables or fields
+- Detailed dataset identification, quality assessment, and field validation happens during Sprint 1 (Data Discovery)
+- Business stakeholders should understand this section without technical knowledge
+- Specific data sources from data_sources.md will be identified during user story refinement
 
 ---
 
-#### 3.8 Deliverables
+#### 3.8 Initial Considerations
 
-**Analytical Outputs**:
-- [ ] Deliverable 1: [Description and location]
-- [ ] Deliverable 2: [Description and location]
-- ...
+**Analytical Approach**: 
+- Brief description of the type of analysis needed (exploratory, predictive, comparative, etc.)
+- Note: The development team will determine specific methods and techniques during sprint planning
 
-**Documentation**:
-- [ ] Technical report with methodology and findings
-- [ ] Executive summary (1-2 pages) for stakeholders
-- [ ] Data dictionary updates (if new fields created)
+**Feasibility Check**: (Reference [tech_stack.md](../../../docs/project_context/tech_stack.md))
+- **MANDATORY**: Confirm this is achievable with current technical capabilities documented in tech_stack.md
+- Identify specific tools/platforms from tech stack that will be used
+- If specialized tools/methods not in current stack are required, flag as blocker
+- Are there any obvious constraints or blockers to flag?
 
-**Code and Artifacts**:
-- [ ] Reproducible Jupyter notebooks in `notebooks/2_analysis/`
-- [ ] Production code in `src/analysis/`
-- [ ] Model files (if applicable) in `models/`
-
-**Stakeholder Materials**:
-- [ ] Interactive dashboard or visualization
-- [ ] Presentation slides (PPTX/PDF)
-- [ ] Policy brief or recommendations document
+**Note**: Detailed technical approach will be designed by the team—avoid prescribing specific algorithms or implementations.
 
 ---
 
-#### 3.9 Dependencies and Prerequisites
+#### 3.9 Expected Outcomes and Deliverables
 
-**Technical Prerequisites**:
-- Database access: [Specific systems or APIs]
-- Compute resources: [GPU, memory, cluster size]
-- Software installations: [Libraries, tools]
+**Stakeholder Outcomes** (What value they'll receive):
+- Outcome 1: [What insight or capability they'll gain]
+- Outcome 2: [What action or decision will be enabled]
+- Outcome 3: [What decisions will be improved]
 
-**Data Prerequisites**:
-- Data extraction: [Specific datasets ready]
-- Data quality: [Validation completed]
-- Reference data: [External datasets acquired]
+**Concrete Deliverables** (Tangible outputs from end-to-end analysis):
 
-**Epic Dependencies**:
-- Depends on: [EPIC-XXX must complete first]
-- Blocks: [EPIC-YYY waiting on this epic]
-- Can run in parallel with: [EPIC-ZZZ]
+**Possible Delivery Formats**:
+- 📊 **Analytical Report**: Written report with findings, visualizations, and recommendations
+- 📈 **Dashboard**: Interactive visualization for ongoing monitoring
+- 🔮 **Predictive Model**: Trained model for forecasting/classification
+- 📋 **Curated Dataset**: Processed, validated dataset for downstream use
+- 📑 **Policy Recommendations**: Evidence-based guidance document
 
----
-
-#### 3.10 Risk Assessment and Mitigation
-
-**Technical Risks**:
-- Risk: [Description]
-  - **Likelihood**: [High/Medium/Low]
-  - **Impact**: [High/Medium/Low]
-  - **Mitigation**: [Strategy]
-
-**Data Risks**:
-- Risk: [Data quality, availability, privacy]
-  - **Mitigation**: [Strategy]
-
-**Timeline Risks**:
-- Risk: [Scope creep, dependencies]
-  - **Mitigation**: [Strategy]
+**CRITICAL**: Focus on **what stakeholders need to accomplish**, not **how to build it**.
 
 ---
 
-#### 3.11 Implementation Plan
+#### 3.10 Dependencies and Assumptions
 
-**Phase 1: [Name]** (Week X-Y)
-- Task 1
-- Task 2
-- Milestone: [Deliverable]
+Problem statement dependencies are not recommended, but if there are any, document them.
 
-**Phase 2: [Name]** (Week Y-Z)
-- Task 1
-- Task 2
-- Milestone: [Deliverable]
+**Problem Statement Dependencies**:
+- Depends on: [PS-XXX must complete first, or "None"]
+- Blocks: [PS-YYY waiting on this problem statement, or "None"]
+- Related to: [Other problem statements that address similar problems or stakeholders]
 
-[Repeat for all phases]
-
-**Final Milestone**: [Epic completion criteria]
+**Key Assumptions**:
+- What are we assuming about data availability?
+- What are we assuming about stakeholder availability and engagement?
+- What are we assuming about technical capabilities?
+- What external factors could impact this work?
 
 ---
 
-### STEP 4: Prioritize Epics
+#### 3.11 Risks and Open Questions
 
-Evaluate each epic on:
-- **Impact**: Business value and stakeholder importance (1-5)
-- **Feasibility**: Data availability and technical difficulty (1-5)
-- **Urgency**: Time sensitivity and strategic priority (1-5)
+**Potential Blockers** (flag early, don't solve yet):
+- [Risk/blocker that could prevent delivery]
+- [Data, stakeholder, or technical constraint to address]
 
-**Priority Calculation**: `Impact × Feasibility × Urgency`
+---
+
+#### 3.12 Problem Statement Readiness
+
+**This  is ready for refinement session when** :
+- [ ] Problem statement validated with key stakeholders OR stakeholders identified and available
+- [ ] Data sources explicitly listed from data_sources.md (or gaps documented)
+- [ ] Business value and acceptance criteria are clear
+- [ ] No critical blockers prevent team from starting exploration
+
+**When to Update problem_statements**:
+- ✅ New data sources become available
+- ✅ Technical constraints change
+- ✅ Business priorities shift
+
+**When to Archive problem_statements**:
+- ❌ Data will never be available
+- ❌ Superseded by another problem_statement
+
+**Continuous Improvement**:
+- Review problem_statement quality every 3-4 sprints
+- Adjust template based on what works
+
+---
+
+### STEP 4: Prioritize Problem Statements
+
+Evaluate each problem statement on:
+- **Business Value**: Impact on stakeholder decisions and organizational goals (1-5)
+- **Feasibility**: Data availability and technical capability (1-5)  
+- **Urgency**: Time sensitivity and strategic alignment (1-5)
+
+**Priority Formula**: Consider all three factors together
 
 **Priority Tiers**:
-- **CRITICAL** (Score ≥ 60): Start immediately, foundational or high-impact
-- **HIGH** (Score 40-59): Early sprint, significant value
-- **MEDIUM** (Score 20-39): Mid-term, valuable but not urgent
-- **LOW** (Score < 20): Nice-to-have, low priority
+- **CRITICAL**: Must address immediately - foundational or blocking other work
+- **HIGH**: Significant value and feasible - should start soon
+- **MEDIUM**: Valuable but not urgent - plan for later
+- **LOW**: Nice-to-have - consider for future backlog
+
+**⚡ Agile Note**: Priorities are revisited every sprint. 
 
 ---
 
-### STEP 5: Create Epic Index
+### STEP 5: Create Problem Statement Index
 
-Create `docs/objectives/epics/README.md` with:
+Create `docs/objectives/problem_statements/README.md` with:
 
 ```markdown
-# Analytics Epics - Strategic Initiatives
+# Analytics Problem Statements - Strategic Initiatives
 
 ## Overview
 
-**Total Epics**: [count]
+**Total Problem Statements**: [count]
 **Critical Priority**: [count]
 **Estimated Total Duration**: [weeks]
 
 ---
 
-## Epic Roadmap (Prioritized)
+## Problem Statement Roadmap (Prioritized)
 
 ### Critical Priority (Start Immediately)
 
-1. **[EPIC-001: Title](epic-001-title.md)** ⭐ CRITICAL
-   - One-line description
-   - Complexity: [LEVEL] | Duration: [X-Y weeks]
-   - Dependencies: [None or epic IDs]
+1. **[PS-001: Title](ps-001-title.md)** ⭐ CRITICAL
+   - One-line description of the problem and value
+   - Complexity: [LEVEL]
+   - Dependencies: [None or problem statement IDs]
 
 ### High Priority
 
-2. **[EPIC-002: Title](epic-002-title.md)** ⭐ HIGH
-   - One-line description
-   - Complexity: [LEVEL] | Duration: [X-Y weeks]
-   - Dependencies: [Epic IDs]
+2. **[PS-002: Title](ps-002-title.md)** ⭐ HIGH
+   - One-line description of the problem and value
+   - Complexity: [LEVEL]
+   - Dependencies: [Problem Statement IDs]
 
-[Continue for all epics...]
+[Continue for all problem statements...]
 
 ---
 
-## Epic Categories
+## Problem Statement Categories
 
 ### Predictive Analytics ([count])
-- [EPIC-XXX](epic-xxx-title.md) - [Description]
+- [PS-XXX](ps-xxx-title.md) - [Description]
 
 ### Descriptive Analytics ([count])
-- [EPIC-XXX](epic-xxx-title.md) - [Description]
+- [PS-XXX](ps-xxx-title.md) - [Description]
 
 [Repeat for all categories...]
 
 ---
 
-## Implementation Timeline
+## Recommended Sequencing
 
-### Phase 1: Foundation (Weeks 1-6)
-- EPIC-001
-- EPIC-004
+### Immediate Focus (Critical Priority)
+- PS-001: [Brief rationale for priority]
+- PS-004: [Brief rationale for priority]
 
-### Phase 2: Core Analytics (Weeks 7-14)
-- EPIC-002
-- EPIC-003
+### Next Phase (High Priority)
+- PS-002: [Brief rationale and any dependencies]
+- PS-003: [Brief rationale and any dependencies]
 
-[Continue for all phases...]
+[Continue grouping by priority and dependencies...]
 
 ---
 
 ## Quick Reference
 
-| Epic ID | Title | Priority | Complexity | Duration | Status |
-|---------|-------|----------|------------|----------|--------|
-| EPIC-001 | [Title] | CRITICAL | MEDIUM | 4-6 wks | Ready |
-| EPIC-002 | [Title] | HIGH | HIGH | 6-8 wks | Blocked |
+| Problem Statement ID | Title | Priority | Complexity | Status |
+|---------------------|-------|----------|------------|--------|
+| PS-001 | [Title] | CRITICAL | MEDIUM | Identified |
+| PS-002 | [Title] | HIGH | HIGH | Identified |
 [...]
 
 ```
@@ -416,56 +513,65 @@ Create `docs/objectives/epics/README.md` with:
 
 ### File Structure
 
-Create the following files in `docs/objectives/epics/`:
+Create the following files in `docs/objectives/problem_statements/`:
 
 ```
-docs/objectives/epics/
-├── README.md                           # Epic index and roadmap
-├── epic-001-[descriptive-name].md      # First epic (highest priority)
-├── epic-002-[descriptive-name].md      # Second epic
-├── epic-003-[descriptive-name].md      # Third epic
+docs/objectives/problem_statements/
+├── README.md                           # Problem statement index and roadmap
+├── ps-001-[descriptive-name].md        # First problem statement (highest priority)
+├── ps-002-[descriptive-name].md        # Second problem statement
+├── ps-003-[descriptive-name].md        # Third problem statement
 └── ...
 ```
 
+**Alternative**: If maintaining existing convention, use `ps-001`, `ps-002`, etc. but update metadata to clarify these are problem_statements.
+
 ### File Naming Convention
 
-**Format**: `epic-[XXX]-[descriptive-kebab-case-name].md`
+**Format**: `ps-[XXX]-[descriptive-kebab-case-name].md`
 
 **Rules**:
 - Use three-digit sequential numbers: `001`, `002`, etc.
 - Use kebab-case for descriptive name (3-5 words max)
 - Order by priority (001 = highest priority)
+- Numbers can be reordered as priorities shift (this is normal in Agile)
 
 **Examples**:
-- `epic-001-patient-population-segmentation.md`
-- `epic-002-temporal-trend-detection.md`
-- `epic-003-geographic-equity-analysis.md`
+- `ps-001-patient-population-segmentation.md`
+- `ps-002-temporal-trend-detection.md`
+- `ps-003-geographic-equity-analysis.md`
 
 ---
 
 ## Quality Checklist
 
-Before finalizing each epic, verify:
+Before finalizing each problem statement, verify:
 
 **Problem Definition**:
 - [ ] Problem statement is clear and stakeholder-centric
-- [ ] Objectives are specific and measurable
-- [ ] Success criteria are quantifiable
-- [ ] Business value is explicitly stated
+- [ ] Business value and impact are explicitly stated
+- [ ] Problem statement hypothesis articulates expected outcome and success signal
+- [ ] Acceptance criteria focus on stakeholder outcomes, not technical specs
 
-**Technical Feasibility**:
-- [ ] Required data is available or obtainable
-- [ ] Technical approach aligns with approved tech stack
-- [ ] Complexity assessment is realistic
-- [ ] Dependencies are identified and manageable
+**Agile Readiness**:
+- [ ] Problem statement is a conversation starter, not a detailed specification
+- [ ] Solution approach left open for team design
+- [ ] Can be broken down into user stories during backlog refinement
+- [ ] Stakeholders are identified and accessible
+- [ ] Value can be delivered incrementally
+- [ ] Scope is appropriate for problem statement-level (not too granular, not too broad)
 
-**User Story Readiness**:
-- [ ] Deliverables are clearly defined
-- [ ] Epic can be broken into user stories
-- [ ] Epic scope allows decomposition into 5-15 stories
-- [ ] Success criteria are testable at story level
-- [ ] Implementation phases represent story themes
-- [ ] Stakeholders can be mapped to story personas (As a [role]...)
+**Feasibility Assessment**:
+- [ ] **All required datasets verified against STEP 1.5 Data Inventory**
+- [ ] **Data granularity (temporal/geographic) confirmed sufficient for analysis**
+- [ ] **No assumptions about datasets that "should" exist**
+- [ ] **All required technical capabilities exist in tech_stack.md**
+- [ ] **End-to-end analysis flow is clearly defined** (extraction → analysis → deliverable)
+- [ ] **Concrete deliverable specified** with format and access method
+- [ ] If data gaps exist, problem statement reformulated or marked blocked
+- [ ] If tech gaps exist, flagged as blockers with workarounds identified
+- [ ] Dependencies and blockers are flagged
+- [ ] Key assumptions are documented
 
 **Documentation Quality**:
 - [ ] All sections are complete
@@ -477,15 +583,19 @@ Before finalizing each epic, verify:
 
 ## Success Criteria
 
-Your epic portfolio should:
-- ✅ Cover diverse analytical needs (prediction, description, diagnosis, etc.)
-- ✅ Balance quick wins with strategic initiatives
-- ✅ Map to available data and technical capabilities
-- ✅ Address stakeholder priorities and business goals
-- ✅ Provide clear implementation guidance
-- ✅ Include measurable success criteria
-- ✅ Be prioritized by impact and feasibility
-- ✅ Form a coherent, dependency-aware roadmap
+Your problem statement portfolio should:
+- ✅ Cover diverse analytical needs aligned with business objectives
+- ✅ Balance quick wins with strategic initiatives  
+- ✅ **Be executable end-to-end** with explicitly verified data and tools
+- ✅ **Use only documented datasets** (no assumptions about "should have" data)
+- ✅ **Match data granularity** to analytical approach (no temporal/geographic mismatches)
+- ✅ If data gaps exist, reformulated or clearly marked as blocked
+
+**Agile Excellence**:
+- ✅ Focus on problems and value, not prescriptive solutions
+- ✅ Serve as conversation starters, not detailed specifications
+- ✅ Can be decomposed into 3-10 user stories per problem statement
+- ✅ Enable incremental value delivery across sprints
 
 ---
 
@@ -495,7 +605,6 @@ Your epic portfolio should:
 
 If project context is incomplete:
 - **Stakeholders**: Infer from domain (healthcare → clinicians, administrators, policy makers)
-- **Data**: Assume standard datasets for the industry/domain
 - **Methods**: Recommend industry-standard analytical approaches
 - **Constraints**: Assume typical privacy, security, and regulatory requirements
 
@@ -509,4 +618,4 @@ Consider domain-specific opportunities:
 
 ---
 
-**Remember**: These epics will drive multi-week analytical initiatives. Clarity, specificity, and actionability are paramount. Write epics that senior stakeholders will approve and technical teams can confidently execute.
+**Remember**: These problem statements will drive multi-week analytical initiatives. Clarity, specificity, and actionability are paramount. Write problem statements that senior stakeholders will approve and technical teams can confidently execute.

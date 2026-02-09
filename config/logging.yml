@@ -1,0 +1,99 @@
+# Logging Configuration
+# MOH Healthcare Analytics Project
+
+version: 1
+disable_existing_loggers: False
+
+formatters:
+  standard:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  
+  detailed:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(filename)s:%(lineno)d - %(funcName)s() - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  
+  json:
+    format: '{"timestamp": "%(asctime)s", "name": "%(name)s", "level": "%(levelname)s", "message": "%(message)s"}'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: standard
+    stream: ext://sys.stdout
+  
+  file_info:
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
+    formatter: detailed
+    filename: logs/etl/info.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+    encoding: utf8
+  
+  file_error:
+    class: logging.handlers.RotatingFileHandler
+    level: ERROR
+    formatter: detailed
+    filename: logs/errors/error.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+    encoding: utf8
+  
+  file_audit:
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
+    formatter: json
+    filename: logs/audit/audit.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 10
+    encoding: utf8
+
+loggers:
+  # Root logger
+  root:
+    level: INFO
+    handlers: [console, file_info, file_error]
+  
+  # ETL pipeline logger
+  etl:
+    level: DEBUG
+    handlers: [file_info, file_error]
+    propagate: no
+  
+  # Data processing logger
+  data_processing:
+    level: INFO
+    handlers: [file_info, file_error]
+    propagate: no
+  
+  # Analysis logger
+  analysis:
+    level: INFO
+    handlers: [file_info]
+    propagate: no
+  
+  # Audit logger (data access tracking)
+  audit:
+    level: INFO
+    handlers: [file_audit]
+    propagate: no
+  
+  # Third-party library loggers
+  kagglehub:
+    level: WARNING
+    handlers: [console]
+    propagate: no
+  
+  databricks:
+    level: INFO
+    handlers: [file_info]
+    propagate: no
+
+# Log retention policy
+retention:
+  info_logs: 30  # days
+  error_logs: 90  # days
+  audit_logs: 365  # days (1 year for compliance)
