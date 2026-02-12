@@ -1,55 +1,44 @@
-"""
-Logging Setup Utility
-
-This module provides standardized logging configuration for the project.
-"""
-
+"""Structured logging configuration."""
 import logging
-import logging.config
-from pathlib import Path
-
-import yaml
+import sys
+from typing import Optional
 
 
-def setup_logging(
-    default_path: str = "config/logging.yml",
-    default_level: int = logging.INFO,
-    env_key: str = "LOG_CFG"
-) -> None:
-    """
-    Setup logging configuration.
+def setup_logger(
+    name: str,
+    level: int = logging.INFO,
+    log_file: Optional[str] = None
+) -> logging.Logger:
+    """Configure structured logging with consistent format.
     
     Args:
-        default_path: Path to logging configuration file
-        default_level: Default logging level if config file not found
-        env_key: Environment variable name for config file path override
-    """
-    import os
-    
-    path = default_path
-    value = os.getenv(env_key, None)
-    if value:
-        path = value
-    
-    config_path = Path(path)
-    
-    if config_path.exists():
-        with open(config_path, "rt") as f:
-            config = yaml.safe_load(f.read())
-        logging.config.dictConfig(config)
-    else:
-        logging.basicConfig(level=default_level)
-        logging.warning(f"Logging config file not found: {config_path}. Using basic config.")
-
-
-def get_logger(name: str) -> logging.Logger:
-    """
-    Get a logger instance with the specified name.
-    
-    Args:
-        name: Name for the logger (typically __name__)
-    
+        name: Logger name (typically __name__)
+        level: Logging level (default: INFO)
+        log_file: Optional path to log file
+        
     Returns:
         Configured logger instance
     """
-    return logging.getLogger(name)
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    
+    # Create formatter
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+    
+    # Console handler
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setLevel(level)
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+    
+    # File handler (optional)
+    if log_file:
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setLevel(level)
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
+    
+    return logger

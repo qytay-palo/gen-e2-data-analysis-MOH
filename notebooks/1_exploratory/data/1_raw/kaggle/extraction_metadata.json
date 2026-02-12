@@ -1,0 +1,12 @@
+{
+  "extraction_timestamp": "2026-02-11T13:54:04.605558",
+  "source_dataset": "subhamjain/health-dataset-complete-singapore",
+  "record_count": 16066,
+  "column_count": 3,
+  "columns": [
+    "epi_week",
+    "disease",
+    "no._of_cases"
+  ],
+  "file_path": "data/1_raw/kaggle/disease_data.parquet"
+}

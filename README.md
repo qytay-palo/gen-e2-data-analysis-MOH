@@ -1,244 +1,448 @@
-# MOH Healthcare Analytics: Policy & Operations Insights
+# MOH Infectious Disease Temporal Analysis & Forecasting
 
-**Project Type:** Healthcare Data Analysis  
-**Platform:** HEALIX/Databricks (GCC Cloud Environment)  
-**Languages:** Python, R, SQL  
-**Last Updated:** 4 February 2026  
-**Status:** Active Development - Phase 0 (Initialization)
-
----
-
-## 🎯 Project Overview
-
-This project analyzes Singapore's healthcare system data to support evidence-based policymaking and operational improvements across polyclinics and hospitals. The analysis focuses on identifying bottlenecks, intervention opportunities, and process improvements to ensure accessible, efficient, and sustainable healthcare delivery.
-
-### Key Outcomes
-
-1. **Disease Outbreak Detection**: Identify potential disease outbreaks through syndromic surveillance and trend analysis
-2. **Clinic Visitation Distribution**: Understand visitation patterns and capacity utilization across polyclinics and healthcare facilities
-3. **Policy Intervention Identification**: Identify areas requiring government intervention or policy implementation
-4. **Healthcare Process Optimization**: Analyze potential improvements in hospitalization and polyclinic user processes
-
-### Success Metrics
-
-The project's success will be measured by:
-- ✅ **Bottleneck Identification**: Pinpoint operational bottlenecks in patient flow, resource allocation, and service delivery
-- ✅ **Intervention Opportunities**: Identify specific areas where government intervention is needed
-- ✅ **Improvement Opportunities**: Discover actionable opportunities for process and service improvements
-- ✅ **Evidence-Based Decision Making**: Enable data-driven policy decisions with comprehensive insights
-
-### Stakeholders
-
-- **Primary Audience**: 
-  - MOH Business Decision Makers
-  - MOH Policy Makers
-- **Expected Impact**: Support comprehensive, well-rounded policy decisions with data-driven evidence
+**Project Status:** 🟢 Active Development (Phase 1)  
+**Last Updated:** 9 February 2026  
+**Platform:** HEALIX/Databricks  
+**Language:** Python 3.9+
 
 ---
 
-## 🗂️ Project Structure
+## 📋 Project Overview
+
+This data analytics project analyzes **9 years of weekly infectious disease surveillance data** (2012-2020) from Singapore's Ministry of Health to:
+
+1. **Identify seasonal patterns** across 45 infectious diseases
+2. **Forecast outbreak periods** 8-12 weeks in advance for high-burden diseases (Dengue, HFMD)
+3. **Rank disease burden** to prioritize resource allocation
+4. **Optimize public health resources** through proactive planning
+
+### Business Impact
+
+**Target Stakeholders:**
+- MOH Policy Makers (budget allocation, strategic planning)
+- Healthcare Facility Committees (operational planning, staff scheduling)
+- Public Health Surveillance Teams (outbreak response)
+
+**Expected Outcomes:**
+- Proactive vs reactive resource deployment
+- Improved outbreak response times (target: 20% faster)
+- Evidence-based policy decisions for program funding
+- Optimized healthcare capacity during predictable disease peaks
+
+---
+
+## 🎯 Project Objectives
+
+### 1. Temporal Pattern Analysis
+Identify which diseases exhibit strong seasonal patterns and when they peak
+
+**Key Deliverable:** Seasonal disease calendar showing high-risk periods
+
+### 2. Outbreak Forecasting
+Predict future case volumes with 70%+ accuracy for Dengue Fever and HFMD
+
+**Key Deliverable:** 8-12 week ahead forecasts with confidence intervals
+
+### 3. Disease Burden Assessment
+Rank all 45 diseases by case volume, growth rate, and outbreak frequency
+
+**Key Deliverable:** Prioritized disease list for resource allocation
+
+### 4. Resource Optimization
+Provide evidence-based recommendations for allocating resources across disease programs
+
+**Key Deliverable:** Decision matrix and budget allocation framework
+
+---
+
+## 📊 Data Sources
+
+### Primary Dataset: Weekly Infectious Disease Bulletin
+- **Source:** Ministry of Health Singapore (via Kaggle)
+- **Dataset ID:** `subhamjain/health-dataset-complete-singapore`
+- **Coverage:** 2012-2020 (470 weeks)
+- **Records:** 16,066 weekly case counts across 45 diseases
+- **Key Diseases:**
+  - Dengue Fever: 126,642 total cases
+  - HFMD (Hand, Foot, Mouth Disease): 73,927+ cases
+  - Salmonellosis: 16,497 cases
+  - Mumps: 4,213 cases
+
+**Data Quality:** ✅ Complete (no missing values), consistent weekly reporting
+
+See [Data Sources Documentation](docs/project_context/data-sources.md) for details.
+
+---
+
+## 🏗️ Project Structure
 
 ```
 .
-├── .env.example          # Environment variables template (credentials, API keys)
-├── .gitignore            # Git exclusions
-├── README.md             # This file
-├── requirements.txt      # Python dependencies
-├── environment.yml       # Conda environment specification
+├── README.md                # This file
+├── requirements.txt         # Python dependencies
+├── environment.yml          # Conda environment specification
+├── pyproject.toml           # Project metadata and build configuration
 │
-├── .github/              # CI/CD and automation
-│   └── workflows/
-│       ├── data_quality_checks.yml
-│       └── scheduled_extraction.yml
+├── .gitignore               # Version control exclusions
+├── .env.example             # Template for environment variables
 │
-├── docs/                 # 📚 Documentation & Context
-│   ├── index.md          # Documentation navigation hub
-│   ├── objectives/       # Project goals and success criteria
-│   ├── data_dictionary/  # Data schemas, field definitions, lineage
-│   ├── methodology/      # Statistical methods, analytical frameworks
-│   └── project_context/  # Business context, tech stack, data sources
+├── config/                  # 📝 Configuration Files
+│   ├── auto_analysis.yml    # Automated analysis settings
+│   ├── data_sources.yml     # Data source configurations
+│   ├── databricks.yml       # HEALIX/Databricks settings
+│   └── logging.yml          # Logging configuration
 │
-├── config/               # ⚙️ Configuration Files
-│   ├── databricks.yml    # Databricks cluster and job configs
-│   ├── data_sources.yml  # Data connection configurations
-│   └── logging.yml       # Logging configuration
+├── docs/                    # 📚 Documentation
+│   ├── index.md             # Documentation hub
+│   ├── problem_statements.md # Analytics opportunities
+│   ├── project_context/     # Business context
+│   │   ├── business-objectives.md
+│   │   ├── data-sources.md
+│   │   └── tech-stack.md
+│   ├── objectives/          # Feature objectives
+│   │   └── infectious_disease_temporal_analysis.md
+│   └── data_dictionary/     # Data schemas and definitions
 │
-├── sql/                  # 🗄️ Database Scripts
-│   ├── views/            # SQL views for common queries
-│   ├── procedures/       # Stored procedures
-│   └── extractions/      # Data extraction queries
+├── data/                    # 💾 Data Storage
+│   ├── 1_raw/               # Original immutable source data
+│   ├── 2_external/          # External reference data
+│   ├── 3_interim/           # Intermediate transformation outputs
+│   ├── 4_processed/         # Final cleaned datasets (analysis-ready)
+│   └── schemas/             # Data contracts and lineage
 │
-├── data/                 # 📊 Data Pipeline
-│   ├── 1_raw/            # Original immutable source data
-│   ├── 2_external/       # External reference data
-│   ├── 3_interim/        # Intermediate transformation outputs
-│   ├── 4_processed/      # Final analysis-ready datasets
-│   └── schemas/          # Data schemas and lineage docs
+├── notebooks/               # 📓 Interactive Analysis
+│   ├── 1_exploratory/       # Initial EDA, data profiling
+│   ├── 2_analysis/          # Deep-dive analysis, insights
+│   │   └── automated_analysis_demo.ipynb
+│   └── 3_feature_engineering/ # Feature creation
 │
-├── notebooks/            # 📓 Interactive Analysis
-│   ├── 1_exploratory/    # EDA, data profiling, hypothesis generation
-│   ├── 2_analysis/       # Deep-dive analysis, insights documentation
-│   └── 3_feature_engineering/  # Feature creation, transformations
+├── src/                     # 🐍 Production Code
+│   ├── data_processing/     # ETL, cleaning, validation
+│   ├── features/            # Feature engineering
+│   ├── analysis/            # Statistical analysis algorithms
+│   ├── visualization/       # Chart generation, plotting
+│   ├── models/              # Model training, tuning
+│   └── utils/               # Helper functions
+│       ├── config_loader.py
+│       └── logger.py
 │
-├── src/                  # 🔧 Production Code
-│   ├── utils/            # Helper functions, common utilities
-│   ├── data_processing/  # ETL, cleaning, validation
-│   ├── features/         # Feature engineering
-│   ├── analysis/         # Statistical analysis algorithms
-│   ├── visualization/    # Chart generation, plotting utilities
-│   └── models/           # Model training, hyperparameter tuning
+├── scripts/                 # ⚙️ Automation Scripts
+│   ├── explore_infectious_disease_data.py  # Kaggle dataset exploration
+│   ├── analyze_infectious_disease_scope.py # Data scope analysis
+│   ├── auto_analyze.py      # Automated analysis runner
+│   └── run_scheduled_analysis.py
 │
-├── tests/                # ✅ Quality Assurance
-│   ├── unit/             # Unit tests
-│   ├── integration/      # Integration tests
-│   └── data/             # Data validation tests
+├── tests/                   # 🧪 Quality Assurance
+│   ├── unit/                # Unit tests
+│   ├── integration/         # Integration tests
+│   └── data/                # Data validation tests
 │
-├── models/               # 🤖 Model Artifacts
-│   └── *.pkl, *.joblib   # Trained models, serialized objects
+├── models/                  # 🤖 Trained Models
+│   └── *.pkl, *.joblib      # Serialized model artifacts
 │
-├── results/              # 📈 Analysis Outputs
-│   ├── tables/           # Summary statistics, analytical tables
-│   ├── metrics/          # Performance KPIs, evaluation metrics
-│   └── exports/          # Stakeholder-ready data exports
+├── results/                 # 📈 Analysis Outputs
+│   ├── tables/              # Summary statistics (CSV/Excel)
+│   ├── metrics/             # Performance KPIs (JSON/CSV)
+│   └── exports/             # Stakeholder-ready exports
 │
-├── reports/              # 📑 Stakeholder Communication
-│   ├── figures/          # Static visualizations (PNG/PDF)
-│   ├── dashboards/       # Interactive dashboards (HTML/Streamlit)
-│   └── presentations/    # Executive summaries (PPTX/PDF)
+├── reports/                 # 📄 Stakeholder Communication
+│   ├── figures/             # Static visualizations (PNG/PDF)
+│   ├── dashboards/          # Interactive dashboards (HTML)
+│   └── presentations/       # Executive summaries (PPTX/PDF)
 │
-├── logs/                 # 📝 Execution Logs
-│   ├── etl/              # ETL pipeline logs
-│   ├── errors/           # Error logs and stack traces
-│   └── audit/            # Data access and change audit trails
+├── logs/                    # 📝 Execution Logs
+│   ├── etl/                 # ETL pipeline logs
+│   ├── errors/              # Error logs and stack traces
+│   └── audit/               # Audit trails
 │
-└── scripts/              # 🚀 Automation & Deployment
-    └── *.py, *.sh        # End-to-end pipelines, automation scripts
+└── sql/                     # 🗄️ SQL Queries (if using databases)
+    ├── views/               # SQL views
+    ├── procedures/          # Stored procedures
+    └── extractions/         # Data extraction queries
 ```
 
 ---
 
-## 🛠️ Technical Stack
-
-### Platform
-- **Cloud Environment**: HEALIX (GCC-Compliant)
-- **Analytics Platform**: Databricks
-- **Languages**: Python, R
-- **Additional Tools**: STATA (statistical analysis)
-
-### Key Libraries (Python)
-- **Data Processing**: pandas, numpy, pyspark
-- **Visualization**: matplotlib, seaborn, plotly
-- **Statistical Analysis**: scipy, statsmodels, scikit-learn
-- **Data Access**: kagglehub, databricks-sql-connector
-
-### Data Sources
-- **Primary**: Kaggle Health Dataset (Singapore MOH Data)
-  - 35 data tables covering healthcare facilities, workforce, utilization, outcomes
-  - Time span: 1990-2020
-  - Source: data.gov.sg via Kaggle
-
----
-
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.9+
-- Access to HEALIX/Databricks workspace
-- Kaggle API credentials (for data download)
 
-### Installation
+- **Python:** 3.9 or higher
+- **Conda:** Recommended for environment management
+- **Kaggle Account:** For dataset access
+- **HEALIX/Databricks:** Access credentials (for production deployment)
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd gen-e2-data-analysis-MOH
-   ```
+### 1. Clone Repository
 
-2. **Set up Python environment**
-   ```bash
-   # Using pip
-   pip install -r requirements.txt
-   
-   # Using conda
-   conda env create -f environment.yml
-   conda activate moh-analytics
-   ```
+```bash
+git clone https://github.com/your-org/gen-e2-data-analysis-MOH.git
+cd gen-e2-data-analysis-MOH
+```
 
-3. **Configure environment variables**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your credentials
-   ```
+### 2. Set Up Environment
 
-4. **Download data**
-   ```bash
-   python scripts/download_data.py
-   ```
+**Option A: Using Conda (Recommended)**
+```bash
+conda env create -f environment.yml
+conda activate moh-infectious-disease
+```
 
----
+**Option B: Using venv**
+```bash
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-## 📊 Analysis Workflow
+### 3. Configure Kaggle API
 
-### Phase 1: Context & Understanding
-1. Review business objectives and success criteria
-2. Study data dictionary and source documentation
-3. Understand analytical methodology and frameworks
+**Generate API Key:**
+1. Log in to Kaggle → Account Settings
+2. Click "Create New API Token"
+3. Download `kaggle.json`
 
-### Phase 2: Data Acquisition
-1. Extract data from Kaggle dataset
-2. Validate data quality and completeness
-3. Document data lineage and transformations
+**Install API Key:**
+```bash
+mkdir -p ~/.kaggle
+mv ~/Downloads/kaggle.json ~/.kaggle/
+chmod 600 ~/.kaggle/kaggle.json
+```
 
-### Phase 3: Exploratory Analysis
-1. Profile data distributions and patterns
-2. Identify data quality issues
-3. Generate initial hypotheses
+### 4. Explore the Data
 
-### Phase 4: Deep Analysis
-1. Disease outbreak pattern analysis
-2. Clinic visitation and capacity analysis
-3. Process bottleneck identification
-4. Policy intervention opportunity mapping
+```bash
+# Analyze infectious disease data scope
+python3 scripts/analyze_infectious_disease_scope.py
+```
 
-### Phase 5: Insights & Recommendations
-1. Synthesize findings into actionable insights
-2. Create visualizations and dashboards
-3. Prepare stakeholder presentations
+**Output:**
+- Disease coverage summary
+- Temporal span analysis
+- Priority diseases for forecasting
+- Saved results in `data/infectious_disease_scope.json`
 
----
+### 5. Run Exploratory Analysis
 
-## 🔐 Security & Compliance
+```bash
+# Launch Jupyter Lab
+jupyter lab
 
-- **GCC Compliance**: All analysis conducted on HEALIX platform
-- **Data Privacy**: Aggregate data only, no personally identifiable information
-- **Access Control**: Role-based access to sensitive data
-- **Audit Trails**: All data access and transformations logged
+# Open: notebooks/1_exploratory/
+```
 
 ---
 
-## 📖 Documentation
+## 📦 Dependencies
 
-Comprehensive documentation available in [`docs/index.md`](docs/index.md):
-- [Business Objectives](docs/objectives/)
-- [Data Dictionary](docs/data_dictionary/)
-- [Methodology](docs/methodology/)
-- [Technical Stack](docs/project_context/tech-stack.md)
-- [Data Sources](docs/project_context/data-sources.md)
+### Core Libraries
+
+**Data Processing:**
+- pandas >= 2.0.0
+- numpy >= 1.24.0
+- polars >= 0.17.0 (optional, for large datasets)
+
+**Time Series Analysis:**
+- statsmodels >= 0.14.0
+- prophet >= 1.1.0
+- pmdarima >= 2.0.0
+
+**Machine Learning:**
+- scikit-learn >= 1.2.0
+- xgboost >= 1.7.0
+- mlflow >= 2.3.0
+
+**Visualization:**
+- matplotlib >= 3.7.0
+- seaborn >= 0.12.0
+- plotly >= 5.14.0
+
+**Data Acquisition:**
+- kagglehub >= 0.2.0
+
+**Platform:**
+- pyspark >= 3.3.0 (Databricks)
+- databricks-connect (for local development)
+
+See [requirements.txt](requirements.txt) for complete list.
 
 ---
 
-## 🤝 Contributing
+## 🔧 Configuration
 
-1. Create a feature branch
-2. Make your changes with appropriate tests
-3. Run code quality checks (`black`, `flake8`, `mypy`)
-4. Submit a pull request
+### Environment Variables
+
+Create `.env` file (copy from `.env.example`):
+
+```bash
+# Kaggle API
+KAGGLE_USERNAME=your_username
+KAGGLE_KEY=your_api_key
+
+# Databricks (HEALIX)
+DATABRICKS_HOST=https://your-workspace.cloud.databricks.com
+DATABRICKS_TOKEN=your_token
+
+# Project Settings
+PROJECT_ENV=development  # or: staging, production
+LOG_LEVEL=INFO
+```
+
+### Configuration Files
+
+- **`config/data_sources.yml`**: Dataset connections
+- **`config/databricks.yml`**: Platform settings
+- **`config/logging.yml`**: Logging configuration
+- **`config/auto_analysis.yml`**: Automated analysis parameters
+
+---
+
+## 📈 Usage Examples
+
+### Load Infectious Disease Data
+
+```python
+import kagglehub
+import pandas as pd
+from pathlib import Path
+
+# Download dataset
+dataset_path = kagglehub.dataset_download(
+    "subhamjain/health-dataset-complete-singapore"
+)
+
+# Load infectious disease data
+disease_file = Path(dataset_path) / "weekly-infectious-disease-bulletin-cases" / "weekly-infectious-disease-bulletin-cases.csv"
+df = pd.read_csv(disease_file)
+
+# Preview
+print(df.head())
+print(f"Total records: {len(df):,}")
+print(f"Diseases tracked: {df['disease'].nunique()}")
+```
+
+### Analyze Seasonal Patterns
+
+```python
+from src.analysis.temporal_patterns import SeasonalAnalyzer
+
+# Initialize analyzer
+analyzer = SeasonalAnalyzer(df)
+
+# Identify seasonal diseases
+seasonal_diseases = analyzer.detect_seasonality(
+    p_value_threshold=0.05,
+    min_observations=100
+)
+
+# Visualize Dengue Fever seasonality
+analyzer.plot_seasonal_decomposition("Dengue Fever")
+```
+
+### Forecast Future Cases
+
+```python
+from src.models.forecasting import DiseaseForecaster
+
+# Train forecasting model
+forecaster = DiseaseForecaster(method='prophet')
+forecaster.fit(df, disease="Dengue Fever")
+
+# Generate 12-week forecast
+forecast = forecaster.predict(horizon=12, include_confidence=True)
+
+# Visualize
+forecaster.plot_forecast(forecast)
+```
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+pytest tests/
+
+# Run unit tests only
+pytest tests/unit/
+
+# Run with coverage
+pytest --cov=src tests/
+```
+
+---
+
+## 📝 Documentation
+
+- **[Project Context](docs/project_context/)**: Business objectives, data sources, tech stack
+- **[Objectives](docs/objectives/)**: Detailed feature specifications
+- **[Problem Statements](docs/problem_statements.md)**: Analytics opportunities
+- **[Data Dictionary](docs/data_dictionary/)**: Schemas, field definitions
+- **[Index](docs/index.md)**: Documentation navigation hub
+
+---
+
+## 🗺️ Project Roadmap
+
+### ✅ Phase 0: Setup & Discovery (Week 1-2)
+- [x] Data source identification
+- [x] Scope definition
+- [x] Environment setup
+- [x] Documentation structure
+
+### 🚧 Phase 1: Foundation (Week 3-5)
+- [ ] Data extraction pipeline
+- [ ] Quality assessment & validation
+- [ ] Exploratory data analysis
+- [ ] Seasonal pattern identification
+
+### 📅 Phase 2: Modeling (Week 6-8)
+- [ ] Forecasting model development
+- [ ] Model validation & tuning
+- [ ] Disease burden analysis
+- [ ] Statistical significance testing
+
+### 📅 Phase 3: Insights & Tools (Week 9-12)
+- [ ] Resource allocation framework
+- [ ] Interactive dashboard
+- [ ] Executive reports & policy briefs
+- [ ] Stakeholder presentations
+
+---
+
+## 👥 Team & Contributors
+
+**Project Lead:** Data Analytics Team, MOH  
+**Stakeholders:** 
+- MOH Policy Makers
+- Healthcare Facility Committees
+- Public Health Surveillance Teams
+
+**Technical Contributors:** [Add team members]
+
+---
+
+## 📄 License
+
+[Specify license - typically internal/proprietary for government projects]
+
+---
+
+## 🔗 Related Resources
+
+- **MOH Website:** https://www.moh.gov.sg/
+- **Data Source (Kaggle):** https://www.kaggle.com/datasets/subhamjain/health-dataset-complete-singapore
+- **HEALIX Platform:** [Internal documentation]
 
 ---
 
 ## 📞 Contact & Support
 
-For questions or support, contact the MOH Analytics Team.
+**Project Email:** [project-email@moh.gov.sg]  
+**Documentation Issues:** Open an issue in this repository  
+**Technical Support:** [Contact internal support team]
 
-**Project Maintainers**: [Your Team]  
-**Last Updated**: 4 February 2026
+---
+
+**Last Updated:** 9 February 2026  
+**Version:** 1.0.0  
+**Status:** 🟢 Active Development

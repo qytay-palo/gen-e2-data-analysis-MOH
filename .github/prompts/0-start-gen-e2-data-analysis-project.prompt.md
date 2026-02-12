@@ -112,6 +112,10 @@ Below is the base folder structure:
       - set up appropriate configuration files for the chosen technologies
       - document the chosen platform in README.md and docs/index.md
       - include language specific dependencies in requirements.txt or environment.yml
+      - **Mandatory**: Use Polars for data processing and manipulation (preferred over pandas for performance and memory efficiency)
+         - Include `polars` in requirements.txt
+         - Document Polars usage patterns in project documentation
+         - Use Polars for ETL pipelines, data transformations, and feature engineering
 
 3. **Data Dictionary Creation**:
    - Compile a comprehensive data dictionary in `docs/data_dictionary/` that details all datasets, including:
@@ -172,6 +176,7 @@ Below is the base folder structure:
 
 2. **Install Project Dependencies**:
    - Install all necessary packages and libraries as per the chosen technical stack
+   -
    - Document installation steps in README.md and requirements.txt/environment.yml
 
 3. **Review**:

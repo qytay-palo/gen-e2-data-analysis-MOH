@@ -150,13 +150,6 @@ Use clear, descriptive names that enable easy identification of content:
   - `healthcare-capacity-feature-engineering-guide.md`
   - `disease-outbreak-feature-engineering-guide.md`
 
-**Best Practices:**
-- `{analytical-area}-best-practices.md`
-- Examples:
-  - `time-series-forecasting-best-practices.md`
-  - `geospatial-health-analysis-best-practices.md`
-  - `healthcare-equity-analysis-best-practices.md`
-
 #### f. File Content Structure for Domain Knowledge
 
 Store all domain knowledge files in `docs/domain_knowledge/` directory. Each file should follow this structure:
@@ -317,18 +310,71 @@ Ensure each story adheres to the INVEST principles:
 5.  **Small:** Stories should be small enough to be completed within a single iteration (e.g., a typical sprint). Break down large problem statements or features into smaller, manageable stories.
 6.  **Testable:** Each story must have implicit or explicit acceptance criteria. It should be possible to verify that the story has been implemented correctly.
 
-#### b. Use Vertical Slicing (CRITICAL)
+#### b. Use Vertical Slicing for Data Analysis Workflows (CRITICAL)
 
-*   **DO:** Create stories that represent a complete, thin slice of end-to-end functionality, delivering user value. Example: "As a user, I want to log in with my email and password so that I can access my account." (Touches UI, logic, potentially backend).
-*   **DO NOT:** Split stories horizontally by technical layer or component. Avoid stories like: "Create the login database table," "Build the login API endpoint," or "Design the login UI." These are tasks, not user stories.
+*   **DO:** Create stories that represent a complete, thin slice of analytical value from data extraction through to actionable insights. Each story should deliver tangible analytical outcomes that stakeholders can use.
+*   **DO:** For complex analytical problems, break them down by **data analysis lifecycle stages**:
+    1. **Data Extraction & Ingestion** - Getting raw data from sources
+    2. **Data Cleaning & Preprocessing** - Preparing data for analysis
+    3. **Exploratory Data Analysis (EDA)** - Understanding patterns and characteristics
+    4. **Feature Engineering** - Creating analytical variables
+    5. **Statistical Analysis/Modeling** - Applying analytical methods
+    6. **Model Evaluation & Validation** - Assessing quality and reliability
+    7. **Visualization & Reporting** - Communicating insights
+*   **DO:** Example of proper lifecycle decomposition: Instead of one massive story "As an analyst, I want to forecast disease outbreaks," break it into:
+    - Story 1: "As an analyst, I want to explore historical disease patterns so that I can understand baseline trends" (EDA stage)
+    - Story 2: "As an analyst, I want to develop a baseline forecasting model so that I can establish prediction benchmarks" (Initial Modeling stage)
+    - Story 3: "As an analyst, I want to create an interactive forecasting dashboard so that stakeholders can visualize predictions" (Visualization stage)
+*   **DO NOT:** Split stories horizontally by technical layer. Avoid stories like: "Create the database table," "Build the API endpoint," or "Design the UI component." These are implementation tasks, not user stories.
+*   **DO NOT:** Create stories that are just technical tasks without clear user value, such as "Clean the dataset" or "Run regression model." Instead, frame them with user value: "As an analyst, I want clean demographic data so that I can produce reliable trend analyses."
 
-#### c. Story Format Requirements
+#### c. Data Analysis Lifecycle Decomposition Strategy
 
-*   Assign a sequential number to each story title (e.g., `# User Story: 1 - Search Products`).
+For analytical problem statements, systematically decompose them following the data analysis lifecycle. **Note:** The stages below are guidelines and commonly used patterns, but are **not limited to the following**. Adapt, combine, or add stages as needed based on the specific problem statement requirements and complexity.
+
+**Stage 1: Data Extraction & Understanding**
+- Stories focusing on acquiring, loading, and profiling raw data
+- Outcome: Stakeholders understand what data is available and its characteristics
+- Example: "As an analyst, I want to extract 5 years of disease surveillance data so that I can assess data completeness and quality"
+
+**Stage 2: Data Preparation & Quality**
+- Stories about cleaning, transforming, and validating data
+- Outcome: Analysis-ready datasets with documented quality metrics
+- Example: "As an analyst, I want to clean and standardize disease classification codes so that I can ensure consistent temporal comparisons"
+
+**Stage 3: Exploratory Analysis**
+- Stories for discovering patterns, distributions, and relationships
+- Outcome: Initial insights and hypotheses documented for stakeholders
+- Example: "As a public health analyst, I want to identify seasonal disease patterns so that I can formulate outbreak timing hypotheses"
+
+**Stage 4: Feature Engineering**
+- Stories creating analytical variables and derived metrics
+- Outcome: Rich feature set ready for modeling or advanced analysis
+- Example: "As an analyst, I want to engineer temporal features (lag variables, rolling averages) so that I can capture disease transmission dynamics"
+
+**Stage 5: Advanced Analysis & Modeling**
+- Stories applying statistical methods, forecasting, or machine learning
+- Outcome: Validated analytical models or statistical findings
+- Example: "As a policy analyst, I want to develop a seasonal forecasting model so that I can predict outbreak peaks 3 months in advance"
+
+**Stage 6: Validation & Evaluation**
+- Stories assessing model performance, conducting sensitivity analysis
+- Outcome: Confidence metrics and model limitations documented
+- Example: "As an analyst, I want to evaluate forecast accuracy across different disease types so that I can communicate prediction reliability"
+
+**Stage 7: Visualization & Insight Communication**
+- Stories creating dashboards, reports, and interactive tools
+- Outcome: Actionable insights accessible to decision-makers
+- Example: "As a healthcare operations manager, I want an interactive outbreak dashboard so that I can monitor predictions and allocate resources proactively"
+
+#### d. Story Format Requirements
+
+*   Assign a sequential number to each story title that reflects the lifecycle stage (e.g., `# User Story: 1 - Exploratory Disease Pattern Analysis`, `# User Story: 2 - Baseline Forecasting Model Development`).
 *   Focus on extracting user-centric requirements and value propositions discussed.
 *   Ignore conversational filler, off-topic discussions, or administrative details unless they directly inform a requirement.
 *   If the problem statement mentions specific user roles, use them. Otherwise, infer logical user types (e.g., "user," "administrator," "analyst").
 *   If acceptance criteria are explicitly discussed, include them as bullet points under the relevant story.
+*   Ensure story titles clearly indicate which lifecycle stage they address.
 
 ---
 
@@ -440,6 +486,7 @@ This section outlines detailed formatting guidelines for writing user stories in
    - Use bullet points for detailed requirements
 
 #### 3. 🔒 Technical Constraints
+   - Data processing library (prefer Polars over Pandas)
    - Architecture requirements
    - State management approach
    - Data analysis guidelines
@@ -459,7 +506,7 @@ This section outlines detailed formatting guidelines for writing user stories in
    - Tasks should be specific enough for immediate development
    - Include data source file paths, API endpoints, or dataset references
    - Note any code reuse opportunities from existing components
-   - Specify configuration or environment setup requirements
+   - Specify environment setup requirements
 
 ---
 
@@ -522,24 +569,107 @@ This section outlines detailed formatting guidelines for writing user stories in
 
 "...The analytics team needs to understand polyclinic utilization patterns. Sarah from MOH mentioned that tracking visit trends by age group and time period is critical for capacity planning. John added that analyzing seasonal patterns would help with resource allocation, especially during peak periods. We need to ensure the analysis is reliable and the insights are clearly communicated to stakeholders with supporting visualizations..."
 
-### Generated User Stories
+### Generated User Stories (Decomposed by Data Analysis Lifecycle)
 
-1.  **As a** healthcare policy analyst,
-    **I want** to analyze polyclinic visit patterns by age group and year,
-    **so that** I can identify demographic trends and inform capacity planning decisions.
-    *   Acceptance Criteria:
-        *   Data extraction includes visit counts by age group (per [`docs/data_dictionary/`](docs/data_dictionary/))
-        *   Analysis covers full historical period available in the dataset
-        *   Output includes summary statistics and trend metrics by age segment
+**Stage 1-2: Data Extraction & Preparation**
 
-2.  **As a** healthcare operations manager,
-    **I want** to identify seasonal utilization patterns in polyclinic visits,
-    **so that** I can optimize staff scheduling and resource allocation during peak periods.
+1.  **User Story 1 - Data Extraction and Quality Assessment**
+    
+    **As a** healthcare data analyst,
+    **I want** to extract and profile polyclinic visit data across all age groups and time periods,
+    **so that** I can assess data completeness and establish a reliable foundation for analysis.
+    
     *   Acceptance Criteria:
-        *   Analysis identifies quarterly and monthly visit patterns
-        *   Seasonal peaks and troughs are clearly quantified
-        *   Results are presented in an interactive dashboard with drill-down capabilities
-        *   Statistical significance of seasonal variations is documented
+        *   Data extraction includes visit counts by age group from all polyclinics (per [`docs/data_dictionary/`](docs/data_dictionary/))
+        *   Analysis covers minimum 3 years of historical data
+        *   Data quality report documents completeness, missing values, and outliers
+        *   Age group classifications are validated against MOH standards
+
+**Stage 3: Exploratory Analysis**
+
+2.  **User Story 2 - Exploratory Visit Pattern Analysis**
+    
+    **As a** healthcare policy analyst,
+    **I want** to explore polyclinic visit patterns by age group, month, and quarter,
+    **so that** I can identify demographic trends and preliminary seasonal patterns.
+    
+    *   Acceptance Criteria:
+        *   Summary statistics calculated for each age group and time period
+        *   Temporal trends visualized showing year-over-year changes
+        *   Preliminary seasonal patterns identified and documented
+        *   Statistical tests applied to confirm significance of observed patterns
+        *   EDA report delivered with key findings and hypotheses
+
+**Stage 4-5: Feature Engineering & Modeling**
+
+3.  **User Story 3 - Seasonal Pattern Analysis and Feature Engineering**
+    
+    **As a** healthcare operations manager,
+    **I want** to engineer temporal features and quantify seasonal utilization patterns,
+    **so that** I can understand cyclical demand drivers for resource planning.
+    
+    *   Acceptance Criteria:
+        *   Temporal features created: monthly/quarterly indicators, lag variables, rolling averages
+        *   Seasonal decomposition performed (trend, seasonal, residual components)
+        *   Peak and trough periods identified with confidence intervals
+        *   Seasonal indices calculated for each age group
+        *   Domain knowledge from [`docs/domain_knowledge/`](docs/domain_knowledge/) applied for feature validation
+
+4.  **User Story 4 - Demand Forecasting Model Development**
+    
+    **As a** healthcare capacity planner,
+    **I want** to develop a forecasting model for polyclinic visit demand,
+    **so that** I can predict future utilization and optimize resource allocation.
+    
+    *   Acceptance Criteria:
+        *   Multiple forecasting approaches tested (ARIMA, Prophet, ensemble methods)
+        *   Model trained on historical data with proper train/test split
+        *   Forecast horizon extends 3-6 months into the future
+        *   Model incorporates age group and seasonal features
+        *   Feature importance documented for stakeholder understanding
+
+**Stage 6: Validation & Evaluation**
+
+5.  **User Story 5 - Forecast Model Evaluation and Validation**
+    
+    **As a** healthcare data analyst,
+    **I want** to rigorously evaluate forecast model performance across different scenarios,
+    **so that** I can communicate prediction reliability and model limitations to stakeholders.
+    
+    *   Acceptance Criteria:
+        *   Performance metrics calculated (RMSE, MAPE, MAE) by age group
+        *   Forecast accuracy compared against naive baseline models
+        *   Sensitivity analysis conducted for key assumptions
+        *   Model limitations and confidence intervals documented
+        *   Validation report includes recommendations for model deployment
+
+**Stage 7: Visualization & Communication**
+
+6.  **User Story 6 - Interactive Utilization Dashboard Development**
+    
+    **As a** healthcare operations manager,
+    **I want** an interactive dashboard showing historical patterns and future forecasts,
+    **so that** I can monitor utilization trends and make data-driven staffing decisions.
+    
+    *   Acceptance Criteria:
+        *   Dashboard displays historical visit trends by age group with drill-down by time period
+        *   Forecasted demand visualized with confidence intervals
+        *   Seasonal patterns highlighted with period-over-period comparisons
+        *   Interactive filters for age group, time period, and polyclinic location
+        *   Alert indicators for predicted capacity constraints
+        *   Dashboard accessible to authorized MOH stakeholders
+        *   User guide and interpretation notes included
+
+---
+
+### Why This Decomposition Works
+
+✅ **Incremental Value Delivery:** Each story delivers actionable outcomes
+✅ **Clear Dependencies:** Stories build logically on previous work
+✅ **Manageable Scope:** Each story fits within a sprint (1-2 weeks)
+✅ **Testable:** Clear acceptance criteria for each stage
+✅ **Stakeholder-Focused:** Different stories serve different user needs
+✅ **Lifecycle Coverage:** Spans full analysis journey from raw data to insights
 
 ---
 
@@ -554,13 +684,17 @@ Before finishing, verify that you have:
 - [ ] Named domain knowledge files following the prescribed naming convention
 - [ ] Cross-referenced domain knowledge in user stories for feature engineering guidance
 - [ ] Generated user stories for **EVERY** problem statement (not just a subset)
+- [ ] **Decomposed analytical problems by data analysis lifecycle stages** (extraction → visualization)
 - [ ] Applied INVEST principles to each story
-- [ ] Used vertical slicing (end-to-end value, not technical layers)
+- [ ] Used vertical slicing (end-to-end analytical value, not technical layers)
+- [ ] **Ensured story titles reflect their lifecycle stage** (e.g., "Exploratory Analysis", "Model Development")
+- [ ] **Verified stories build logically** from data extraction through to visualization/reporting
 - [ ] Created separate markdown files with correct naming convention
-- [ ] Included all required sections: Description, Acceptance Criteria, Technical Constraints, Dependencies, Tasks
+- [ ] Included all required sections: Description, Acceptance Criteria, Technical Constraints, Domain Knowledge References, Dependencies, Tasks
+- [ ] **Grouped implementation tasks by lifecycle stage** within each story
 - [ ] Updated each problem statement's `index.md` with links to new stories
 - [ ] Updated the main `docs/objectives/problem_statements/index.md`
-- [ ] Ensured stories are small enough for one sprint
+- [ ] Ensured stories are small enough for one sprint (1-2 weeks)
 - [ ] Made stories testable with clear acceptance criteria
 - [ ] Documented any assumptions made for incomplete problem statements
 

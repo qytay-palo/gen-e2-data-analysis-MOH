@@ -1,11 +1,18 @@
 # Databricks Configuration
-# HEALIX/GCC Cloud Environment
+# HEALIX/GCC Cloud Environment - MOH Infectious Disease Analysis Project
+
+# Workspace Settings
+workspace:
+  host: "${DATABRICKS_HOST}"  # HEALIX workspace URL
+  token: "${DATABRICKS_TOKEN}"  # Personal access token
+  workspace_id: "${DATABRICKS_WORKSPACE_ID}"
+  environment: "${PROJECT_ENV:-development}"  # development, staging, production
 
 # Cluster Configuration
 cluster:
-  name: "moh-analytics-cluster"
+  name: "moh-infectious-disease-analytics"
   spark_version: "13.3.x-scala2.12"  # LTS version
-  node_type_id: "Standard_DS3_v2"    # Adjust based on workload
+  node_type_id: "Standard_DS3_v2"    # 4 cores, 14 GB RAM
   
   driver_node_type_id: "Standard_DS3_v2"
   num_workers: 2  # Auto-scaling recommended for production

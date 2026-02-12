@@ -309,6 +309,224 @@ All problem statements share a common goal: **Enable comprehensive, well-rounded
 
 ---
 
+## 7. Infectious Disease Seasonal Analysis & Outbreak Forecasting
+
+### Problem Statement
+
+**Challenge**: Healthcare facilities and public health agencies often operate reactively, responding to disease outbreaks after they occur rather than preparing proactively. Without understanding seasonal patterns and forecast capabilities, resources are distributed evenly throughout the year rather than concentrated during high-risk periods, leading to:
+
+- **Overwhelmed Healthcare Capacity**: Emergency rooms and clinics flooded during unexpected disease surges (Dengue outbreaks, HFMD seasons)
+- **Inefficient Resource Allocation**: Staff, supplies, and budgets spread evenly rather than optimized for predictable peaks
+- **Missed Prevention Opportunities**: Vector control campaigns, vaccination drives, and public awareness initiatives poorly timed
+- **Policy Uncertainty**: Budget allocation decisions lack data-driven justification for disease-specific programs
+
+**Impact**:
+- Healthcare system strain during outbreaks (longer wait times, staff burnout)
+- Higher treatment costs from reactive vs preventive care
+- Preventable disease burden due to missed intervention windows
+- Budget inefficiencies from mis-timed resource deployment
+
+**Opportunity**: Leverage 9 years (2012-2020) of weekly infectious disease surveillance data to:
+- Identify which diseases exhibit strong seasonal patterns
+- Forecast high-risk outbreak periods 8-12 weeks in advance
+- Prioritize diseases for resource allocation based on burden metrics
+- Enable proactive healthcare planning and intervention timing
+
+### Research Questions
+
+#### Temporal Pattern Analysis
+1. Which infectious diseases show statistically significant seasonal patterns?
+2. What are the peak months/weeks for Dengue Fever, HFMD, and respiratory infections?
+3. Are there multi-year epidemic cycles beyond annual seasonality?
+4. How consistent are seasonal patterns year-over-year?
+5. Do different diseases have overlapping peak periods (compounding system strain)?
+
+#### Outbreak Forecasting
+6. Can we forecast disease case volumes 8-12 weeks in advance with ≥70% accuracy?
+7. What forecasting methods work best for different disease types?
+8. How do we distinguish between normal seasonal peaks vs true outbreak surges?
+9. What early warning indicators (lead time) can we achieve?
+10. How should confidence intervals be communicated to stakeholders?
+
+#### Disease Burden Assessment
+11. Which diseases contribute most to overall infectious disease burden?
+12. How do we balance high-volume diseases (HFMD) vs high-severity diseases (Dengue Haemorrhagic Fever)?
+13. Which diseases show increasing vs decreasing trends over time?
+14. What are the fastest-growing infectious disease threats?
+15. How has the disease burden mix shifted from 2012-2020?
+
+#### Resource Optimization
+16. How should public health resources be allocated across disease surveillance programs?
+17. What is the optimal timing for preventive interventions (vector control, vaccination campaigns)?
+18. How can healthcare facilities adjust staffing levels based on forecasts?
+19. What cost-benefit tradeoffs exist between prevention and treatment resource allocation?
+20. Can we quantify the value of proactive vs reactive resource deployment?
+
+### Data Requirements
+
+- **Primary Dataset**: Weekly Infectious Disease Bulletin (2012-2020)
+  - 16,066 records across 45 notifiable diseases
+  - 470 weeks of continuous surveillance data
+  - Key diseases: Dengue Fever (126,642 cases), HFMD (73,927+ cases), Salmonellosis (16,497 cases), Mumps (4,213 cases)
+
+- **Supplementary Data** (Future Enhancement):
+  - Weather data (temperature, rainfall) for environmental correlations
+  - Population demographics for rate calculations
+  - Healthcare capacity metrics (beds, staff) for resource optimization
+  - Intervention timing (campaigns, policies) for impact evaluation
+
+### Analytical Approaches
+
+#### Time Series Analysis
+- **Seasonal Decomposition**: Isolate trend, seasonal, and residual components
+- **Autocorrelation Analysis**: Identify temporal dependencies and lag structures
+- **Spectral Analysis**: Detect dominant periodicities and cycles
+- **Statistical Tests**: Mann-Kendall trend test, Kruskal-Wallis for seasonal differences
+
+#### Forecasting Models
+- **SARIMA (Seasonal ARIMA)**: Classical statistical approach for seasonal time series
+- **Prophet**: Facebook's forecasting tool designed for business time series with seasonality
+- **XGBoost with Lagged Features**: Machine learning approach incorporating past values
+- **Ensemble Methods**: Combine multiple models for robust predictions
+
+#### Burden Metrics
+- **Absolute Burden**: Total case counts, cumulative incidence
+- **Relative Burden**: Year-over-year growth rates, outbreak frequency
+- **Severity Indicators**: Hospitalization rates, mortality (where available)
+- **Composite Scoring**: Weighted index combining multiple burden dimensions
+
+### Expected Deliverables
+
+#### 1. Seasonal Disease Profiles
+- Visual calendar showing peak periods for each major disease
+- Statistical significance testing results for seasonal patterns
+- Comparative analysis across diseases (which seasons have highest combined burden)
+
+#### 2. Outbreak Forecasting System
+- 8-12 week ahead forecasts for Dengue Fever and HFMD
+- Confidence intervals and prediction accuracy metrics
+- Early warning alerts when forecasts exceed thresholds
+- Model validation reports on historical data
+
+#### 3. Disease Burden Ranking
+- Comprehensive ranking of all 45 diseases by multiple metrics
+- Trend analysis (2012-2020) showing disease evolution
+- Identification of top 10 highest-burden diseases for resource prioritization
+
+#### 4. Resource Allocation Framework
+- Decision matrix for distributing resources across diseases and time periods
+- Recommended staffing levels by season for healthcare facilities
+- Budget allocation recommendations by disease category
+- Cost-benefit analysis of intervention timing (e.g., pre-season vector control)
+
+#### 5. Interactive Dashboard
+- Real-time monitoring of current disease levels vs forecasts
+- Historical trend visualizations
+- Scenario planning tools ("what if" resource allocation)
+
+### Target Stakeholders & Use Cases
+
+#### 1. MOH Policy Makers
+**Use Case**: Evidence-based budget allocation for disease surveillance and prevention programs  
+**Key Insights Needed**:
+- Which diseases warrant increased funding?
+- What is the return on investment for proactive vs reactive programs?
+- Long-term trends to inform 3-5 year strategic planning
+
+#### 2. Healthcare Facility Committees
+**Use Case**: Operational planning for staffing, supplies, and capacity management  
+**Key Insights Needed**:
+- When should additional staff be scheduled?
+- What supplies need to be stockpiled before peak seasons?
+- How to balance resources across multiple simultaneous disease threats?
+
+#### 3. Public Health Surveillance Teams
+**Use Case**: Prioritization of surveillance efforts and outbreak response planning  
+**Key Insights Needed**:
+- Which diseases require enhanced monitoring?
+- When to deploy rapid response teams proactively?
+- Validation of current surveillance priorities
+
+### Success Metrics
+
+#### Analytical Quality
+- Seasonal patterns identified for minimum 3 diseases with statistical significance (p < 0.05)
+- Forecasting accuracy ≥70% (MAPE or similar metric) for Dengue and HFMD
+- Comprehensive burden ranking for all 45 tracked diseases
+
+#### Stakeholder Impact
+- Healthcare facilities use forecasts for planning (adoption by ≥50% of facilities)
+- Policy makers cite findings in ≥2 budget allocation decisions
+- Public health interventions timed proactively based on forecasts
+
+#### Operational Efficiency
+- 20% improvement in outbreak response time (measured by time from forecast alert to intervention deployment)
+- 15% reduction in emergency stockpiling costs through better timing
+- Measurable reduction in preventable disease burden (long-term metric)
+
+### Technical Implementation
+
+#### Platform
+- **Primary**: HEALIX/Databricks environment
+- **Languages**: Python 3.9+, SQL, R (optional for specialized statistical methods)
+- **Version Control**: Git/GitHub
+
+#### Key Libraries
+- **Data Processing**: pandas, numpy, polars
+- **Time Series**: statsmodels, prophet, pmdarima
+- **Machine Learning**: scikit-learn, xgboost, mlflow
+- **Visualization**: matplotlib, seaborn, plotly, dash
+- **Big Data**: pyspark (Databricks integration)
+
+#### Deliverable Format
+- **Reports**: Markdown, PDF (executive summaries)
+- **Dashboards**: Plotly Dash, Streamlit, or Databricks notebooks
+- **Code**: Modular Python packages with comprehensive documentation
+- **Data Outputs**: CSV exports for stakeholder use
+
+### Timeline
+
+**Phase 1: Foundation** (Weeks 1-4)
+- Data extraction, quality assessment, exploratory analysis
+- Seasonal pattern identification and statistical testing
+- Preliminary visualizations and insights
+
+**Phase 2: Modeling** (Weeks 5-8)
+- Forecasting model development and validation
+- Disease burden analysis and ranking
+- Model tuning and performance optimization
+
+**Phase 3: Insights & Tools** (Weeks 9-12)
+- Resource allocation framework development
+- Interactive dashboard creation
+- Executive reports and policy briefs
+- Stakeholder presentations and training
+
+### Risks & Mitigation
+
+| Risk | Impact | Probability | Mitigation Strategy |
+|------|--------|-------------|---------------------|
+| COVID-19 anomalies distort 2020 data | High | High | Focus on 2012-2019 baseline, separate COVID analysis |
+| Forecasting models underperform (<70% accuracy) | High | Medium | Ensemble approach, multiple model types, conservative confidence intervals |
+| Stakeholder adoption low (tools not used) | High | Low | Early engagement, user-friendly design, training sessions |
+| Data quality issues (gaps, reporting changes) | Medium | Medium | Comprehensive validation, imputation protocols, sensitivity analysis |
+| HEALIX/Databricks setup delays | Medium | Low | Begin on local environment, migrate to cloud platform |
+
+### Related Analyses
+
+**Synergies with Existing Problem Statements**:
+- **Problem 1 (Disease Outbreak Detection)**: Forecasting complements early warning systems
+- **Problem 3 (Healthcare Capacity Planning)**: Seasonal forecasts inform bed/staff planning
+- **Problem 5 (Healthcare Expenditure)**: Resource optimization reduces reactive spending
+
+**Future Extensions**:
+- Integration with real-time surveillance data feeds
+- Regional/district-level forecasting (if granular data becomes available)
+- Climate-disease correlation analysis (temperature, rainfall effects)
+- Impact evaluation of public health interventions
+
+---
+
 **Document Owner**: MOH Analytics Team  
 **Review Frequency**: Quarterly or as project evolves  
-**Last Review**: 4 February 2026
+**Last Review**: 9 February 2026

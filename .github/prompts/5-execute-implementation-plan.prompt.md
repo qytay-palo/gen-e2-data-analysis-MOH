@@ -4,7 +4,7 @@ stage: Development
 ---
 # AI Agent Prompt: Execute Implementation Plan
 
-## Objective
+## Role
 
 Execute a detailed implementation plan accurately and verify its completion according to specifications for a end-to-end data analysis project.
 
@@ -41,6 +41,44 @@ The implementation MUST:
 - Create exact visual implementations matching design specifications
 - For any service or API integration step, you MUST implement the actual data fetching, error handling, and retries as described in the plan. Stubs or placeholders are NOT considered complete. If a function is only a stub, the implementation is NOT complete.
 - **Leverage MCP (Model Context Protocol) tools for all file and data operations as specified below**
+- **Implement ALL code blocks provided in the implementation plan verbatim (see Code Implementation Fidelity below)**
+
+### Code Implementation Fidelity
+
+**CRITICAL**: When an implementation plan includes code blocks with complete function implementations, these MUST be used exactly as specified:
+
+✅ **REQUIRED - Implement Verbatim:**
+- ALL code blocks provided in the implementation plan
+- All type hints, docstrings, and parameter definitions
+- All error handling, retry logic, and validation checks
+- All logging statements and audit trail tracking
+- All unit tests specified with full test coverage
+- All helper functions, utility modules, and configuration files
+- All security best practices (credential handling, input validation)
+
+❌ **FORBIDDEN - Do NOT:**
+- Simplify or omit "helper" functions or "boilerplate" code
+- Skip validation, error handling, or logging statements
+- Reduce comprehensive error handling to basic try/except blocks
+- Replace detailed implementations with stubs or placeholders
+- Assume "obvious" code can be skipped or simplified
+- Modify function signatures, parameters, or return types without justification
+- Create partial implementations with TODO comments
+
+**Rationale**: Implementation plan code blocks are:
+- Production-ready and tested against edge cases
+- Include proper error handling for real-world scenarios
+- Follow security best practices
+- Implement comprehensive logging for debugging and audit trails
+- Support reproducibility and long-term maintainability
+
+**Verification After Implementation**:
+1. Every function specified in the plan exists and is fully implemented
+2. All type hints and docstrings match the specification exactly
+3. All unit tests run successfully with expected coverage
+4. No functions are stubs (contain only `pass` or `NotImplementedError`)
+5. All error handling, retry logic, and validation checks are present
+6. All logging and metadata tracking code is functional
 
 ## MCP Tools Integration
 
@@ -162,27 +200,214 @@ Acceptance Criterion 2: Quality report generated
 
 ### Implementation Stages
 
-The implementation MUST proceed through these sequential stages:
+The implementation MUST proceed through stages aligned with the data analysis lifecycle. **Adapt these stages according to the specific implementation plan provided:**
 
-#### Stage 1: Basic Structure Implementation
-- Create component hierarchy and file structure
-- Implement basic layout without detailed styling
-- Verify structure matches design specifications
+- **If the plan specifies different stages**: Follow the plan's structure exactly
+- **If the plan is task-oriented**: Map tasks to appropriate lifecycle stages below
+- **If the plan omits stages**: Skip irrelevant stages (e.g., modeling for descriptive analysis)
+- **If the plan combines stages**: Execute combined activities as specified
+- **Always prioritize**: The implementation plan's instructions over these generic stages
 
-#### Stage 2: Color Implementation
-- Apply ALL colors as exact hex values (#RRGGBB) first
-- Double-check every color against design specification
-- Convert to Tailwind color tokens only if they are an EXACT match
+The following stages represent a complete data analysis lifecycle and should be selectively applied based on the implementation plan:
 
-#### Stage 3: Layout & Spacing Implementation
-- Apply exact padding, margin and gap values in pixels
-- Validate that spacing perfectly matches design specification
-- Convert to Tailwind spacing classes only if they are an EXACT match
+#### Stage 0: Environment Setup & Dependencies
+- Configure Python environment (virtual environment, conda, etc.)
+- Use **configure_python_environment** tool to set up the workspace environment
+- Install all required Python packages and libraries from `requirements.txt`
+- Use **install_python_packages** tool for package installation in **kernel and environment**
+- Verify Python version compatibility with project requirements
+- Install additional system dependencies if needed
+- Test import of critical libraries to ensure proper installation
+- Document environment specifications (Python version, package versions)
+- Use **get_python_environment_details** to verify installation success
+- Set up any required API keys or environment variables
+- Configure database connections if applicable
+- Verify MCP tools availability (filesystem, SQLite, GitHub)
 
-#### Stage 4: Typography & Detail Implementation
-- Apply font families, sizes, weights, and line heights exactly as specified
-- Implement any remaining details (borders, shadows, etc.)
-- Verify against design specification
+#### Stage 1: Problem Understanding & Setup
+- Review user story and acceptance criteria thoroughly
+- Understand business context and analytical objectives
+- Set up project structure (directories, notebooks, configurations)
+- Verify data sources and access requirements
+- Document assumptions and constraints
+- Use **filesystem tools** to create necessary directory structure
+
+#### Stage 2: Data Collection & Extraction
+- Extract data from source systems using appropriate methods
+- Use **filesystem tools** to read data from `data/1_raw/` or `data/2_external/`
+- Use **SQLite tools** for database extractions (if applicable)
+- Implement data fetching logic with proper error handling and retries
+- Save raw data with appropriate metadata and timestamps
+- Document data lineage and extraction parameters
+- Verify data completeness and successful extraction
+
+#### Stage 3: Data Profiling & Quality Assessment
+- Generate comprehensive data quality reports
+- Analyze data distributions, missing values, and outliers
+- Identify data types, formats, and schema inconsistencies
+- Document data quality issues and anomalies
+- Create data profiling notebooks in `notebooks/1_exploratory/`
+- Use **filesystem tools** to save profiling results to `results/tables/`
+- Establish data quality metrics and thresholds
+
+#### Stage 4: Data Cleaning & Preprocessing
+- Implement data cleaning logic based on profiling findings
+- Handle missing values using appropriate strategies
+- Correct data types and format inconsistencies
+- Remove or flag outliers based on business rules
+- Standardize and normalize data as needed
+- Use **filesystem tools** to write cleaned data to `data/3_interim/`
+- Document all transformations and cleaning decisions
+- Log data cleaning operations to `logs/etl/`
+
+#### Stage 5: Exploratory Data Analysis (EDA)
+- Conduct statistical analysis and hypothesis testing
+- Create visualizations to understand patterns and relationships
+- Identify key insights and anomalies
+- Explore temporal trends, correlations, and distributions
+- Create analysis notebooks in `notebooks/2_analysis/`
+- Use **filesystem tools** to save figures to `reports/figures/`
+- Document findings and preliminary insights
+
+#### Stage 6: Feature Engineering & Transformation
+- Design and create relevant features based on domain knowledge
+- Apply transformations (aggregations, encodings, scaling)
+- Create derived metrics and calculated fields
+- Validate feature quality and relevance
+- Create feature engineering notebooks in `notebooks/3_feature_engineering/`
+- Use **filesystem tools** to save processed data to `data/4_processed/`
+- Document feature definitions and calculation logic
+
+#### Stage 7: Analysis Implementation & Modeling
+- Implement analytical methods or statistical models
+- Perform calculations, aggregations, or predictive modeling
+- Apply domain-specific analytical frameworks
+- Validate analytical outputs against business logic
+- Use **filesystem tools** to save model artifacts to `models/`
+- Use **filesystem tools** to save analysis results to `results/`
+- Document methodology and analytical approach
+
+#### Stage 8: Results Validation & Quality Assurance
+- Verify outputs meet acceptance criteria
+- Validate analytical results against known benchmarks
+- Perform sensitivity analysis and robustness checks
+- Review results with domain experts (if applicable)
+- Document validation procedures and outcomes
+- Use **filesystem tools** to save validation results to `results/metrics/`
+- Log validation checks to `logs/audit/`
+
+#### Stage 9: Documentation & Reporting
+- Create comprehensive analysis documentation
+- Generate reports with findings, insights, and recommendations
+- Create executive summaries and technical documentation
+- Build interactive dashboards or visualizations (if required)
+- Use **filesystem tools** to save reports to `reports/`
+- Ensure all code is well-commented and reproducible
+- Document limitations and future improvement opportunities
+
+#### Stage 10: Delivery & Handoff
+- Package final deliverables (data, code, reports, dashboards)
+- Verify all acceptance criteria are met
+- Complete verification checklists
+- Prepare handoff documentation
+- Use **filesystem tools** to organize final outputs
+- Archive logs and intermediate outputs appropriately
+- Provide recommendations for next steps or iterations
+
+## Data Plugin Integration for Next Step Analysis
+
+Before and during implementation, leverage the data plugin to analyze and optimize the next code generation steps:
+
+### Pre-Implementation Analysis
+
+Use data plugin commands to gather context and validate approach:
+
+1. **Explore Existing Data** (`/explore-data`)
+   - Profile datasets before writing transformation logic
+   - Identify data quality issues that affect implementation approach
+   - Discover actual data distributions to inform validation thresholds
+   - Example: Before implementing data cleaning, run `/explore-data data/1_raw/patient_visits.csv` to understand null patterns
+
+2. **Validate Queries** (`/write-query`)
+   - Generate optimized SQL for data extraction steps
+   - Ensure dialect-specific best practices are followed
+   - Test query logic before embedding in pipeline code
+   - Example: Use `/write-query` to generate PostgreSQL query for complex temporal aggregations
+
+3. **Analyze Context** (`data-context-extractor` skill)
+   - Extract domain knowledge about metrics, entities, and business rules
+   - Build company-specific data analysis skills for consistent implementation
+   - Document tribal knowledge for future implementations
+   - Example: Create MOH-specific data analysis skill documenting disease classification hierarchies
+
+### During Implementation
+
+Use data plugin commands to accelerate code generation:
+
+1. **Generate Visualizations** (`/create-viz`)
+   - Create publication-quality charts instead of writing matplotlib code from scratch
+   - Follow visualization best practices automatically
+   - Ensure consistent styling across analysis outputs
+   - Example: Generate time series plots for epidemiological trends
+
+2. **Build Dashboards** (`/build-dashboard`)
+   - Scaffold interactive HTML dashboards with proper structure
+   - Apply dashboard design patterns automatically
+   - Save development time on boilerplate code
+   - Example: Create workforce capacity monitoring dashboard
+
+3. **Statistical Analysis** (`/analyze`)
+   - Perform statistical computations and exploratory analysis
+   - Get quick answers to validate implementation logic
+   - Generate analysis code snippets for integration
+   - Example: Run hypothesis tests to validate correlation assumptions
+
+4. **Continuous Validation** (`/validate`)
+   - QA analysis outputs for methodology and accuracy
+   - Detect common pitfalls before stakeholder delivery
+   - Verify statistical assumptions and calculations
+   - Example: Validate forecasting model outputs for bias and accuracy
+
+### Determining Next Code Generation Step
+
+When the implementation plan is ambiguous or requires decisions, use the data plugin to inform next steps:
+
+**Decision Framework:**
+
+1. **If data characteristics are unknown**: Run `/explore-data` first
+   - Determines cleaning strategy (handling nulls, outliers)
+   - Informs feature engineering approach
+   - Validates data availability for planned analysis
+
+2. **If query logic is complex**: Use `/write-query` to prototype
+   - Tests extraction logic before pipeline implementation
+   - Validates join relationships and aggregation correctness
+   - Ensures performance optimization
+
+3. **If visualization requirements are unclear**: Use `/create-viz` to prototype
+   - Generates sample charts to validate with stakeholders
+   - Determines appropriate chart types based on data
+   - Identifies visualization library requirements
+
+4. **If analysis methodology needs validation**: Run `/analyze` or `/validate`
+   - Verifies statistical approach before full implementation
+   - Identifies potential issues early
+   - Generates reference outputs for comparison
+
+**Adaptive Implementation Workflow:**
+
+```
+1. Review implementation plan stage
+2. Identify knowledge gaps or uncertainties
+3. Select appropriate data plugin command to gather context
+4. Execute command and analyze results
+5. Adjust implementation approach based on findings
+6. Generate code with informed decisions
+7. Validate outputs using `/validate`
+8. Proceed to next stage
+```
+
+This approach ensures that code generation is **data-driven and context-aware**, reducing rework and improving implementation quality.
 
 ## Verification Requirements
 

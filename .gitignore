@@ -1,27 +1,13 @@
-# MOH Healthcare Analytics - Git Ignore
-# Last Updated: 4 February 2026
-
-# ============================================================================
-# Environment & Credentials
-# ============================================================================
-.env
-.env.local
-.env.*.local
-*.key
-*.pem
-credentials.json
-secrets.yaml
+# MOH Infectious Disease Analysis - Git Ignore File
+# Last Updated: 9 February 2026
 
 # ============================================================================
 # Python
 # ============================================================================
-# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
-
-# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -42,196 +28,179 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# PyInstaller
-*.manifest
-*.spec
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-test-results/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-*.ipynb_checkpoints/
-profile_default/
-ipython_config.py
-
-# IPython
-.ipython/
-
-# pyenv
-.python-version
-
-# Environments
-.venv
-env/
+# ============================================================================
+# Virtual Environments
+# ============================================================================
 venv/
+.venv/
 ENV/
+env/
+.env
+.venv
 env.bak/
 venv.bak/
-moh-analytics/
 
 # ============================================================================
-# Data Files (IMPORTANT - Don't commit large data files)
+# Jupyter Notebook
 # ============================================================================
-# Raw data (downloaded from sources)
-data/1_raw/
-data/2_external/
-data/3_interim/
-data/4_processed/
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+*.ipynb_checkpoints/
 
-# Keep directory structure but not files
-!data/*/.gitkeep
-!data/*/*/.gitkeep
+# Jupyter Notebook metadata
+.jupyter/
+.local/share/jupyter/
 
-# Data exports
-results/tables/*.csv
-results/tables/*.xlsx
-results/exports/*
-!results/**/.gitkeep
+# ============================================================================
+# Environment & Secrets
+# ============================================================================
+.env
+.env.local
+.env.*.local
+*.env
+kaggle.json
+secrets.yml
+credentials.json
 
-# Large model files
+# ============================================================================
+# IDEs & Editors
+# ============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.history/
+*.code-workspace
+
+# ============================================================================
+# Data Files (Exclude large datasets)
+# ============================================================================
+data/1_raw/*.csv
+data/1_raw/*.parquet
+data/1_raw/*.xlsx
+data/2_external/*
+data/3_interim/*
+data/4_processed/*
+!data/**/.gitkeep
+!data/sample_disease_data.csv
+
+# Downloaded datasets
+*.cache/
+.cache/
+kagglehub/
+
+# ============================================================================
+# Model Artifacts
+# ============================================================================
 models/*.pkl
 models/*.h5
 models/*.joblib
+models/*.onnx
 models/*.pt
 models/*.pth
-models/*.onnx
 !models/.gitkeep
+
+# MLflow
+mlruns/
+mlartifacts/
+
+# ============================================================================
+# Results & Outputs
+# ============================================================================
+results/**/*.csv
+results/**/*.json
+results/**/*.parquet
+!results/**/.gitkeep
+
+reports/**/*.html
+reports/**/*.pdf
+reports/**/*.png
+reports/**/*.jpg
+!reports/**/.gitkeep
 
 # ============================================================================
 # Logs
 # ============================================================================
 logs/
 *.log
+log/
 *.log.*
-!logs/.gitkeep
-!logs/*/.gitkeep
+logs/**/*.log
+!logs/**/.gitkeep
 
 # ============================================================================
-# Reports & Outputs
+# Testing
 # ============================================================================
-reports/figures/*.png
-reports/figures/*.jpg
-reports/figures/*.pdf
-reports/figures/*.svg
-reports/dashboards/*.html
-reports/presentations/*.pptx
-reports/presentations/*.pdf
-!reports/**/.gitkeep
-
-# ============================================================================
-# IDE & Editor
-# ============================================================================
-# VS Code
-.vscode/
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
-
-# PyCharm
-.idea/
-*.iml
-*.iws
-
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# Eclipse
-.project
-.pydevproject
-.settings/
-
-# ============================================================================
-# Operating System
-# ============================================================================
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-._*
-
-# Windows
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-Desktop.ini
-$RECYCLE.BIN/
-
-# Linux
-*~
-.directory
-.Trash-*
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
 
 # ============================================================================
 # Databricks
 # ============================================================================
 .databricks/
-databricks.cfg
-cluster-config.json
+*.dbfs
+.dbfs/
+*.dbc
 
 # ============================================================================
-# R
+# OS & System Files
 # ============================================================================
-.Rhistory
-.RData
-.Rapp.history
-.Rproj.user/
-*.Rproj
-
-# ============================================================================
-# Temporary Files
-# ============================================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+*.bak
 *.tmp
 *.temp
-*.bak
-*.swp
-*~.nib
-*.orig
-
-# ============================================================================
-# Archives (don't commit large archives)
-# ============================================================================
-*.zip
-*.tar
-*.tar.gz
-*.rar
-*.7z
-
-# ============================================================================
-# Kaggle Cache
-# ============================================================================
-.kaggle/
-kaggle.json
-~/.cache/kagglehub/
 
 # ============================================================================
 # Documentation Build
 # ============================================================================
-site/
 docs/_build/
-docs/.doctrees/
+docs/_static/
+docs/_templates/
+site/
 
 # ============================================================================
-# Misc
+# Temporary Files
 # ============================================================================
-.mypy_cache/
-.dmypy.json
-dmypy.json
-.pyre/
-.pytype/
+tmp/
+temp/
+*.tmp
+*.temp
+~$*
+
+# ============================================================================
+# Package Management
+# ============================================================================
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+
+# ============================================================================
+# Project-Specific
+# ============================================================================
+# Exclude analysis results with timestamps
+reports/*_20*.md
+reports/*_20*.html
+results/metrics/*_20*.json
+
+# Exclude large intermediate files
+data/infectious_disease_datasets_exploration.json

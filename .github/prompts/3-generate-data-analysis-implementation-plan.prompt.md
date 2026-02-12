@@ -1,14 +1,36 @@
 ---
 agent: 'agent'
-description: Create an implementation plan for data science and analytics project taking a figma link, a story and other optional assets
+description: Create an implementation plan for data science and analytics project taking a story and other optional assets
 model: Claude Sonnet 4.5
 ---
 
-# Prompt: Generate Detailed End-to-End Data Science and Analytics programming Implementation Plan (Figma Design Support)
+# Prompt: Generate Detailed End-to-End Data Analytics programming Implementation Plan
 
 ## Role
 
 You are a senior data analyst Lead, expert in analyzing requirements and creating detailed, comprehensive, executable programming implementation plan for production-grade end-to-end data analytics and science pipelines. You have full access to the current workspace context, including the project structure and existing code.
+
+### Available Data Plugin Commands
+
+You have access to specialized data plugin commands and skills to accelerate implementation:
+
+**Commands** (located in `.github/prompts/data-plugin/`):
+- `/write-query` - Write optimized SQL queries for data extraction
+- `/explore-data` - Profile and explore datasets for quality assessment
+- `/analyze` - Answer data questions from quick lookups to full analyses
+- `/validate` - QA analysis for methodology, accuracy, and bias checks
+- `/create-viz` - Create publication-quality visualizations with Python
+- `/build-dashboard` - Build interactive HTML dashboards
+
+**Skills** (detailed methodologies in `.github/prompts/data-plugin/skills/`):
+- `data-exploration` - Systematic data profiling and quality assessment
+- `statistical-analysis` - Descriptive stats, hypothesis testing, trend analysis
+- `data-validation` - Pre-delivery QA checklists and common pitfall detection
+- `data-visualization` - Chart selection and design best practices
+- `sql-queries` - Dialect-specific SQL optimization
+- `interactive-dashboard-builder` - Dashboard design patterns
+
+When creating implementation plans, **reference these commands and skills** at appropriate stages to guide implementers on leveraging these accelerators.
 
 ---
 
@@ -19,7 +41,6 @@ The input will consist of:
 - A User Story in standard format (As a [role], I want [goal], so that [benefit])
 - Acceptance Criteria
 - Optional Notes
-- Design specifications provided as a Figma link (e.g., https://www.figma.com/file/...)
 
 ## Output Requirements
 
@@ -69,33 +90,15 @@ This section MUST:
   - Specify name and path
   - Describe required changes
 
-### 5. Design Specifications (for UI/Dashboard Features)
+### 5. Data Pipeline
 
-This section MUST (when applicable for dashboards or UI components):
-- Use the `get_figma_data` tool to extract all required design tokens, color values, spacing, typography, and layout details directly from the provided Figma link. Document these values explicitly in the plan.
-- Include a complete color analysis table:
-  ```
-  | Design Color | Semantic Purpose | Element | Implementation Method |
-  |--------------|-----------------|---------|------------------------|
-  | #718EBF | Header text | Dashboard header text | Power BI theme / Direct hex value |
-  | #232323 | Regular text | Card text | Power BI theme / Direct hex value |
-  ```
-- Document all spacing values (padding, margin, gap) in exact pixel values
-- Create a visual hierarchy diagram showing the containment structure
-- List all typography details (family, size, weight, line-height)
-- Include visual verification requirements as a checklist
-- Address responsive behavior as specified in the design
-- Map design elements to implementation counterparts (Power BI visuals, custom Python visuals, web app components)
-
-
-### 6. Data Pipeline Architecture
-
-**CRITICAL CONSTRAINT**: All implementation plan must be **grounded in available data sources** documented in [docs/project_context/data_sources.md](../../../docs/project_context/data_sources.md) and **feasible with the current tech stack** documented in [docs/project_context/tech_stack.md](../../../docs/project_context/tech_stack.md). Do not propose problems that require unavailable data or exceed technical capabilities.
+**CRITICAL CONSTRAINT**: All implementation plan must be **grounded in available data sources** documented in [docs/project_context/data-sources.md](../../../docs/project_context/data-sources.md) and **feasible with the current tech stack** documented in [docs/project_context/tech-stack.md](../../../docs/project_context/tech-stack.md). Do not propose problems that require unavailable data or exceed technical capabilities.
 
 This section MUST:
 - Define necessary data schemas and their location (dbt models, SQL schemas, Parquet schemas)
 - Detail the data pipeline strategy:
-  - Data extraction methods (APIs, database queries, file ingestion) according to suitable methods to extract data defined in [docs/project_context/data_sources.md](../../../docs/project_context/data_sources.md) 
+  - Data extraction methods (APIs, database queries, file ingestion) according to suitable methods to extract data defined in [docs/project_context/data-sources.md](../../../docs/project_context/data-sources.md)
+    - **Note**: Use `/write-query` command for optimized SQL generation following dialect-specific best practices
   - Data transformation steps (cleaning, aggregation)
   - Feature engineering and dimensionality reduction steps
   - Model training or analysis steps (algorithms, hyperparameters)
@@ -107,6 +110,45 @@ This section MUST:
   - Error handling and retry logic
   - Monitoring and alerting requirements
   - Data lineage and versioning approach
+
+### 6. Domain-Driven Feature Engineering & Analysis Strategy
+
+This section MUST follow a three-step validation process:
+
+**Step 1: Identify Relevant Domain Knowledge**
+- Review domain knowledge documents in `docs/domain_knowledge/` 
+- Select ONLY documents directly relevant to the user story problem type
+- For each selected document, list:
+  - Document name and key concepts applicable to this user story
+  - Domain-specific metrics, formulas, or ratios that could be engineered as features
+  - Analytical methods or best practices relevant to the problem
+
+**Step 2: Validate Data Availability**
+- Cross-reference required data fields from domain concepts against available data sources in [docs/project_context/data-sources.md](../../../docs/project_context/data-sources.md)
+- For each proposed domain-driven feature, confirm:
+  - All required input fields exist in available data sources
+  - Data granularity supports the calculation (temporal, geographic, categorical levels)
+  - Data quality is sufficient for the intended calculation
+- **Explicitly reject** domain features that cannot be computed from available data sources
+- Document data gaps that prevent certain domain features from being implemented
+
+**Step 3: Select Applicable Features**
+- List ONLY features that satisfy ALL conditions:
+  - Directly relevant to solving the user story problem
+  - Computable from verified available data sources  
+  - Aligned with domain terminology and calculation standards
+  - Feasible within current technical capabilities
+- For each selected feature, specify:
+  - Feature name following domain terminology conventions
+  - Calculation formula/method from domain knowledge
+  - Required input fields mapped to specific data source columns
+  - Expected value range or validation criteria from domain benchmarks
+- Document analytical approach:
+  - Statistical methods appropriate for problem type (informed by domain best practices)
+  - Domain-specific validation criteria and thresholds
+  - Interpretation guidelines using domain context
+
+**Important**: Prioritize practicality over comprehensiveness. It is better to implement fewer features that are well-grounded in available data than to propose many features that cannot be reliably computed.
 
 ### 7. API Endpoints & Data Contracts (if applicable)
 
@@ -122,6 +164,11 @@ This section MUST (when feature includes APIs or data services):
 
 This section MUST (when applicable for dashboards or UI components):
 - Create an explicit mapping between design specs and implementation
+- **Data Plugin Accelerators**:
+  - Use `/create-viz` command for generating publication-quality Python visualizations
+  - Use `/build-dashboard` command for creating interactive HTML dashboards
+  - **Reference**: `.github/prompts/data-plugin/skills/data-visualization/SKILL.md` for chart selection best practices
+  - **Reference**: `.github/prompts/data-plugin/skills/interactive-dashboard-builder/SKILL.md` for dashboard design patterns
 - For Power BI dashboards:
   - Always use direct hex color values from design specs
   - Document font sizes, weights, and line heights with exact implementation approach
@@ -134,9 +181,10 @@ This section MUST (when applicable for dashboards or UI components):
 - Do not add or modify color tokens unless absolutely necessary. Always use direct hex values for all colors as per design specs.
 
 ### 9. Testing Strategy
-
-This section MUST:
 - Follow the project's established patterns for test file locations and naming
+- **Analysis Quality Assurance**:
+  - Use `/validate` command to QA analysis before stakeholder delivery
+  - **Reference**: `.github/prompts/data-plugin/skills/data-validation/SKILL.md` for pre-delivery QA checklist and common pitfalls
 - Specify key areas for Unit Tests (Python functions, data transformations, utility scripts)
 - Specify key areas for Data Extraction Tests (API endpoints)
 - Specify key areas for Data Quality Tests (dbt tests, custom validation)
@@ -146,8 +194,6 @@ This section MUST:
 - Mention if end-to-end pipeline tests would be relevant (optional)
 
 ### 10. Implementation Steps
-
-This section MUST:
 - Provide a detailed, ordered checklist of implementation tasks explicitly divided into phases:
   - **Phase 1: Data Extraction**
   - **Phase 2: Data Cleaning**
@@ -164,6 +210,8 @@ This section MUST:
 This section MUST:
 - Define data quality checks at each pipeline stage:
   - Source data validation (completeness, accuracy, consistency)
+    - **Note**: Use `/explore-data` command for comprehensive data profiling
+    - **Reference**: `.github/prompts/data-plugin/skills/data-exploration/SKILL.md` for profiling methodology
   - Transformation validation (business logic correctness)
   - Output validation (statistical checks, distribution analysis)
   - Expected data profiling and statistical checks
@@ -181,7 +229,6 @@ This section MUST:
   - Modular, reusable functions with clear inputs/outputs
   - Comprehensive logging at key pipeline stages
   - Explicit error handling and data quality checks
-  - Configuration separated from code
   - Unit tests for all transformation functions (`tests/unit/`)
   - Documentation of expected data formats and schemas (docstrings, README files)
 
@@ -198,23 +245,57 @@ This section MUST:
 This section MUST (when applicable for analytical/ML features):
 - Specify statistical methods and techniques:
   - Descriptive statistics to be calculated
-  - Hypothesis tests to be performed (with significance levels)
+    - **Note**: Use `/analyze` command for quick statistical computations and exploratory analysis
+    - **Reference**: `.github/prompts/data-plugin/skills/statistical-analysis/SKILL.md` for methodology guidance
+  - Hypothesis tests to be performed (with significance levels, e.g., α = 0.05)
   - Time series analysis methods (if applicable)
+  - Handling of small sample sizes, imbalanced data, or rare events
+  - Multiple testing correction methods (Bonferroni, FDR) when applicable
 - Define modeling approach (if ML/predictive models involved):
   - Problem type (regression, classification, clustering, forecasting)
   - Candidate algorithms with justification
   - Feature selection strategy
   - Train/validation/test split ratios
-  - Cross-validation approach
-  - Hyperparameter tuning strategy
+  - Cross-validation approach (k-fold, time series split)
+  - Hyperparameter tuning strategy (grid search, random search, Bayesian optimization)
 - Establish model evaluation criteria:
   - Primary and secondary metrics (RMSE, MAE, R², AUC-ROC, precision/recall)
-  - Baseline models for comparison
-  - Performance thresholds for production deployment
+  - Baseline models for comparison (mean/median, simple heuristics)
+  - Performance thresholds for production deployment (specific values required)
+  - Business impact metrics (cost savings, improved outcomes)
 - Document model interpretability requirements:
-  - Feature importance analysiss
+  - Feature importance analysis (permutation, SHAP values)
   - SHAP/LIME explanations (if required)
-  - Model documentation for stakeholders
+  - Model documentation for stakeholders (assumptions, limitations, appropriate use cases)
+
+### Model Operations & Governance (for ML/predictive features)
+
+This section MUST (when applicable for machine learning models):
+- Define model versioning strategy:
+  - Use MLflow, Weights & Biases, or similar model registry
+  - Version naming convention (semantic versioning recommended)
+  - Model metadata to track (hyperparameters, training data version, performance metrics)
+- Specify experiment tracking requirements:
+  - Log all hyperparameters, metrics, and key artifacts
+  - Track data lineage (training data provenance)
+  - Document failed experiments and learnings
+- Define model packaging approach:
+  - Serialization format (pickle, joblib, ONNX, SavedModel)
+  - Include preprocessing pipeline with model
+  - Document model input/output schemas
+- Establish deployment strategy:
+  - Batch scoring vs real-time inference requirements
+  - API endpoint specifications (if applicable)
+  - Rollback procedures to revert to previous model version
+- Define production monitoring requirements:
+  - Model performance monitoring (accuracy degradation over time)
+  - Data drift detection (input distribution changes)
+  - Concept drift detection (relationship changes)
+  - Alerting thresholds and escalation procedures
+- Specify retraining triggers and schedule:
+  - Periodic retraining schedule (monthly, quarterly)
+  - Performance-based triggers (accuracy drops below threshold)
+  - Data-based triggers (significant new data available)
 
 ## UI/Dashboard Visual Testing (for Dashboard/Visualization Features)
 
@@ -258,19 +339,17 @@ This section MUST:
 If applicable, this section MUST:
 - List each referenced file with a relative path and short description
 - Ensure all referenced documents, APIs, or design files are linked
-- If a Figma link is used, include the link in the References section with a short description.
 
 ## Quality Criteria
 
 The implementation plan MUST:
-- Be based on the existing data sources defined in [docs/project_context/data_sources.md](../../../docs/project_context/data_sources.md) and conventions
+- Be based on the existing data sources defined in [docs/project_context/data-sources.md](../../../docs/project_context/data-sources.md) and conventions
 - Prioritize pipeline and model reuse over creating new components
 - Provide concrete file paths, pipeline names, and schema definitions
 - Be clear and detailed enough for implementation without significant ambiguity
 - Accurately reflect design specifications (for dashboard/UI features)
 - Include proper Mermaid diagram formatting to ensure correct rendering
 - Ensure data quality and governance considerations are addressed
-- When a Figma link is provided, ensure all design details (colors, spacing, typography, etc.) are extracted and documented explicitly from the Figma file, and referenced in the implementation plan.
 
 ---
 
@@ -281,10 +360,10 @@ When generating the implementation plan:
 1. **Be Specific**: Use concrete file paths, library names, and configuration values
 2. **Be Comprehensive**: Cover all aspects from data ingestion to monitoring
 3. **Be Realistic**: Base estimates on actual data volumes and system capabilities
-4. **Be Healthcare-Aware**: Consider regulatory, privacy, and clinical validity requirements
 5. **Be Modular**: Design components that can be developed and tested independently
 6. **Reference Existing Assets**: Always check workspace for reusable components before proposing new ones
 7. **Follow Project Standards**: Adhere to established naming conventions, folder structure, and coding patterns in the workspace
+9. **Ensure Reproducibility**: Include clear steps for environment setup, dependency management, and seed setting
 
 
 ## Example Section Format
@@ -297,14 +376,17 @@ Implementation Steps section example:
 
 **1. Environment Setup:**
 - [ ] Create Python virtual environment: `python -m venv venv` or configure conda environment
-- [ ] Install required dependencies from `requirements.txt`
+- [ ] Install required dependencies from `requirements.txt` with pinned versions
+- [ ] Verify Python version meets requirements (e.g., Python 3.9+)
 - [ ] Set up configuration file: `config/analysis_config.yml`
 - [ ] Configure logging: `src/utils/logger.py`
 - [ ] Create `.env` file with database credentials and API keys (do not commit)
-- [ ] Test database/API connectivity
+- [ ] Test database/API connectivity and log connection success
+- [ ] Document environment setup in `README.md` or `SETUP.md`
 
 **2. Data Extraction:**
 - [ ] Create data extraction script: `scripts/extract_data.py`
+- [ ] Use `/write-query` command to generate optimized SQL for data extraction
 - [ ] Implement extraction from primary data source (e.g., SQL database, API, CSV files)
 - [ ] Implement extraction from secondary/reference data sources (if applicable)
 - [ ] Add error handling and retry logic for data extraction
@@ -322,6 +404,8 @@ Implementation Steps section example:
 
 **4. Data Quality Assessment:**
 - [ ] Create initial data quality notebook: `notebooks/1_exploratory/01_data_quality_assessment.ipynb`
+- [ ] Use `/explore-data` command to generate comprehensive data profile
+- [ ] Follow data profiling methodology from `.github/prompts/data-plugin/skills/data-exploration/SKILL.md`
 - [ ] Assess missing values by column and identify patterns
 - [ ] Identify duplicate records and determine deduplication strategy
 - [ ] Detect outliers using statistical methods (IQR, Z-score)
@@ -349,6 +433,8 @@ Implementation Steps section example:
 
 **7. Univariate Analysis:**
 - [ ] Create EDA notebook: `notebooks/1_exploratory/02_exploratory_data_analysis.ipynb`
+- [ ] Use `/analyze` command for quick statistical summaries
+- [ ] Apply statistical analysis methodology from `.github/prompts/data-plugin/skills/statistical-analysis/SKILL.md`
 - [ ] Analyze distribution of numerical variables (histograms, box plots, descriptive stats)
 - [ ] Analyze frequency of categorical variables (bar charts, frequency tables)
 - [ ] Identify key patterns and anomalies in individual variables
@@ -360,6 +446,7 @@ Implementation Steps section example:
 - [ ] Perform subgroup analysis (stratification by demographics, facility type, etc.)
 - [ ] Analyze temporal patterns and trends (time series plots, seasonality)
 - [ ] Test statistical hypotheses (t-tests, chi-square, ANOVA as appropriate)
+- [ ] Use `/create-viz` command for generating publication-quality charts
 - [ ] Document key insights and relationships discovered
 
 **9. Business Insights Documentation:**
@@ -371,16 +458,28 @@ Implementation Steps section example:
 
 **Phase 4: Feature Engineering**
 
-**10. Feature Creation:**
-- [ ] Create feature engineering notebook: `notebooks/3_feature_engineering/01_feature_creation.ipynb`
-- [ ] Create temporal features (day of week, month, season, holidays)
+**10. Domain Knowledge Review & Feature Planning:**
+- [ ] Review all domain knowledge documents in `docs/domain_knowledge/`
+- [ ] Create domain knowledge inventory: document title, key concepts, applicable metrics/formulas
+- [ ] Identify domain-specific features to engineer (e.g., epidemiological metrics, workforce ratios, burden indices)
+- [ ] Map each proposed feature to domain knowledge source and calculation method
+- [ ] Document domain terminology to use for feature naming and definitions
+- [ ] Identify domain-specific validation criteria and benchmarks
+- [ ] Create feature engineering specification document referencing domain sources
+
+**11. Feature engineering:**
+- [ ] Create feature engineering notebook: `notebooks/3_feature_engineering/01_feature_engineering.ipynb`
+- [ ] Implement domain-specific features identified from domain knowledge review
+- [ ] Create temporal features (day of week, month, season, holidays, epi-week aggregations)
 - [ ] Create aggregated features (rolling averages, lag features, cumulative sums)
 - [ ] Create derived features (ratios, differences, interactions)
+- [ ] Apply domain-specific calculations (e.g., attack rates, burden metrics, workforce ratios per domain knowledge)
 - [ ] Create categorical encodings (one-hot, label encoding, target encoding)
 - [ ] Implement feature engineering module: `src/features/engineering.py`
-- [ ] Document feature definitions and business logic
+- [ ] Document feature definitions, calculation logic, domain sources, and data source mappings
+- [ ] Validate features against domain benchmarks and expected ranges (from domain knowledge)
 
-**11. Feature Selection & Validation:**
+**12. Feature Selection & Validation:**
 - [ ] Perform feature importance analysis (correlation with target, mutual information)
 - [ ] Remove highly correlated redundant features (VIF, correlation threshold)
 - [ ] Implement feature selection methods (recursive elimination, L1 regularization)
@@ -390,34 +489,38 @@ Implementation Steps section example:
 
 **Phase 5: Modeling/Analysis**
 
-**12. Statistical Analysis (if analytical focus):**
+**13. Statistical Analysis (if analytical focus):**
 - [ ] Create statistical analysis notebook: `notebooks/2_analysis/01_statistical_analysis.ipynb`
+- [ ] Apply domain-specific analytical methods identified from domain knowledge review
 - [ ] Perform descriptive statistics and summarize key metrics
 - [ ] Conduct hypothesis tests to answer research questions
 - [ ] Perform time series analysis (trend, seasonality decomposition) if applicable
+- [ ] Apply domain-specific validation criteria and compare against domain benchmarks
 - [ ] Create statistical visualizations (confidence intervals, effect sizes)
 - [ ] Document statistical findings with interpretation and limitations
+- [ ] Interpret results using domain terminology and context from domain knowledge
 - [ ] Save analysis results to `results/tables/statistical_summary.csv`
 
-**13. Model Development (if predictive focus):**
+**14. Model Development (if predictive focus):**
 - [ ] Create modeling notebook: `notebooks/2_analysis/02_model_development.ipynb`
+- [ ] Apply domain best practices for model selection (e.g., forecasting methods from domain knowledge)
 - [ ] Split data into train/validation/test sets (70/15/15 or similar)
 - [ ] Establish baseline model for comparison (mean, median, simple heuristic)
 - [ ] Train candidate models (Linear Regression, Random Forest, XGBoost, etc.)
 - [ ] Perform hyperparameter tuning (grid search, random search)
 - [ ] Implement model training module: `src/models/training.py`
-- [ ] Document model selection rationale and hyperparameters
+- [ ] Document model selection rationale, hyperparameters, and alignment with domain best practices
 
-**14. Model Evaluation:**
+**15. Model Evaluation:**
 - [ ] Evaluate models on validation set using appropriate metrics (RMSE, MAE, R², AUC, F1)
 - [ ] Perform cross-validation to assess model stability
 - [ ] Analyze residuals and prediction errors
 - [ ] Assess model assumptions (normality, homoscedasticity for linear models)
-- [ ] Compare model performance against baseline and business requirements
+- [ ] Compare model performance against baseline, business requirements, and domain benchmarks
 - [ ] Select final model based on evaluation criteria
 - [ ] Implement model evaluation module: `src/models/evaluation.py`
 
-**15. Model Interpretability:**
+**16. Model Interpretability:**
 - [ ] Calculate feature importance scores (permutation importance, SHAP values)
 - [ ] Create partial dependence plots for key features
 - [ ] Generate SHAP summary plots and force plots (if applicable)
@@ -425,7 +528,7 @@ Implementation Steps section example:
 - [ ] Document model interpretation for stakeholders
 - [ ] Save model artifacts to `models/trained_models/`
 
-**16. Model Testing:**
+**17. Model Testing:**
 - [ ] Evaluate final model on held-out test set
 - [ ] Calculate final performance metrics
 - [ ] Perform sensitivity analysis (robustness to input changes)
@@ -435,15 +538,19 @@ Implementation Steps section example:
 
 **Phase 6: Results & Visualization**
 
-**17. Results Compilation:**
+**18. Results Compilation:**
 - [ ] Create results summary notebook: `notebooks/2_analysis/03_results_summary.ipynb`
+- [ ] Use `/validate` command to QA analysis before stakeholder delivery
+- [ ] Apply pre-delivery QA checklist from `.github/prompts/data-plugin/skills/data-validation/SKILL.md`
 - [ ] Compile key findings, metrics, and insights
 - [ ] Create executive summary with business recommendations
 - [ ] Generate final visualizations for presentation
 - [ ] Save results tables to `results/tables/`
 - [ ] Save results metrics to `results/metrics/model_performance.json`
 
-**18. Dashboard Development (if applicable):**
+**19. Dashboard Development (if applicable):**
+- [ ] Use `/build-dashboard` command for interactive HTML dashboard prototyping
+- [ ] Reference dashboard design patterns from `.github/prompts/data-plugin/skills/interactive-dashboard-builder/SKILL.md`
 - [ ] Create Power BI report connected to results data
 - [ ] Implement key visualizations (trends, comparisons, distributions)
 - [ ] Add interactive filters and slicers
@@ -452,8 +559,9 @@ Implementation Steps section example:
 - [ ] Test dashboard performance and optimize queries
 - [ ] Save dashboard to `reports/dashboards/`
 
-**19. Documentation:**
+**20. Documentation:**
 - [ ] Update data dictionary: `docs/data_dictionary/features.md`
+- [ ] Document all domain knowledge sources referenced and how they informed analysis
 - [ ] Create methodology document: `docs/methodology/analysis_approach.md`
 - [ ] Write user guide for dashboard/tool: `docs/user_guide.md`
 - [ ] Document all assumptions, limitations, and caveats

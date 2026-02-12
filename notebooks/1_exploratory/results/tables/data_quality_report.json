@@ -1,0 +1,37 @@
+{
+  "total_records": 16066,
+  "total_columns": 3,
+  "missing_values": {
+    "epi_week": 0.0,
+    "disease": 0.0,
+    "no._of_cases": 0.0
+  },
+  "validations": {
+    "schema": {
+      "passed": true,
+      "errors": []
+    },
+    "missing_values": {
+      "passed": true,
+      "percentages": {
+        "epi_week": 0.0,
+        "disease": 0.0,
+        "no._of_cases": 0.0
+      }
+    },
+    "epi_week_format": {
+      "passed": true,
+      "invalid_count": 0
+    },
+    "case_count_range": {
+      "passed": true,
+      "negative_values": 0
+    },
+    "record_count": {
+      "passed": true,
+      "actual": 16066,
+      "expected": 16066
+    }
+  },
+  "quality_score": 100.0
+}
