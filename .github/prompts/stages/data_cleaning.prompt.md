@@ -1,7 +1,7 @@
 # Data Cleaning Steps - Dynamic Dataset Processing
 
-**Processing Framework**: Polars (primary), Pandas (compatibility)  
-**Last Updated**: 11 February 2026
+**Processing Framework**: Polars (primary)
+**Last Updated**: 12 February 2026
 
 ---
 
@@ -310,7 +310,6 @@ def standardize_categories(df: pl.DataFrame, dataset_context: dict = None) -> pl
             "M": "Male", "m": "Male", "male": "Male",
             "F": "Female", "f": "Female", "female": "Female"
         }
-    }
     
     # Add domain-specific mappings from context
     if dataset_context:
@@ -350,6 +349,396 @@ def standardize_categories(df: pl.DataFrame, dataset_context: dict = None) -> pl
     
     return df
 ```
+
+### 2.4 Categorical Value Inconsistency Detection and Correction
+
+**Critical Step**: Identify naming inconsistencies, abbreviations, typos, and variations in categorical columns that refer to the same entity.
+
+**Common Issues to Detect** (Inconsistencies - should merge):
+- Abbreviations vs full names (e.g., "HFMD" vs "Hand, Foot Mouth Disease")
+- Spelling variations (e.g., "Nipah" vs "Nipah virus infection")
+- Case inconsistencies (e.g., "Zika" vs "Zika Virus Infection")
+- Whitespace differences (trailing/leading spaces)
+- Special character variations (e.g., "COVID-19" vs "COVID 19" vs "Covid-19")
+- Punctuation differences (e.g., "Hand, Foot Mouth" vs "Hand Foot Mouth")
+
+**Important: Preserve Legitimate Variations** (Do NOT merge):
+- Distinct disease types (e.g., "Hepatitis A" ≠ "Hepatitis B" ≠ "Hepatitis C")
+- Version/type numbers (e.g., "Type 1 Diabetes" ≠ "Type 2 Diabetes")
+- Grade levels (e.g., "Grade A" ≠ "Grade B")
+- Phase designations (e.g., "Phase I" ≠ "Phase II")
+- Category/class differences (e.g., "Class 1" ≠ "Class 2")
+- Strain/variant differences (e.g., "Strain A" ≠ "Strain B")
+
+```python
+def analyze_categorical_inconsistencies(df: pl.DataFrame, col: str, threshold: float = 0.85) -> dict:
+    """
+    Analyze a categorical column to identify potential naming inconsistencies.
+    Uses intelligent heuristics to avoid flagging legitimate variations.
+    
+    Args:
+        df: Polars DataFrame
+        col: Column name to analyze
+        threshold: Similarity threshold for fuzzy matching (0-1). Default 0.85 to be conservative.
+    
+    Returns:
+        Dict with potential inconsistencies and recommended mappings
+    """
+    from difflib import SequenceMatcher
+    import re
+    
+    # Get unique values and their counts
+    value_counts = df.group_by(col).agg([
+        pl.count().alias('count')
+    ]).sort('count', descending=True)
+    
+    unique_values = value_counts[col].to_list()
+    counts = value_counts['count'].to_list()
+    
+    logger.info(f"\n{'=' * 80}")
+    logger.info(f"CATEGORICAL ANALYSIS: {col}")
+    logger.info(f"{'=' * 80}")
+    logger.info(f"Total unique values: {len(unique_values)}")
+    logger.info(f"Value distribution:")
+    
+    for val, count in zip(unique_values[:20], counts[:20]):  # Show top 20
+        logger.info(f"  • {val}: {count:,} records")
+    
+    # Patterns that indicate legitimate variations (NOT inconsistencies)
+    # These are suffixes/prefixes that differentiate distinct entities
+    variation_patterns = [
+        r'\b[A-Z]$',  # Single letter suffix: "Hepatitis A", "Hepatitis B"
+        r'\b\d+$',  # Number suffix: "Type 1", "Type 2", "Version 3"
+        r'\btype\s+[A-Z0-9]+\b',  # Type designations: "Type A", "Type 1"
+        r'\bstrain\s+[A-Z0-9]+\b',  # Strain designations
+        r'\bvariant\s+[A-Z0-9]+\b',  # Variant designations
+        r'\bgrade\s+[A-Z0-9]+\b',  # Grade levels
+        r'\bphase\s+[A-Z0-9]+\b',  # Phase designations
+        r'\blevel\s+[A-Z0-9]+\b',  # Level designations
+        r'\bcategory\s+[A-Z0-9]+\b',  # Category designations
+        r'\bclass\s+[A-Z0-9]+\b',  # Class designations
+        r'\b(i|ii|iii|iv|v|vi|vii|viii|ix|x)\b',  # Roman numerals
+    ]
+    
+    def has_legitimate_variation(s1: str, s2: str) -> bool:
+        """Check if two strings differ only in legitimate variation patterns"""
+        s1_lower = s1.lower()
+        s2_lower = s2.lower()
+        
+        # Remove the variation patterns and compare
+        for pattern in variation_patterns:
+            s1_stripped = re.sub(pattern, '', s1_lower, flags=re.IGNORECASE).strip()
+            s2_stripped = re.sub(pattern, '', s2_lower, flags=re.IGNORECASE).strip()
+            
+            # If after removing variation patterns they're identical, these are legitimate variations
+            if s1_stripped == s2_stripped and s1_stripped:
+                return True
+        
+        return False
+    
+    def differs_only_in_meaningful_suffix(s1: str, s2: str) -> bool:
+        """Check if strings differ only in trailing letters/numbers that indicate distinct entities"""
+        s1_lower = s1.lower().strip()
+        s2_lower = s2.lower().strip()
+        
+        # Extract the base and suffix
+        # Pattern: base word(s) followed by space and single letter/number
+        match1 = re.match(r'^(.+?)\s+([a-z0-9])$', s1_lower)
+        match2 = re.match(r'^(.+?)\s+([a-z0-9])$', s2_lower)
+        
+        if match1 and match2:
+            base1, suffix1 = match1.groups()
+            base2, suffix2 = match2.groups()
+            
+            # Same base, different suffix = legitimate variations
+            if base1 == base2 and suffix1 != suffix2:
+                return True
+        
+        return False
+    
+    # Detect potential inconsistencies
+    potential_duplicates = {}
+    
+    for i, val1 in enumerate(unique_values):
+        if val1 is None or val1 == "":
+            continue
+            
+        val1_clean = str(val1).strip()
+        val1_lower = val1_clean.lower()
+        
+        for j, val2 in enumerate(unique_values[i+1:], start=i+1):
+            if val2 is None or val2 == "":
+                continue
+                
+            val2_clean = str(val2).strip()
+            val2_lower = val2_clean.lower()
+            
+            # CRITICAL: Skip if these are legitimate variations (e.g., Hepatitis A vs B)
+            if has_legitimate_variation(val1_clean, val2_clean):
+                continue
+            
+            if differs_only_in_meaningful_suffix(val1_clean, val2_clean):
+                continue
+            
+            # Check for exact match (case-insensitive only)
+            if val1_lower == val2_lower:
+                potential_duplicates.setdefault(val1, []).append(val2)
+                continue
+            
+            # Check for whitespace-only differences
+            if val1_lower.replace(' ', '') == val2_lower.replace(' ', ''):
+                potential_duplicates.setdefault(val1, []).append(val2)
+                continue
+            
+            # Check for punctuation-only differences
+            val1_no_punct = re.sub(r'[^\w\s]', '', val1_lower)
+            val2_no_punct = re.sub(r'[^\w\s]', '', val2_lower)
+            if val1_no_punct == val2_no_punct:
+                potential_duplicates.setdefault(val1, []).append(val2)
+                continue
+            
+            # Check for abbreviation patterns (ONLY if high similarity)
+            # Case 1: One is an acronym of the other
+            words1 = [w for w in val1_lower.split() if len(w) > 0]
+            words2 = [w for w in val2_lower.split() if len(w) > 0]
+            
+            if len(words1) > 1 and len(words2) == 1:
+                acronym1 = ''.join(w[0] for w in words1)
+                if acronym1 == val2_lower:
+                    potential_duplicates.setdefault(val1, []).append(val2)
+                    continue
+            elif len(words2) > 1 and len(words1) == 1:
+                acronym2 = ''.join(w[0] for w in words2)
+                if acronym2 == val1_lower:
+                    potential_duplicates.setdefault(val1, []).append(val2)
+                    continue
+            
+            # High similarity fuzzy matching (conservative threshold)
+            # Only flag if VERY similar to avoid false positives
+            similarity = SequenceMatcher(None, val1_lower, val2_lower).ratio()
+            if similarity >= threshold:
+                # Additional check: length difference should be small
+                length_ratio = min(len(val1_lower), len(val2_lower)) / max(len(val1_lower), len(val2_lower))
+                if length_ratio >= 0.8:  # Lengths should be similar
+                    potential_duplicates.setdefault(val1, []).append(val2)
+    
+    # Report findings
+    if potential_duplicates:
+        logger.warning(f"\n⚠️  POTENTIAL INCONSISTENCIES DETECTED:")
+        logger.warning(f"    (Legitimate variations like 'Disease A' vs 'Disease B' are excluded)")
+        for primary, variants in potential_duplicates.items():
+            logger.warning(f"\n  Primary: '{primary}'")
+            logger.warning(f"  Variants detected:")
+            for variant in variants:
+                variant_count = value_counts.filter(pl.col(col) == variant)['count'][0]
+                logger.warning(f"    - '{variant}' ({variant_count:,} records)")
+    else:
+        logger.info(f"\n✓ No inconsistencies detected (legitimate variations preserved)")
+    
+    return {
+        'column': col,
+        'unique_count': len(unique_values),
+        'potential_duplicates': potential_duplicates,
+        'value_counts': dict(zip(unique_values, counts))
+    }
+
+
+def create_standardization_mapping(inconsistency_report: dict) -> dict:
+    """
+    Create a mapping dictionary for standardizing categorical values.
+    
+    Interactive function that requires human review of detected inconsistencies.
+    AI agents should log this for manual review or use heuristics.
+    
+    Args:
+        inconsistency_report: Output from analyze_categorical_inconsistencies
+    
+    Returns:
+        Dict mapping variant names to standardized names
+    """
+    mapping = {}
+    potential_dupes = inconsistency_report['potential_duplicates']
+    value_counts = inconsistency_report['value_counts']
+    
+    if not potential_dupes:
+        logger.info("No inconsistencies detected - no mapping needed")
+        return mapping
+    
+    logger.info(f"\n{'=' * 80}")
+    logger.info("RECOMMENDED STANDARDIZATION MAPPING")
+    logger.info(f"{'=' * 80}")
+    
+    for primary, variants in potential_dupes.items():
+        # Choose the most common variant as the canonical name
+        all_variants = [primary] + variants
+        variant_counts = [(v, value_counts.get(v, 0)) for v in all_variants]
+        canonical = max(variant_counts, key=lambda x: x[1])[0]
+        
+        logger.info(f"\nCanonical form: '{canonical}'")
+        logger.info(f"Standardize these variants:")
+        
+        for variant, count in variant_counts:
+            if variant != canonical:
+                mapping[variant] = canonical
+                logger.info(f"  '{variant}' → '{canonical}' ({count:,} records)")
+    
+    return mapping
+
+
+def apply_categorical_standardization(df: pl.DataFrame, col: str, mapping: dict) -> pl.DataFrame:
+    """
+    Apply standardization mapping to a categorical column.
+    
+    Args:
+        df: Polars DataFrame
+        col: Column name to standardize
+        mapping: Dict mapping old values to new standardized values
+    
+    Returns:
+        DataFrame with standardized categorical values
+    """
+    if not mapping:
+        logger.info(f"No mapping provided for '{col}' - skipping standardization")
+        return df
+    
+    logger.info(f"\nApplying standardization to '{col}'...")
+    logger.info(f"Mapping {len(mapping)} variants to canonical forms")
+    
+    # Apply mapping with default fallback to original value
+    df = df.with_columns(
+        pl.col(col).map_dict(mapping, default=pl.col(col)).alias(col)
+    )
+    
+    # Verify changes
+    new_unique_count = df[col].n_unique()
+    logger.info(f"✓ Standardization complete: {new_unique_count} unique values remain")
+    
+    return df
+
+
+def comprehensive_categorical_cleaning(df: pl.DataFrame, categorical_cols: list = None, similarity_threshold: float = 0.85) -> tuple[pl.DataFrame, dict]:
+    """
+    Complete categorical cleaning pipeline with inconsistency detection.
+    
+    This is the recommended approach for thorough categorical data cleaning.
+    Uses intelligent heuristics to preserve legitimate variations (e.g., Disease A vs Disease B).
+    
+    Args:
+        df: Polars DataFrame
+        categorical_cols: List of categorical columns to analyze (None = auto-detect)
+        similarity_threshold: Fuzzy matching threshold (0-1). Default 0.85 is conservative.
+                            Higher = fewer false positives but may miss some typos.
+                            Lower = more sensitive but may flag legitimate variations.
+    
+    Returns:
+        Tuple of (cleaned_df, cleaning_report)
+    """
+    # Auto-detect categorical columns if not provided
+    if categorical_cols is None:
+        categorical_cols = []
+        for col in df.columns:
+            if df[col].dtype == pl.Utf8:
+                # Consider string columns with < 50% unique values as categorical
+                unique_ratio = df[col].n_unique() / df.height
+                if unique_ratio < 0.5:
+                    categorical_cols.append(col)
+    
+    logger.info(f"\n{'=' * 80}")
+    logger.info(f"COMPREHENSIVE CATEGORICAL CLEANING")
+    logger.info(f"{'=' * 80}")
+    logger.info(f"Analyzing {len(categorical_cols)} categorical columns: {categorical_cols}")
+    logger.info(f"Similarity threshold: {similarity_threshold} (conservative to avoid merging distinct entities)")
+    
+    cleaning_report = {
+        'columns_analyzed': categorical_cols,
+        'inconsistencies_found': {},
+        'mappings_applied': {},
+        'total_standardizations': 0,
+        'similarity_threshold': similarity_threshold
+    }
+    
+    for col in categorical_cols:
+        logger.info(f"\n{'=' * 80}")
+        logger.info(f"Processing column: {col}")
+        logger.info(f"{'=' * 80}")
+        
+        # Step 1: Analyze for inconsistencies
+        inconsistency_report = analyze_categorical_inconsistencies(df, col, threshold=similarity_threshold)
+        
+        if inconsistency_report['potential_duplicates']:
+            cleaning_report['inconsistencies_found'][col] = inconsistency_report
+            
+            # Step 2: Create standardization mapping
+            mapping = create_standardization_mapping(inconsistency_report)
+            
+            if mapping:
+                # Step 3: Apply standardization
+                df = apply_categorical_standardization(df, col, mapping)
+                cleaning_report['mappings_applied'][col] = mapping
+                cleaning_report['total_standardizations'] += len(mapping)
+        else:
+            logger.info(f"✓ No inconsistencies detected in '{col}'")
+    
+    # Final summary
+    logger.info(f"\n{'=' * 80}")
+    logger.info(f"CATEGORICAL CLEANING SUMMARY")
+    logger.info(f"{'=' * 80}")
+    logger.info(f"Columns analyzed: {len(categorical_cols)}")
+    logger.info(f"Columns with inconsistencies: {len(cleaning_report['inconsistencies_found'])}")
+    logger.info(f"Total standardizations applied: {cleaning_report['total_standardizations']}")
+    logger.info(f"✓ Legitimate variations (Type A/B, Grade 1/2, etc.) preserved")
+    
+    return df, cleaning_report
+```
+
+**Usage Example**:
+
+```python
+# After initial data loading and basic standardization
+df = standardize_column_names(df)
+df = standardize_temporal_columns(df)
+
+# Critical: Detect and fix categorical inconsistencies
+# Use default threshold (0.85) for conservative matching
+df, categorical_report = comprehensive_categorical_cleaning(
+    df, 
+    categorical_cols=['disease', 'sector', 'category', 'region'],  # Specify or None for auto-detect
+    similarity_threshold=0.85  # Conservative: avoids merging "Hepatitis A" with "Hepatitis B"
+)
+
+# For more sensitive detection (may need manual review):
+# similarity_threshold=0.75  # Will catch more typos but may flag some legitimate variations
+
+# Save the cleaning report for documentation
+with open(INTERIM_DATA_PATH / "categorical_cleaning_report.json", 'w') as f:
+    json.dump(categorical_report, f, indent=2)
+
+# Always review the report before proceeding with analysis
+logger.info(f"Review categorical cleaning report: {INTERIM_DATA_PATH / 'categorical_cleaning_report.json'}")
+```
+
+**Best Practices for Categorical Inconsistency Detection**:
+
+1. **Always analyze before assuming**: Never assume categorical data is clean - always run inconsistency detection first
+2. **Review top values**: Print the top 10-20 values for each categorical column to spot obvious issues
+3. **Preserve legitimate variations**: Ensure logic distinguishes between:
+   - ❌ Inconsistencies: "HFMD" vs "Hand, Foot Mouth Disease" (should merge)
+   - ✅ Legitimate variations: "Hepatitis A" vs "Hepatitis B" (must keep separate)
+   - ✅ Legitimate variations: "Type 1" vs "Type 2", "Grade A" vs "Grade B"
+4. **Use conservative thresholds**: 
+   - Start with high similarity threshold (0.85-0.90) to avoid false positives
+   - Require similar string lengths (avoid matching "A" with "Appendicitis")
+5. **Check for patterns**:
+   - Abbreviations (HFMD, HIV, TB)
+   - Full names with variations (Hand, Foot Mouth Disease vs Hand Foot Mouth Disease)
+   - Case differences (COVID-19 vs Covid-19 vs covid-19)
+   - Whitespace (leading/trailing spaces)
+   - Punctuation variations (Hand, Foot vs Hand Foot)
+6. **Document mappings**: Save all standardization mappings for reproducibility and audit
+7. **Validate counts**: Ensure total record counts remain the same after standardization
+8. **Manual review**: Always review detected inconsistencies before applying - don't blindly merge
+9. **Domain knowledge**: Use domain-specific knowledge to identify which variations should be merged
+10. **Test on sample**: Run on a subset first to validate detection logic before full dataset
 
 ---
 
@@ -675,6 +1064,16 @@ def generate_cleaning_report(original_df: pl.DataFrame, cleaned_df: pl.DataFrame
     df = standardize_temporal_columns(df)
     df = standardize_categories(df, dataset_context)
     
+    # Stage 2.4: CRITICAL - Detect and fix categorical inconsistencies
+    # This catches abbreviations, typos, and naming variations
+    df, categorical_report = comprehensive_categorical_cleaning(df)
+    
+    # Save categorical cleaning report for documentation
+    report_path = INTERIM_DATA_PATH / f"{table_name}_categorical_cleaning_report.json"
+    with open(report_path, 'w') as f:
+        json.dump(categorical_report, f, indent=2)
+    logger.info(f"Categorical cleaning report saved to: {report_path}")
+    
     # Stage 3: Data types
     df = enforce_data_types(df, table_name)
     df = validate_numeric_ranges(df)
@@ -779,6 +1178,8 @@ def clean_all_moh_tables(dataset_path: Path) -> dict:
 6. **Save as Parquet** - Better compression and faster reads
 7. **Document assumptions** - Comment business logic
 8. **Version control schemas** - Track data structure changes
+9. **Always analyze categorical columns for inconsistencies** - Never assume they're clean
+10. **Generate and review categorical cleaning reports** - Document all standardization mappings
 
 ### ✗ Don'ts
 
@@ -790,6 +1191,8 @@ def clean_all_moh_tables(dataset_path: Path) -> dict:
 6. **Don't hardcode paths** - Use Path objects and config files
 7. **Don't process in-place** - Create new columns/dataframes
 8. **Don't forget memory management** - Monitor RAM usage for large operations
+9. **Don't skip categorical inconsistency detection** - Abbreviations and typos are common
+10. **Don't apply standardization without reviewing** - Always check what will be merged
 
 ---
 
@@ -833,7 +1236,9 @@ Before marking data as "clean", verify:
 
 - [ ] All column names follow snake_case convention
 - [ ] Temporal columns aligned (unified "year" column)
-- [ ] Categorical values standardized
+- [ ] **Categorical inconsistencies detected and corrected** (abbreviations, typos, variations)
+- [ ] **Categorical cleaning report generated and reviewed**
+- [ ] Categorical values standardized (case, punctuation, whitespace)
 - [ ] Data types correctly enforced
 - [ ] Numeric ranges validated
 - [ ] Duplicates removed or flagged

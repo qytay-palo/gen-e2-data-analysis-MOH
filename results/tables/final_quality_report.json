@@ -1,0 +1,35 @@
+{
+  "dataset_info": {
+    "total_records": 16066,
+    "total_diseases": 44,
+    "date_range": {
+      "start": "2012-W01",
+      "end": "2020-W53",
+      "year_range": "2012-2020"
+    },
+    "temporal_coverage": {
+      "total_weeks": 470,
+      "total_years": 9
+    }
+  },
+  "data_quality_metrics": {
+    "missing_values_pct": 0.0,
+    "duplicate_records": 0,
+    "outlier_records": 478,
+    "outlier_pct": 2.975227187850118,
+    "diseases_standardized": 1
+  },
+  "disease_burden_summary": {
+    "high_burden_diseases": 14,
+    "medium_burden_diseases": 15,
+    "low_burden_diseases": 15,
+    "total_cases_all_diseases": 396031
+  },
+  "transmission_categories": {
+    "Vector-borne": 6,
+    "Other": 28,
+    "Foodborne": 3,
+    "Respiratory": 1,
+    "Vaccine-preventable": 6
+  }
+}

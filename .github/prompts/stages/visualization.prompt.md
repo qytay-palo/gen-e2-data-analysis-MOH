@@ -7,12 +7,7 @@ stage: Visualization & Reporting
 
 ## Objective
 
-Create compelling visualizations and comprehensive reports that communicate analysis findings to stakeholders. Leverage MCP tools for efficient data access, visualization generation, and report delivery.
-
-## Required MCP Tools
-
-- **Filesystem Server** (REQUIRED): For reading analysis results, saving visualizations, and creating report outputs
-- **SQLite Server** (when applicable): For querying data for visualizations directly from databases
+Create compelling visualizations and comprehensive reports that communicate analysis findings to stakeholders.
 
 ## Input Requirements
 
@@ -29,7 +24,7 @@ The following inputs MUST be available before proceeding:
    - Database tables (if using SQLite)
 
 3. **Reporting Requirements**: From user story or stakeholder specs
-   - Target audience (executives, analysts, clinicians)
+   - Target audience (executives, analysts, domain experts)
    - Report format (dashboard, PDF, presentation)
    - Key messages to convey
    - Deadline and delivery format
@@ -39,6 +34,12 @@ The following inputs MUST be available before proceeding:
    - Chart types required
    - Interactivity requirements
    - Accessibility requirements
+
+5. **Data Volume Assessment**:
+   - Total number of records to visualize
+   - Expected concurrent dashboard users
+   - Data refresh frequency requirements
+   - Performance constraints (load time, query limits)
 
 ## Output Requirements
 
@@ -70,15 +71,15 @@ The visualization and reporting MUST produce:
 
 ## Execution Steps
 
-### Step 1: Visualization Planning (using MCP filesystem tools)
+### Step 1: Visualization Planning
 
 ```
-1. Use filesystem tools to create visualization directories:
+1. Create visualization directories:
    - reports/figures/{epic_id}/
    - reports/dashboards/{epic_id}/
    - reports/presentations/{epic_id}/
 
-2. Use filesystem tools to read analysis results:
+2. Read analysis results:
    - Read results/metrics/{epic_id}_metrics.json
    - Read results/tables/{epic_id}/*.csv
    - Read analysis summary from results/{epic_id}/analysis_summary.md
@@ -89,15 +90,57 @@ The visualization and reporting MUST produce:
    - Comparisons and relationships
    - Outliers and anomalies
 
-4. Select appropriate chart types for each finding
+4. Select appropriate chart types for each finding (see Chart Selection Guide)
+
+5. Choose visualization tools based on requirements:
+   - Data volume and performance needs
+   - Interactivity requirements
+   - Target audience technical proficiency
+   - Deployment environment
+   - See Tool Selection Matrix below for guidance
 ```
 
-**Example MCP Commands**:
-- "Use filesystem tools to create directory reports/figures/epic-001/"
-- "Use filesystem tools to read results/metrics/epic-001_metrics.json"
-- "Use filesystem tools to read results/epic-001/analysis_summary.md"
+### Step 1.5: Tool Selection
 
-### Step 2: Time Series Visualizations (using MCP tools)
+```
+Choose appropriate tools based on requirements:
+
+**For Static Visualizations:**
+- Matplotlib/Seaborn (Python) - Publication quality, full control
+- ggplot2 (R) - Statistical graphics, grammar of graphics
+- Plotly (static export) - Interactive-first with static output
+
+**For Interactive Dashboards:**
+- Tableau - Enterprise BI, self-service analytics, no coding
+- Power BI - Microsoft ecosystem, business users
+- Plotly Dash - Python-based, custom web apps, ML integration
+- Streamlit - Rapid prototyping, data science focus
+- Bokeh - Interactive plots, large datasets, server-side processing
+- Apache ECharts - JavaScript, high performance, rich chart types
+- D3.js - Complete control, custom complex visualizations
+- Observable - Reactive notebooks, shareable visualizations
+
+**For Large Datasets (>1M rows):**
+- Datashader (aggregation) + HoloViews/Bokeh
+- Plotly + data aggregation layer
+- Apache Superset (database-native visualization)
+- Grafana (time-series, monitoring)
+- Consider database-side aggregation before visualization
+
+**For Real-Time/Monitoring:**
+- Grafana + Prometheus/InfluxDB
+- Streamlit with auto-refresh
+- Custom WebSocket-based dashboards
+
+**Decision Factors:**
+1. Data size: >1M rows → use aggregation strategies
+2. Audience: Technical vs business users
+3. Deployment: Cloud, on-premise, or embedded
+4. Maintenance: Self-service vs developer-maintained
+5. Budget: Open-source vs commercial licenses
+```
+
+### Step 2: Time Series Visualizations
 
 ```
 For temporal data and trends:
@@ -126,15 +169,10 @@ For temporal data and trends:
    - Grid lines for readability
    - Appropriate date formatting
 
-5. Use filesystem tools to save visualizations
+5. Save visualizations
 ```
 
-**Example MCP Commands**:
-- "Create line chart showing monthly emergency visit trends over 2 years"
-- "Add confidence intervals and annotate flu season peaks"
-- "Use filesystem tools to save to reports/figures/epic-001/monthly_visit_trends.png at 300 DPI"
-
-### Step 3: Distribution Visualizations (using MCP tools)
+### Step 3: Distribution Visualizations
 
 ```
 For showing data distributions and spread:
@@ -165,14 +203,10 @@ For showing data distributions and spread:
    - Highlight outliers or thresholds
    - Use consistent color schemes
 
-6. Use filesystem tools to save visualizations
+6. Save visualizations
 ```
 
-**Example MCP Commands**:
-- "Create box plot comparing wait times across 5 departments"
-- "Use filesystem tools to save to reports/figures/epic-001/wait_time_distributions.png"
-
-### Step 4: Comparison Visualizations (using MCP tools)
+### Step 4: Comparison Visualizations
 
 ```
 For comparing groups, categories, or time periods:
@@ -205,14 +239,10 @@ For comparing groups, categories, or time periods:
    - Include data labels for precision
    - Show comparison baselines
 
-6. Use filesystem tools to save visualizations
+6. Save visualizations
 ```
 
-**Example MCP Commands**:
-- "Create grouped bar chart comparing utilization rates across facilities and departments"
-- "Use filesystem tools to save to reports/figures/epic-001/facility_utilization_comparison.png"
-
-### Step 5: Relationship Visualizations (using MCP tools)
+### Step 5: Relationship Visualizations
 
 ```
 For showing correlations and relationships:
@@ -246,14 +276,10 @@ For showing correlations and relationships:
    - Label outliers
    - Use transparency for overlapping points
 
-6. Use filesystem tools to save visualizations
+6. Save visualizations
 ```
 
-**Example MCP Commands**:
-- "Create scatter plot of capacity vs wait time with regression line"
-- "Use filesystem tools to save to reports/figures/epic-001/capacity_waittime_relationship.png"
-
-### Step 6: Geographic Visualizations (using MCP tools)
+### Step 6: Geographic Visualizations
 
 ```
 For spatial data and geographic patterns:
@@ -281,14 +307,10 @@ For spatial data and geographic patterns:
    - Choose colorblind-safe palettes
    - Provide context (boundaries, cities)
 
-5. Use filesystem tools to save visualizations
+5. Save visualizations
 ```
 
-**Example MCP Commands**:
-- "Create choropleth map showing emergency visit rates by region"
-- "Use filesystem tools to save to reports/figures/epic-001/regional_visit_rates_map.png"
-
-### Step 7: Composition Visualizations (using MCP tools)
+### Step 7: Composition Visualizations
 
 ```
 For showing part-to-whole relationships:
@@ -322,14 +344,10 @@ For showing part-to-whole relationships:
    - Use bar charts if comparison needed
    - Include actual values, not just %
 
-6. Use filesystem tools to save visualizations
+6. Save visualizations
 ```
 
-**Example MCP Commands**:
-- "Create treemap showing patient distribution by department and diagnosis category"
-- "Use filesystem tools to save to reports/figures/epic-001/patient_distribution_treemap.png"
-
-### Step 8: Statistical Visualizations (using MCP tools)
+### Step 8: Statistical Visualizations
 
 ```
 For statistical analysis results:
@@ -354,61 +372,118 @@ For statistical analysis results:
    - Scatter of residuals
    - Q-Q plot of residuals
 
-5. Apply best practices:
-   - Show p-values or significance
-   - Mark significance levels (*, **, ***)
-   - Include sample sizes
-   - Show statistical test used
-   - Provide interpretation guide
+5. Survival Curves (Kaplan-Meier):
+   - Time-to-event analysis
+   - Multiple groups comparison
+   - Confidence bands
+   - Censored data indicators
 
-6. Use filesystem tools to save visualizations
+6. Funnel Plots:
+   - Compare performance across entities
+   - Show control limits (95%, 99.8%)
+   - Identify outliers
+   - Use for variance monitoring
+
+7. Control Charts (SPC):
+   - Monitor process over time
+   - Show mean, UCL, LCL
+   - Mark special cause variation
+   - Trend and shift detection
+
+8. Waterfall Charts:
+   - Show cumulative effect of changes
+   - Start value → intermediate changes → end value
+   - Useful for variance analysis
+   - Color increases vs decreases
+
+9. Sankey Diagrams:
+   - Flow and transition visualization
+   - Show magnitude of flows
+   - Multi-stage processes
+   - Retention/conversion funnels
+
+10. Apply best practices:
+    - Show p-values or significance
+    - Mark significance levels (*, **, ***)
+    - Include sample sizes
+    - Show statistical test used
+    - Provide interpretation guide
+
+11. Save visualizations
 ```
 
-**Example MCP Commands**:
-- "Create forest plot showing odds ratios with 95% CI for risk factors"
-- "Use filesystem tools to save to reports/figures/epic-001/risk_factor_forest_plot.png"
-
-### Step 9: Interactive Dashboard Creation (using MCP tools)
+### Step 9: Interactive Dashboard Creation
 
 ```
 For dynamic, explorable visualizations:
 
-1. Choose dashboard framework:
-   - Plotly Dash (Python, web-based)
-   - Streamlit (Python, rapid prototyping)
-   - Power BI (business intelligence)
-   - Jupyter Dashboard (notebook-based)
-   - Bokeh (Python, interactive)
+1. Choose dashboard framework (see Tool Selection Matrix in Step 1.5)
 
-2. Dashboard components:
+2. Dashboard architecture:
+   - Data layer: Database connections, caching strategy
+   - Processing layer: Aggregations, calculations
+   - Presentation layer: UI components, charts
+   - Separation of concerns for maintainability
+
+3. Performance optimization:
+   - Pre-aggregate data at appropriate granularity
+   - Implement caching (Redis, in-memory)
+   - Use database-side calculations where possible
+   - Lazy loading for non-critical components
+   - Pagination for large tables (50-100 rows per page)
+   - Query timeouts to prevent long-running queries
+   - Connection pooling for concurrent users
+
+4. Dashboard components:
    - Filters and controls (dropdowns, sliders, date pickers)
    - Multiple linked charts (click-to-filter)
    - Metrics cards (KPIs, summary stats)
-   - Data tables (sortable, filterable)
+   - Data tables (sortable, filterable, exportable)
    - Update timestamp and refresh button
+   - Loading indicators for async operations
+   - Error messages and empty state handling
 
-3. Dashboard layout:
+5. Dashboard layout:
+   - F-pattern layout (most important top-left)
    - Logical organization (top-to-bottom priority)
-   - Responsive design (mobile-friendly)
-   - Consistent styling
-   - Clear navigation
+   - Responsive design (mobile-friendly breakpoints)
+   - Consistent styling and spacing
+   - Clear navigation and breadcrumbs
+   - Collapsible sections for advanced filters
 
-4. Add interactivity:
-   - Hover tooltips with details
-   - Click to drill-down
-   - Zoom and pan for time series
+6. Add interactivity:
+   - Hover tooltips with contextual details
+   - Click to drill-down to detailed views
+   - Zoom and pan for time series exploration
    - Cross-filtering between charts
-   - Export functionality (CSV, image)
+   - Export functionality (CSV, Excel, PNG, PDF)
+   - Bookmark/share specific views (URL parameters)
+   - Reset filters button
 
-5. Use filesystem tools to save dashboard files
+7. State management:
+   - Persist user selections (local storage/session)
+   - Deep linking (URL reflects current state)
+   - Undo/redo for exploration
+   - Save custom views per user
+
+8. Data refresh strategy:
+   - Manual refresh button with last updated timestamp
+   - Auto-refresh interval for real-time dashboards (30s-5min)
+   - Background data updates without UI disruption
+   - Visual indicator when data is stale
+   - Incremental updates for large datasets
+
+9. Performance targets:
+   - Initial load: <3 seconds
+   - Data refresh: <1 second for filtered views
+   - Filter interactions: <500ms response
+   - Support 50+ concurrent users (load test)
+   - Graceful degradation under high load
+
+10. Save dashboard files and deployment artifacts
 ```
 
-**Example MCP Commands**:
-- "Create Streamlit dashboard with emergency department metrics"
-- "Add filters for date range, department, and facility"
-- "Use filesystem tools to save to reports/dashboards/epic-001/ed_metrics_dashboard.py"
-
-### Step 10: Executive Reports and Presentations (using MCP tools)
+### Step 10: Executive Reports and Presentations
 
 ```
 For stakeholder communication:
@@ -441,14 +516,48 @@ For stakeholder communication:
    - Key numbers highlighted
    - Simple, clean design
 
-5. Use filesystem tools to save reports
+5. Save reports
 ```
 
-**Example MCP Commands**:
-- "Create executive summary PDF for emergency department analysis"
-- "Use filesystem tools to save to reports/presentations/epic-001/ed_executive_summary.pdf"
+### Step 10.5: Mobile and Responsive Design
 
-### Step 11: Accessibility and Quality Checks (using MCP tools)
+```
+Ensure visualizations work across devices:
+
+1. Mobile Considerations:
+   - Simplified layouts for small screens
+   - Touch-friendly controls (44x44px minimum)
+   - Vertical scrolling over horizontal
+   - Reduced chart complexity (fewer series)
+   - Larger fonts and hit targets
+   - Avoid hover-dependent interactions
+
+2. Responsive Breakpoints:
+   - Mobile: <768px (stacked layout, simplified charts)
+   - Tablet: 768-1024px (2-column layout)
+   - Desktop: >1024px (full dashboard)
+   - Test on actual devices, not just browser resize
+
+3. Progressive Enhancement:
+   - Core content accessible on all devices
+   - Advanced features on larger screens
+   - Graceful degradation of interactions
+   - Alternative views for complex visualizations
+
+4. Progressive Web App (PWA) capabilities:
+   - Offline mode with cached data
+   - Home screen installation
+   - Push notifications for alerts
+   - Background sync for data updates
+
+5. Test across devices and browsers:
+   - iOS Safari, Android Chrome
+   - Desktop browsers (Chrome, Firefox, Edge, Safari)
+   - Different screen sizes and orientations
+   - Touch vs mouse interactions
+```
+
+### Step 11: Accessibility and Quality Checks
 
 ```
 Ensure visualizations are accessible and high quality:
@@ -477,14 +586,10 @@ Ensure visualizations are accessible and high quality:
    - Consistent styling across all charts
    - Professional appearance
 
-5. Use filesystem tools to verify all files created
+5. Verify all files created
 ```
 
-**Example MCP Commands**:
-- "Verify all visualizations use colorblind-safe palette"
-- "Use filesystem tools to list all PNG files and check they are 300 DPI"
-
-### Step 12: Documentation and Delivery (using MCP filesystem tools)
+### Step 12: Documentation and Delivery
 
 ```
 1. Create visualization guide:
@@ -506,68 +611,233 @@ Ensure visualizations are accessible and high quality:
    - Include reproduction scripts
    - Include update instructions
 
-4. Use filesystem tools to write documentation
+4. Write documentation
 ```
 
-**Example MCP Commands**:
-- "Create visualization guide documenting all 15 charts"
-- "Use filesystem tools to write to reports/epic-001/visualization_guide.md"
-- "Use filesystem tools to list all deliverables in reports/epic-001/"
+### Step 13: Testing and Validation
 
-### Step 13: Verification (using MCP filesystem tools)
+```
+1. Functional Testing:
+   - All filters work correctly and update charts
+   - Data refresh updates all dependent visualizations
+   - Export functionality produces valid files
+   - Cross-filtering operates as expected
+   - Date ranges filter correctly
+   - Sorting and pagination work on tables
+   - Links and drill-downs navigate correctly
+
+2. Data Accuracy Testing:
+   - Spot-check calculations against source data
+   - Verify aggregations (sums, averages, counts)
+   - Confirm filters apply correctly
+   - Test edge cases (no data, single record, nulls)
+   - Validate date/time zone handling
+
+3. Performance Testing:
+   - Measure initial load time (<3s target)
+   - Test with maximum expected data volume
+   - Load test with concurrent users (50+ users)
+   - Monitor query execution times
+   - Test with slow network conditions
+   - Check memory usage and leaks
+
+4. User Acceptance Testing:
+   - Present to 3-5 representative users
+   - Collect feedback on clarity and usability
+   - Time common task completion
+   - Document usability issues and confusion
+   - Iterate based on feedback
+
+5. Accessibility Testing:
+   - Screen reader navigation (NVDA, JAWS, VoiceOver)
+   - Keyboard-only navigation (Tab, Enter, Arrow keys)
+   - Color contrast validation (WCAG 2.1 AA)
+   - Alt text for all visualizations
+   - Focus indicators visible
+   - No keyboard traps
+
+6. Cross-Browser Testing:
+   - Chrome, Firefox, Safari, Edge (latest 2 versions)
+   - Mobile browsers (iOS Safari, Android Chrome)
+   - Test on different operating systems
+   - Document any browser-specific issues
+
+7. Create test report:
+   - Document all tests performed
+   - Record any issues found and resolutions
+   - Include performance metrics
+   - List any known limitations
+```
+
+### Step 14: Verification
 
 ```
 1. Verify all required outputs were created:
-   - Use filesystem tools to list files in reports/figures/{epic_id}/
-   - Use filesystem tools to list files in reports/dashboards/{epic_id}/
-   - Use filesystem tools to list files in reports/presentations/{epic_id}/
+   - List files in reports/figures/{epic_id}/
+   - List files in reports/dashboards/{epic_id}/
+   - List files in reports/presentations/{epic_id}/
 
 2. Verify visualization quality:
    - All images at required resolution (300 DPI for print)
-   - All charts properly labeled
-   - All interactive dashboards functional
-   - All reports complete with findings
+   - All charts properly labeled with titles, axes, legends
+   - All interactive dashboards functional and tested
+   - All reports complete with findings and recommendations
 
 3. Cross-check against acceptance criteria from user story
 
-4. Document verification results
-```
+4. Verify testing completion:
+   - All tests from Step 13 completed
+   - Test report documented
+   - Critical issues resolved
 
-**Example MCP Commands**:
-- "Use filesystem tools to list all PNG files in reports/figures/epic-001/ and show file sizes"
-- "Use filesystem tools to verify visualization_guide.md exists and contains all visualizations"
+5. Document verification results
+```
 
 ## Visualization Best Practices
 
 ### 1. Choose the Right Chart Type
+
+**Chart Selection Guide:**
+
 ```
-Time series → Line chart
-Distribution → Histogram, box plot
-Comparison → Bar chart
-Relationship → Scatter plot
-Composition → Stacked bar, treemap
-Geographic → Choropleth map, point map
+┌─────────────────────┬─────────────────────────────────────────┐
+│ Data Relationship   │ Recommended Chart Type                  │
+├─────────────────────┼─────────────────────────────────────────┤
+│ Time series         │ Line chart, area chart                  │
+│ Distribution        │ Histogram, box plot, violin plot        │
+│ Comparison          │ Bar chart (vertical/horizontal)         │
+│ Ranking             │ Sorted bar chart, bullet chart          │
+│ Correlation         │ Scatter plot, correlation heatmap       │
+│ Composition         │ Stacked bar, treemap, donut chart       │
+│ Part-to-whole       │ Pie chart (≤5 slices), stacked 100%     │
+│ Geographic/spatial  │ Choropleth map, point map, heatmap      │
+│ Flow/process        │ Sankey diagram, funnel chart            │
+│ Hierarchical        │ Treemap, sunburst, dendrogram           │
+│ Network             │ Network diagram, chord diagram          │
+│ Statistical         │ Box plot, violin plot, Q-Q plot         │
+│ Deviation           │ Diverging bar chart, bullet chart       │
+│ Multi-dimensional   │ Bubble chart, parallel coordinates      │
+│ Change over time    │ Waterfall chart, slope graph            │
+│ Performance         │ Gauge, bullet chart, control chart      │
+└─────────────────────┴─────────────────────────────────────────┘
+```
+
+**Decision Tree:**
+```
+1. What is your data?
+   └─> One variable
+       └─> Categorical → Bar chart
+       └─> Continuous → Histogram, density plot
+   └─> Two variables
+       └─> Both categorical → Grouped bar, heatmap
+       └─> One categorical, one continuous → Bar chart, box plot
+       └─> Both continuous → Scatter plot, line chart
+   └─> Three+ variables
+       └─> Bubble chart, faceted plots, small multiples
+   └─> Time dimension → Line chart, area chart
+   └─> Geographic → Map-based visualizations
+   └─> Hierarchical → Treemap, sunburst
 ```
 
 ### 2. Design Principles
+
+**Do's:**
 ```
-✅ Maximize data-ink ratio
-✅ Use consistent colors and styling
-✅ Start axes at zero (for bar charts)
-✅ Label everything clearly
+✅ Maximize data-ink ratio (remove non-essential elements)
+✅ Use consistent colors and styling across all charts
+✅ Start axes at zero for bar charts (magnitude comparison)
+✅ Label everything clearly (title, axes, units, legend)
 ✅ Include data sources and timestamps
-❌ Avoid 3D charts (distort perception)
-❌ Avoid pie charts (hard to compare)
-❌ Don't overload with information
+✅ Use whitespace effectively
+✅ Align and group related elements
+✅ Maintain consistent scale across comparable charts
+✅ Show uncertainty (confidence intervals, error bars)
+✅ Order categories meaningfully (alphabetical, by value, chronological)
+✅ Use color purposefully, not decoratively
+✅ Provide context (benchmarks, targets, averages)
+✅ Tell a story with logical flow
+```
+
+**Don'ts - Anti-Patterns:**
+```
+❌ 3D charts (distort perception, hard to read values)
+❌ Dual-axis charts (misleading scale comparisons)
+❌ Pie charts with >5 slices (hard to compare angles)
+❌ Truncated axes on bar charts (exaggerates differences)
+❌ Too many colors (rainbow schemes confuse)
+❌ Chart junk (unnecessary decorations, backgrounds)
+❌ Mixing chart types without reason
+❌ Relying solely on color to convey information
+❌ Tiny fonts or cramped labels
+❌ Unlabeled axes or missing units
+❌ Too much data in one chart (split into small multiples)
+❌ Decorative fonts or all caps for body text
+❌ Using area/volume for 1D comparisons (bubble distortion)
+❌ Hiding zero baseline (misleading trends)
+❌ Excessive precision (0.123456789 vs 0.12)
 ```
 
 ### 3. Storytelling with Data
+
+**Narrative Structure:**
 ```
-✅ Lead with the key message
-✅ Guide the viewer's attention
-✅ Use annotations to highlight insights
-✅ Provide context (benchmarks, targets)
-✅ End with actionable recommendations
+1. Setup (Context):
+   - What is the situation?
+   - Why does it matter?
+   - What question are we answering?
+   - Provide baseline/historical context
+
+2. Conflict (Challenge/Problem):
+   - What changed or went wrong?
+   - Where are the gaps or opportunities?
+   - Show the data that reveals the issue
+   - Use annotations to highlight anomalies
+
+3. Resolution (Insight/Recommendation):
+   - What does the data tell us?
+   - What action should be taken?
+   - What is the expected impact?
+   - Provide clear next steps
+```
+
+**Attention Guidance:**
+```
+✅ Lead with the key message (headline, not description)
+✅ Visual hierarchy (size, color, position)
+✅ Use annotations to highlight critical insights
+✅ Progressive disclosure (overview → detail)
+✅ Consistent reading pattern (Z-pattern, F-pattern)
+✅ Call out what's important with color/size contrast
+✅ Remove distractions (grays for background data)
+```
+
+**Context and Comparison:**
+```
+✅ Provide benchmarks (industry average, target, goal)
+✅ Show trends over time (not just current state)
+✅ Compare to similar entities or time periods
+✅ Include sample sizes and confidence levels
+✅ Show both absolute and relative changes
+✅ Add reference lines (average, threshold, target)
+```
+
+**Actionability:**
+```
+✅ End with clear, specific recommendations
+✅ Quantify expected impact ("reduce costs by 15%")
+✅ Prioritize actions (what to do first)
+✅ Assign accountability (who should act)
+✅ Set timelines (when to implement)
+✅ Define success metrics (how to measure)
+```
+
+**Progression Techniques:**
+```
+✅ Start with executive summary (1-slide/1-page)
+✅ Provide detailed views on demand
+✅ Use drill-down interactions (click for details)
+✅ Layer complexity (simple → detailed)
+✅ Offer multiple perspectives (time, geography, segment)
 ```
 
 ## Quality Checks
@@ -606,17 +876,71 @@ After visualization creation, perform these quality checks:
 - Source is cited
 ```
 
+## Version Control and Deployment
+
+### Version Control Strategy
+
+```
+1. Dashboard Versioning:
+   - Use semantic versioning (v1.0.0, v1.1.0, v2.0.0)
+   - Tag releases in git
+   - Maintain CHANGELOG.md with updates
+   - Document breaking changes
+
+2. A/B Testing:
+   - Deploy new versions alongside existing
+   - Route subset of users to new version
+   - Collect usage metrics and feedback
+   - Gradual rollout (10% → 50% → 100%)
+
+3. Rollback Procedures:
+   - Keep previous version accessible
+   - Document rollback steps
+   - Monitor for issues post-deployment
+   - Have rollback criteria defined
+
+4. Backup and Recovery:
+   - Backup dashboard configurations
+   - Export data sources and connections
+   - Document dependencies and versions
+   - Test recovery procedures
+```
+
+### Deployment Checklist
+
+```
+□ All tests passed (functional, performance, accessibility)
+□ User acceptance testing completed
+□ Documentation updated (user guide, technical docs)
+□ Performance benchmarks meet targets
+□ Security review completed (if applicable)
+□ Data privacy compliance verified
+□ Stakeholder sign-off obtained
+□ Backup of previous version created
+□ Monitoring and alerts configured
+□ Support team trained on new features
+□ Release notes prepared
+□ Rollback plan documented
+```
+
 ## Error Handling
 
 If visualization creation encounters issues:
 
-1. **Use filesystem tools to write detailed error log** to `logs/errors/visualization_{epic_id}_{timestamp}.log`
+1. **Write detailed error log** to `logs/errors/visualization_{epic_id}_{timestamp}.log`
 
 2. **Document the specific issue**:
    - Which visualization failed
    - Error message
    - Data issues encountered
    - Suggested remediation
+
+3. **Common issues and solutions**:
+   - Data too large: Implement aggregation or sampling
+   - Slow performance: Add caching, optimize queries
+   - Memory errors: Process data in chunks
+   - Browser compatibility: Use polyfills or fallbacks
+   - Missing data: Handle nulls gracefully, show empty states
 
 ## Success Criteria
 
@@ -627,31 +951,15 @@ The visualization and reporting is considered successful when:
 - ✅ Reports and presentations saved to `reports/presentations/{epic_id}/`
 - ✅ Visualization guide documented in `reports/{epic_id}/visualization_guide.md`
 - ✅ All visualizations are high quality, accurate, and accessible
-- ✅ Key findings clearly communicated
+- ✅ Key findings clearly communicated with actionable recommendations
 - ✅ Acceptance criteria from user story met
-- ✅ All outputs verified using MCP filesystem tools
-
-## MCP Tools Usage Summary
-
-```markdown
-### MCP Tools Used
-
-**Filesystem Server**:
-- Directories created:
-  - reports/figures/epic-001/
-  - reports/dashboards/epic-001/
-  - reports/presentations/epic-001/
-- Files read:
-  - results/metrics/epic-001_metrics.json
-  - results/tables/epic-001/*.csv
-  - data/4_processed/epic-001/*.csv
-- Files written:
-  - 15 static visualizations (PNG, 300 DPI)
-  - 3 interactive dashboards (HTML, Python)
-  - 2 reports (PDF, PPTX)
-  - 1 visualization guide (Markdown)
-- Verification: Listed all directories, confirmed file creation, validated resolutions
-```
+- ✅ All outputs verified and tested (Step 13 and 14)
+- ✅ Performance targets met (load time <3s, interactions <500ms)
+- ✅ Accessibility compliance achieved (WCAG 2.1 AA)
+- ✅ User acceptance testing completed with positive feedback
+- ✅ Cross-browser and device testing passed
+- ✅ Documentation complete (technical and user guides)
+- ✅ Version control and deployment plan in place
 
 ## Next Stage
 

@@ -77,12 +77,7 @@ credentials.json
 # ============================================================================
 # Data Files (Exclude large datasets)
 # ============================================================================
-data/1_raw/*.csv
-data/1_raw/*.parquet
-data/1_raw/*.xlsx
-data/2_external/*
-data/3_interim/*
-data/4_processed/*
+
 !data/**/.gitkeep
 !data/sample_disease_data.csv
 
@@ -109,10 +104,6 @@ mlartifacts/
 # ============================================================================
 # Results & Outputs
 # ============================================================================
-results/**/*.csv
-results/**/*.json
-results/**/*.parquet
-!results/**/.gitkeep
 
 reports/**/*.html
 reports/**/*.pdf

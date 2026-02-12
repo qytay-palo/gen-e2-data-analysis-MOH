@@ -1,9 +1,9 @@
 # Data Analysis Life Cycle Best Practices
 
-## 🎯 Purpose
+## Purpose
 This document provides **mandatory guidelines** for all data analysis work. When generating, reviewing, or modifying data analysis code, **ALWAYS follow these practices**.
 
-## 📋 Quick Rules for LLM/AI Assistants
+## Rules
 
 When assisting with data analysis tasks:
 

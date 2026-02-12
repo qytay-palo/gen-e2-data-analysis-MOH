@@ -7,12 +7,7 @@ stage: Feature Engineering
 
 ## Objective
 
-Transform prepared data into meaningful features that capture patterns, relationships, and domain knowledge for analysis or modeling. Leverage MCP tools for efficient data access, transformation execution, and feature storage.
-
-## Required MCP Tools
-
-- **Filesystem Server** (REQUIRED): For reading prepared data, saving engineered features, and managing feature documentation
-- **SQLite Server** (when applicable): For complex feature calculations using SQL aggregations
+Transform prepared data into meaningful features that capture patterns, relationships, and domain knowledge for analysis or modeling.
 
 ## Input Requirements
 
@@ -40,7 +35,7 @@ The following inputs MUST be available before proceeding:
    - **Domain knowledge**: `docs/project_context/domain-knowledge.md` Review project context for domain-specific features
    - Previous feature sets (if building on prior work)
    
-   **Use MCP filesystem tools to read these files** to understand:
+   Read these files to understand:
    - What features make business sense
    - What domain-specific patterns to capture
    - What features align with objectives
@@ -80,19 +75,19 @@ The feature engineering MUST produce:
 
 ## Execution Steps
 
-### Step 1: Feature Engineering Setup (using MCP filesystem tools)
+### Step 1: Feature Engineering Setup
 
 ```
-1. Use filesystem tools to create feature directories:
+1. Create feature directories:
    - notebooks/3_feature_engineering/{epic_id}/
    - data/4_processed/{epic_id}/features/
    - src/features/
 
-2. Use filesystem tools to read prepared data from data/4_processed/
+2. Read prepared data from data/4_processed/
 
-3. Use filesystem tools to read data schemas from data/schemas/
+3. Read data schemas from data/schemas/
 
-4. Use filesystem tools to read feature requirements from user story
+4. Read feature requirements from user story
 ```
 
 **Example MCP Commands**:
@@ -123,13 +118,8 @@ The feature engineering MUST produce:
    - Average wait time by time period
    - Peak vs off-peak indicators
 
-5. Use filesystem tools to save temporal features notebook
+5. Save temporal features notebook
 ```
-
-**Example MCP Commands**:
-- "Extract temporal features from visit_datetime column"
-- "Create rolling 7-day average for daily visit counts"
-- "Use filesystem tools to save notebook to notebooks/3_feature_engineering/epic-001/01_temporal_features.ipynb"
 
 ### Step 3: Categorical Feature Engineering
 
@@ -144,6 +134,9 @@ The feature engineering MUST produce:
    - Label encoding for ordinal categories
    - Target encoding for high cardinality (with proper CV)
    - Frequency encoding (count of occurrences)
+   - Hash encoding for very high cardinality (>100 unique values)
+   - Weight of Evidence (WOE) encoding for risk modeling
+   - Binary encoding for moderate cardinality (10-50 values)
 
 3. Create categorical aggregations:
    - Count of events per category
@@ -154,13 +147,8 @@ The feature engineering MUST produce:
    - Group infrequent categories into "Other"
    - Threshold: <5% occurrence
 
-5. Use filesystem tools to save categorical features notebook
+5. Save categorical features notebook
 ```
-
-**Example MCP Commands**:
-- "Apply one-hot encoding to department column with low cardinality"
-- "Create target encoding for diagnosis_code using proper cross-validation"
-- "Use filesystem tools to save notebook to notebooks/3_feature_engineering/epic-001/02_categorical_features.ipynb"
 
 ### Step 4: Numerical Feature Engineering
 
@@ -186,20 +174,26 @@ The feature engineering MUST produce:
    - Patient_age × Diagnosis_severity
    - Capacity × Demand
 
-5. Use filesystem tools to save numerical features notebook
-```
+5. Create polynomial features (when beneficial):
+   - Quadratic terms (x², x³) for non-linear relationships
+   - PolynomialFeatures for feature crosses (degree=2 or 3)
+   - Spline transformations for smooth non-linearities
+   - Note: Monitor feature count explosion with high-degree polynomials
 
-**Example MCP Commands**:
-- "Create wait_time_ratio = wait_time / department_avg_wait_time"
-- "Apply log transformation to highly skewed visit_count variable"
-- "Use filesystem tools to save notebook to notebooks/3_feature_engineering/epic-001/03_numerical_features.ipynb"
+6. Consider advanced numerical techniques:
+   - Quantile transformations (uniform or normal distribution)
+   - Power transformations (Yeo-Johnson for zero/negative values)
+   - Rank-based features for robustness to outliers
+
+7. Save numerical features notebook
+```
 
 ### Step 5: Domain-Specific Feature Engineering
 
 ```
 Create features specific to your business domain:
 
-**CRITICAL**: Read `docs/project_context/business-objectives.md` and `docs/data_dictionary/` using MCP tools to understand domain-specific features
+**CRITICAL**: Read `docs/project_context/business-objectives.md` and `docs/data_dictionary/` to understand domain-specific features
 
 1. Entity-level features:
    - Frequency metrics (events per time period)
@@ -231,15 +225,45 @@ Create features specific to your business domain:
 - Finance: Transaction frequency, account utilization, end-of-quarter effects, default risk indicators
 - Manufacturing: Equipment uptime, defect rates, production cycles, maintenance patterns
 
-5. Use filesystem tools to save domain features notebook
+5. Save domain features notebook
 ```
 
-**Example MCP Commands**:
-- "Create visit_frequency_30d feature counting visits in last 30 days"
-- "Calculate capacity_utilization_rate = current_patients / total_capacity"
-- "Use filesystem tools to save notebook to notebooks/3_feature_engineering/epic-001/04_domain_features.ipynb"
+### Step 5a: Text Feature Engineering (if text data present)
 
-### Step 6: Feature Scaling and Normalization (using MCP tools)
+```
+1. Basic text features:
+   - Text length (character count, word count)
+   - Special character counts (punctuation, numbers, uppercase)
+   - Readability scores (Flesch-Kincaid, etc.)
+   - Sentiment scores
+
+2. Vectorization methods:
+   - Bag-of-Words (CountVectorizer) for simple text
+   - TF-IDF (TfidfVectorizer) for weighted importance
+   - N-grams (bigrams, trigrams) for phrase patterns
+   - Hash vectorization for memory efficiency
+
+3. Advanced text features:
+   - Topic modeling outputs (LDA, NMF)
+   - Named entity recognition (NER) counts
+   - Word embeddings (Word2Vec, GloVe, FastText averages)
+   - Pre-trained transformer embeddings (BERT, domain-specific models)
+
+4. Domain-specific text patterns:
+   - Medical codes extraction (ICD, CPT)
+   - Keyword matching for specific terms
+   - Regular expression patterns
+   - Custom dictionary-based features
+
+5. Consider computational constraints:
+   - Limit vocabulary size (max_features parameter)
+   - Use sparse matrices for memory efficiency
+   - Apply dimensionality reduction after vectorization
+
+6. Save text features notebook
+```
+
+### Step 6: Feature Scaling and Normalization
 
 ```
 1. Identify features requiring scaling:
@@ -257,14 +281,10 @@ Create features specific to your business domain:
    - Save scaler object for future use
    - Apply same transformation to test data
 
-4. Use filesystem tools to save scaler objects
+4. Save scaler objects
 ```
 
-**Example MCP Commands**:
-- "Apply StandardScaler to numerical features with normal distribution"
-- "Use filesystem tools to save the fitted scaler to models/epic-001/feature_scaler.pkl"
-
-### Step 7: Feature Selection (using MCP tools)
+### Step 7: Feature Selection
 
 ```
 1. Calculate feature importance:
@@ -282,18 +302,28 @@ Create features specific to your business domain:
    - Recursive Feature Elimination (RFE)
    - L1-based feature selection (Lasso)
    - Tree-based feature importance
+   - SHAP values for model-agnostic importance
+   - Permutation importance for robustness
+   - Boruta algorithm for all-relevant features
 
-4. Create selected feature set
+4. Statistical validation:
+   - ANOVA F-test for numerical-categorical relationships
+   - Chi-square test with p-value thresholds (<0.05)
+   - Mutual information with threshold (>0.01)
+   - Stability selection across bootstrap samples
 
-5. Use filesystem tools to save feature importance scores
+5. Create selected feature set
+
+6. Document feature selection rationale:
+   - Number of features before/after selection
+   - Selection criteria used
+   - Features removed and why
+   - Performance impact of selection
+
+7. Save feature importance scores
 ```
 
-**Example MCP Commands**:
-- "Calculate mutual information scores for all features with target"
-- "Remove features with correlation > 0.95 with other features"
-- "Use filesystem tools to save feature_importance_scores.csv to results/metrics/epic-001/"
-
-### Step 8: Create Final Feature Dataset (using MCP filesystem tools)
+### Step 8: Create Final Feature Dataset
 
 ```
 1. Combine all engineered features:
@@ -320,16 +350,23 @@ Create features specific to your business domain:
    - Correct data types
    - Expected value ranges
 
-5. Use filesystem tools to save final feature datasets
+5. Optimize data storage:
+   - Use appropriate data types (int8, int16 instead of int64 when possible)
+   - Convert to categorical dtype for low-cardinality strings
+   - Use sparse matrices for one-hot encoded features
+   - Save as Parquet for efficient compression and faster loading
+   - Document memory footprint and loading time
+
+6. For large datasets (>1GB), consider:
+   - Chunked processing with Dask or Vaex
+   - Out-of-core computation strategies
+   - Feature computation in batches
+   - Parallel processing where applicable
+
+7. Save final feature datasets
 ```
 
-**Example MCP Commands**:
-- "Combine all engineered features into final feature matrix"
-- "Create stratified train/test split (80/20) for classification task"
-- "Use filesystem tools to save train set to data/4_processed/epic-001/features/train_features.csv"
-- "Use filesystem tools to save test set to data/4_processed/epic-001/features/test_features.csv"
-
-### Step 9: Feature Documentation (using MCP filesystem tools)
+### Step 9: Feature Documentation
 
 ```
 1. Create comprehensive feature dictionary:
@@ -347,14 +384,10 @@ Create features specific to your business domain:
    - Why certain features were removed
    - Assumptions made
 
-3. Use filesystem tools to write feature dictionary to data/schemas/{epic_id}/feature_dictionary.md
+3. Write feature dictionary to data/schemas/{epic_id}/feature_dictionary.md
 ```
 
-**Example MCP Commands**:
-- "Create feature dictionary documenting all 45 engineered features"
-- "Use filesystem tools to write to data/schemas/epic-001/feature_dictionary.md"
-
-### Step 10: Create Reusable Feature Pipeline (using MCP filesystem tools)
+### Step 10: Create Reusable Feature Pipeline
 
 ```
 1. Convert notebook logic into production code:
@@ -374,14 +407,10 @@ Create features specific to your business domain:
    - Fit on training data
    - Transform train/test consistently
 
-4. Use filesystem tools to save pipeline code to src/features/{epic_id}_feature_pipeline.py
+4. Save pipeline code to src/features/{epic_id}_feature_pipeline.py
 ```
 
-**Example MCP Commands**:
-- "Create FeatureEngineeringPipeline class combining all transformations"
-- "Use filesystem tools to save to src/features/epic001_feature_pipeline.py"
-
-### Step 11: Feature Statistics and Validation (using MCP filesystem tools)
+### Step 11: Feature Statistics and Validation
 
 ```
 1. Calculate feature statistics:
@@ -398,26 +427,33 @@ Create features specific to your business domain:
 
 3. Create feature correlation heatmap
 
-4. Use filesystem tools to save statistics to results/metrics/{epic_id}_feature_stats.json
+4. Calculate feature stability metrics:
+   - Feature distributions across time periods (if temporal data)
+   - Population Stability Index (PSI) for key features
+   - Expected value ranges for monitoring
+
+5. Save statistics to results/metrics/{epic_id}_feature_stats.json
+
+6. Create feature versioning metadata:
+   - Feature set version number
+   - Creation timestamp
+   - Dependencies (data sources, package versions)
+   - Git commit hash (if applicable)
+   - Feature schema/registry entry
 ```
 
-**Example MCP Commands**:
-- "Calculate comprehensive statistics for all 45 features"
-- "Create correlation heatmap and save to reports/figures/epic-001/feature_correlation_heatmap.png"
-- "Use filesystem tools to save feature statistics to results/metrics/epic-001_feature_stats.json"
-
-### Step 12: Verification (using MCP filesystem tools)
+### Step 12: Verification
 
 ```
 1. Verify all required outputs were created:
-   - Use filesystem tools to list files in notebooks/3_feature_engineering/{epic_id}/
-   - Use filesystem tools to list files in data/4_processed/{epic_id}/features/
-   - Use filesystem tools to verify src/features/{epic_id}_feature_pipeline.py exists
-   - Use filesystem tools to verify data/schemas/{epic_id}/feature_dictionary.md exists
-   - Use filesystem tools to verify results/metrics/{epic_id}_feature_stats.json exists
+   - List files in notebooks/3_feature_engineering/{epic_id}/
+   - List files in data/4_processed/{epic_id}/features/
+   - Verify src/features/{epic_id}_feature_pipeline.py exists
+   - Verify data/schemas/{epic_id}/feature_dictionary.md exists
+   - Verify results/metrics/{epic_id}_feature_stats.json exists
 
 2. Verify feature dataset quality:
-   - Use filesystem tools to read feature dataset and check shape
+   - Read feature dataset and check shape
    - Verify no missing values (or expected missing values only)
    - Verify correct number of features
    - Verify train/test split sizes are correct
@@ -426,11 +462,6 @@ Create features specific to your business domain:
 
 4. Document verification results
 ```
-
-**Example MCP Commands**:
-- "Use filesystem tools to list all files in data/4_processed/epic-001/features/"
-- "Use filesystem tools to read train_features.csv and verify shape is (10000, 45)"
-- "Use filesystem tools to verify feature_dictionary.md contains documentation for all 45 features"
 
 ## Feature Engineering Best Practices
 
@@ -467,6 +498,27 @@ Create features specific to your business domain:
 ✅ Transformation applied
 ✅ Assumptions made
 ```
+
+### 5. Reduce Data Complexity
+```
+✅ Apply dimensionality reduction when dealing with high-dimensional data
+✅ Use feature selection to keep only the most informative features
+✅ Use clustering to group similar entities and reduce categorical cardinality
+✅ Remove features with >95% correlation to others
+✅ Eliminate near-zero variance features (variance < 0.01)
+```
+
+Complexity reduction improves model interpretability and prevents overfitting. Focus on retaining features that provide unique information and align with business objectives. Simpler feature sets often perform better and are easier to explain to stakeholders. Balance comprehensiveness with parsimony by systematically evaluating feature importance and removing those that add noise rather than signal.
+
+### 6. Know When to Stop
+```
+✅ Stop when additional features show diminishing returns (<1% improvement)
+✅ Stop when feature count exceeds interpretability threshold (>50-100 features)
+✅ Stop when computational cost outweighs marginal gains
+✅ Prioritize features that align with business objectives over marginal statistical improvements
+```
+
+Feature engineering has diminishing returns. The first 20 well-engineered features typically provide 80% of model performance. Additional features should demonstrate clear value through cross-validation or domain relevance. Consider the maintenance burden of complex feature pipelines in production environments.
 
 ## Quality Checks
 
@@ -508,7 +560,7 @@ After feature engineering, perform these quality checks:
 
 If feature engineering encounters issues:
 
-1. **Use filesystem tools to write detailed error log** to `logs/errors/feature_engineering_{epic_id}_{timestamp}.log`
+1. **Write detailed error log** to `logs/errors/feature_engineering_{epic_id}_{timestamp}.log`
 
 2. **Document the specific issue**:
    - Which feature creation failed
@@ -534,38 +586,7 @@ The feature engineering is considered successful when:
 - ✅ No data leakage detected
 - ✅ Quality checks passed (data, feature, pipeline, documentation)
 - ✅ Acceptance criteria from user story met
-- ✅ All outputs verified using MCP filesystem tools
-
-## MCP Tools Usage Summary
-
-At the end of feature engineering, document MCP tool usage:
-
-```markdown
-### MCP Tools Used
-
-**Filesystem Server**:
-- Directories created:
-  - notebooks/3_feature_engineering/epic-001/
-  - data/4_processed/epic-001/features/
-  - src/features/
-- Files read:
-  - data/4_processed/epic-001/clean_data.csv
-  - data/schemas/epic-001/data_schema.md
-  - docs/objectives/user_stories/epic-001/*.md
-- Files written:
-  - 4 feature engineering notebooks
-  - 2 feature datasets (train, test)
-  - 1 feature pipeline (Python)
-  - 1 feature dictionary (Markdown)
-  - 1 feature statistics (JSON)
-  - 1 scaler object (Pickle)
-- Verification: Listed all directories, confirmed file creation, validated dataset shapes
-
-**SQLite Server** (if used):
-- Queries executed: 5 aggregation queries for feature creation
-- Tables accessed: patient_visits, facility_capacity
-- Features created via SQL: 12 aggregated features
-```
+- ✅ All outputs verified
 
 ## Next Stage
 

@@ -7,12 +7,7 @@ stage: Analysis
 
 ## Objective
 
-Perform comprehensive data analysis on prepared datasets to generate insights, answer research questions, and create visualizations. Leverage MCP tools for efficient file operations, data access, and result generation.
-
-## Required MCP Tools
-
-- **Filesystem Server** (REQUIRED): For reading prepared data, creating analysis outputs, and managing notebooks
-- **SQLite Server** (when applicable): For complex queries and aggregations on database-stored data
+Perform comprehensive data analysis on prepared datasets to generate insights, answer research questions, and create visualizations.
 
 ## Input Requirements
 
@@ -41,7 +36,7 @@ The following inputs MUST be available before proceeding:
    - **Domain knowledge**: Review project context for domain-specific considerations
    - Previous analysis (if building on prior work)
    
-   **Use MCP filesystem tools to read these files** for understanding:
+   Read these files for understanding:
    - What the data represents and how to interpret it
    - What analysis methods are appropriate
    - What business questions to answer
@@ -79,32 +74,26 @@ The analysis MUST produce:
 
 ## Execution Steps
 
-### Step 1: Analysis Setup (using MCP filesystem tools)
+### Step 1: Analysis Setup
 
 ```
-1. Use filesystem tools to create analysis directories:
+1. Create analysis directories:
    - notebooks/2_analysis/{epic_id}/
    - results/tables/{epic_id}/
    - results/metrics/{epic_id}/
    - reports/figures/{epic_id}/
 
-2. Use filesystem tools to read prepared data files from data/4_processed/
+2. Read prepared data files from data/4_processed/
 
-3. Use filesystem tools to read data schemas from data/schemas/
+3. Read data schemas from data/schemas/
 
-4. Use filesystem tools to read analysis objectives from user story or docs/objectives/
+4. Read analysis objectives from user story or docs/objectives/
 ```
 
-**Example MCP Commands**:
-- "Use filesystem tools to create directory notebooks/2_analysis/epic-001/"
-- "Use filesystem tools to list all CSV files in data/4_processed/epic-001/"
-- "Use filesystem tools to read data/schemas/epic-001/patient_visits_schema.md"
-- "Use filesystem tools to read docs/objectives/user_stories/epic-001/02-develop-anomaly-detection-models.md"
-
-### Step 2: Exploratory Data Analysis (using MCP tools)
+### Step 2: Exploratory Data Analysis
 
 ```
-1. Load datasets (read via filesystem tools or SQLite tools)
+1. Load datasets from data/4_processed/
 
 2. Perform initial exploration:
    - Data shape (rows, columns)
@@ -119,15 +108,10 @@ The analysis MUST produce:
    - Box plots for outliers
    - Heat maps for correlations
 
-4. Use filesystem tools to save exploratory notebook to notebooks/2_analysis/{epic_id}/01_eda.ipynb
+4. Save exploratory notebook to notebooks/2_analysis/{epic_id}/01_eda.ipynb
 ```
 
-**Example MCP Commands**:
-- "Use filesystem tools to read data/4_processed/epic-001/clean_patient_visits.csv"
-- "Perform exploratory data analysis and create visualizations"
-- "Use filesystem tools to save the analysis notebook to notebooks/2_analysis/epic-001/01_eda.ipynb"
-
-### Step 3: Statistical Analysis (using MCP tools)
+### Step 3: Statistical Analysis
 
 ```
 1. Based on research questions, perform:
@@ -141,14 +125,10 @@ The analysis MUST produce:
 
 3. Interpret statistical significance
 
-4. Use filesystem tools to save statistical test results to results/tables/{epic_id}/statistical_tests.csv
+4. Save statistical test results to results/tables/{epic_id}/statistical_tests.csv
 ```
 
-**Example MCP Commands**:
-- "Perform t-test comparing wait times between emergency departments"
-- "Use filesystem tools to save statistical test results to results/tables/epic-001/hypothesis_tests.csv"
-
-### Step 4: Metric Calculation (using SQLite or filesystem tools)
+### Step 4: Metric Calculation
 
 ```
 1. Calculate required KPIs and metrics:
@@ -161,17 +141,10 @@ The analysis MUST produce:
 
 3. Format metrics as JSON or CSV
 
-4. Use filesystem tools to save to results/metrics/{epic_id}_metrics.json
+4. Save to results/metrics/{epic_id}_metrics.json
 ```
 
-**Example MCP Commands**:
-- "Calculate monthly emergency department utilization rates"
-- "Use filesystem tools to save metrics to results/metrics/epic-001_metrics.json"
-
-For database-based calculations:
-- "Use SQLite tools to calculate aggregated metrics from the patient_visits database"
-
-### Step 5: Visualization Generation (using MCP filesystem tools)
+### Step 5: Visualization Generation
 
 ```
 1. Create publication-quality visualizations:
@@ -192,16 +165,10 @@ For database-based calculations:
    - PDF for publications
    - HTML for interactive dashboards (if applicable)
 
-4. Use filesystem tools to save all figures to reports/figures/{epic_id}/
+4. Save all figures to reports/figures/{epic_id}/
 ```
 
-**Example MCP Commands**:
-- "Create a time series plot showing monthly emergency visit trends"
-- "Use filesystem tools to save the plot to reports/figures/epic-001/monthly_visits_trend.png"
-- "Create an interactive dashboard showing hospital capacity utilization"
-- "Use filesystem tools to save the dashboard to reports/figures/epic-001/capacity_dashboard.html"
-
-### Step 6: Insight Generation and Documentation (using MCP filesystem tools)
+### Step 6: Insight Generation and Documentation
 
 ```
 1. Synthesize findings into actionable insights:
@@ -219,14 +186,10 @@ For database-based calculations:
    - Limitations and caveats
    - Recommendations
 
-3. Use filesystem tools to write analysis summary to results/{epic_id}/analysis_summary.md
+3. Write analysis summary to results/{epic_id}/analysis_summary.md
 ```
 
-**Example MCP Commands**:
-- "Summarize key findings from the emergency department analysis"
-- "Use filesystem tools to write the analysis summary to results/epic-001/analysis_summary.md"
-
-### Step 7: Create Analysis Notebook (using MCP filesystem tools)
+### Step 7: Create Analysis Notebook
 
 ```
 1. Consolidate analysis into a comprehensive Jupyter notebook:
@@ -244,36 +207,27 @@ For database-based calculations:
    - Statistical significance
    - Business implications
 
-3. Use filesystem tools to save final notebook to notebooks/2_analysis/{epic_id}/final_analysis.ipynb
+3. Save final notebook to notebooks/2_analysis/{epic_id}/final_analysis.ipynb
 ```
 
-**Example MCP Commands**:
-- "Create a comprehensive analysis notebook for Epic 001"
-- "Use filesystem tools to save the notebook to notebooks/2_analysis/epic-001/final_analysis.ipynb"
-
-### Step 8: Verification (using MCP filesystem tools)
+### Step 8: Verification
 
 ```
 1. Verify all required outputs were created:
-   - Use filesystem tools to list files in notebooks/2_analysis/{epic_id}/
-   - Use filesystem tools to list files in results/tables/{epic_id}/
-   - Use filesystem tools to list files in results/metrics/{epic_id}/
-   - Use filesystem tools to list files in reports/figures/{epic_id}/
+   - List files in notebooks/2_analysis/{epic_id}/
+   - List files in results/tables/{epic_id}/
+   - List files in results/metrics/{epic_id}/
+   - List files in reports/figures/{epic_id}/
 
 2. Verify output quality:
-   - Use filesystem tools to read analysis_summary.md and check completeness
-   - Use filesystem tools to read metrics JSON and validate structure
+   - Read analysis_summary.md and check completeness
+   - Read metrics JSON and validate structure
    - Check that visualizations are properly saved (file size > 0)
 
 3. Cross-check against acceptance criteria from user story
 
 4. Document verification results
 ```
-
-**Example MCP Commands**:
-- "Use filesystem tools to list all files in reports/figures/epic-001/ and show their sizes"
-- "Use filesystem tools to read results/epic-001/analysis_summary.md and verify it contains all required sections"
-- "Use filesystem tools to read results/metrics/epic-001_metrics.json and validate the JSON structure"
 
 ## Common Analysis Patterns
 
@@ -379,7 +333,7 @@ After analysis, perform these quality checks:
 
 If analysis encounters issues:
 
-1. **Use filesystem tools to write detailed error log** to `logs/errors/analysis_{epic_id}_{timestamp}.log`
+1. **Write detailed error log** to `logs/errors/analysis_{epic_id}_{timestamp}.log`
 
 2. **Document the specific issue**:
    - Which analysis step failed
@@ -404,38 +358,7 @@ The analysis is considered successful when:
 - ✅ Metrics calculated and saved to `results/metrics/{epic_id}_metrics.json`
 - ✅ Quality checks passed (analytical rigor, insight quality, visualization quality)
 - ✅ Acceptance criteria from user story met
-- ✅ All outputs verified using MCP filesystem tools
-
-## MCP Tools Usage Summary
-
-At the end of analysis, document MCP tool usage:
-
-```markdown
-### MCP Tools Used
-
-**Filesystem Server**:
-- Directories created: 
-  - notebooks/2_analysis/epic-001/
-  - results/tables/epic-001/
-  - results/metrics/epic-001/
-  - reports/figures/epic-001/
-- Files read: 
-  - data/4_processed/epic-001/*.csv (3 datasets)
-  - data/schemas/epic-001/*.md (3 schema files)
-  - docs/objectives/user_stories/epic-001/*.md (1 user story)
-- Files written:
-  - 2 analysis notebooks
-  - 5 result tables (CSV)
-  - 12 visualizations (PNG)
-  - 1 analysis summary (MD)
-  - 1 metrics report (JSON)
-- Verification: Listed all output directories, confirmed file creation, validated file sizes
-
-**SQLite Server** (if used):
-- Queries executed: 8 aggregation queries
-- Tables accessed: patient_visits, diagnoses, treatments
-- Total rows processed: 125,000 rows
-```
+- ✅ All outputs verified
 
 ## Next Stage
 

@@ -419,6 +419,7 @@ Implementation Steps section example:
 - [ ] Implement duplicate removal logic
 - [ ] Implement outlier handling (removal, capping, transformation)
 - [ ] Implement data type conversions and standardization
+- [ ] **Detect and correct categorical inconsistencies**: Analyze all categorical columns for naming variations (abbreviations, typos, case differences) that refer to the same entity using intelligent pattern matching. Use conservative similarity thresholds (0.85+) to avoid incorrectly merging legitimate variations like "Disease A" vs "Disease B" or "Type 1" vs "Type 2". Generate and review categorical cleaning reports documenting all standardization mappings applied.
 - [ ] Create data validation functions: `src/data_processing/validators.py`
 - [ ] Save cleaned data to `data/3_interim/cleaned_data.parquet`
 
