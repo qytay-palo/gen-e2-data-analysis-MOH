@@ -109,7 +109,7 @@ The model training MUST produce:
 4. Split features (X) and target (y):
    X_train = train_df.drop('target_column')
    y_train = train_df.select('target_column')
-   # Convert to appropriate format for modeling library (e.g., numpy, pandas if needed)
+   # Convert to appropriate format for modeling library (e.g., numpy, polars DataFrame if needed)
 ```
 
 ### Step 1.5: Initialize Experiment Tracking
@@ -243,7 +243,7 @@ Optimize top-performing models:
 2. Choose search strategy:
    - Grid Search (exhaustive, small space)
    - Random Search (efficient, large space)
-   - Bayesian Optimization (smarter search, recommended)
+   - Bayesian Optimization (smarter search)
    - Optuna, Hyperopt (advanced frameworks)
 
 3. Cross-validation strategy (CRITICAL - choose correctly):
@@ -765,8 +765,8 @@ Set up foundations for production monitoring (drift detection, performance track
    
    import json
    
-   # Convert Polars to pandas for statistics if needed
-   X_train_pd = X_train.to_pandas() if hasattr(X_train, 'to_pandas') else X_train
+   # Use Polars for statistics if needed
+   X_train_pl = X_train if hasattr(X_train, 'to_numpy') else X_train
    
    monitoring_baseline = {
        "version": version,
@@ -774,16 +774,16 @@ Set up foundations for production monitoring (drift detection, performance track
        "training_data_stats": {
            "feature_stats": {
                col: {
-                   "mean": float(X_train_pd[col].mean()),
-                   "std": float(X_train_pd[col].std()),
-                   "min": float(X_train_pd[col].min()),
-                   "max": float(X_train_pd[col].max()),
-                   "q25": float(X_train_pd[col].quantile(0.25)),
-                   "q50": float(X_train_pd[col].quantile(0.50)),
-                   "q75": float(X_train_pd[col].quantile(0.75)),
-                   "missing_rate": float(X_train_pd[col].isna().mean())
+                   "mean": float(X_train_pl[col].mean()),
+                   "std": float(X_train_pl[col].std()),
+                   "min": float(X_train_pl[col].min()),
+                   "max": float(X_train_pl[col].max()),
+                   "q25": float(X_train_pl[col].quantile(0.25)),
+                   "q50": float(X_train_pl[col].quantile(0.50)),
+                   "q75": float(X_train_pl[col].quantile(0.75)),
+                   "missing_rate": float(X_train_pl[col].isna().mean())
                }
-               for col in X_train_pd.columns
+               for col in X_train_pl.columns
            }
        },
        "prediction_stats": {
@@ -894,7 +894,7 @@ Note: Actual monitoring implementation happens during deployment stage.
 ```
 ✅ Use Polars (import polars as pl) for data processing
 ✅ Use uv for package management (uv pip install <package>)
-✅ Convert to pandas/numpy only when required by model library
+✅ Convert to numpy only when required by model library (Polars preferred)
 ✅ Use MLflow for experiment tracking
 ✅ Follow project-specific conventions and structure
 ```

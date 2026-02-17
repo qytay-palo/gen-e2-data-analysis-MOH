@@ -519,44 +519,6 @@ For stakeholder communication:
 5. Save reports
 ```
 
-### Step 10.5: Mobile and Responsive Design
-
-```
-Ensure visualizations work across devices:
-
-1. Mobile Considerations:
-   - Simplified layouts for small screens
-   - Touch-friendly controls (44x44px minimum)
-   - Vertical scrolling over horizontal
-   - Reduced chart complexity (fewer series)
-   - Larger fonts and hit targets
-   - Avoid hover-dependent interactions
-
-2. Responsive Breakpoints:
-   - Mobile: <768px (stacked layout, simplified charts)
-   - Tablet: 768-1024px (2-column layout)
-   - Desktop: >1024px (full dashboard)
-   - Test on actual devices, not just browser resize
-
-3. Progressive Enhancement:
-   - Core content accessible on all devices
-   - Advanced features on larger screens
-   - Graceful degradation of interactions
-   - Alternative views for complex visualizations
-
-4. Progressive Web App (PWA) capabilities:
-   - Offline mode with cached data
-   - Home screen installation
-   - Push notifications for alerts
-   - Background sync for data updates
-
-5. Test across devices and browsers:
-   - iOS Safari, Android Chrome
-   - Desktop browsers (Chrome, Firefox, Edge, Safari)
-   - Different screen sizes and orientations
-   - Touch vs mouse interactions
-```
-
 ### Step 11: Accessibility and Quality Checks
 
 ```
@@ -614,62 +576,7 @@ Ensure visualizations are accessible and high quality:
 4. Write documentation
 ```
 
-### Step 13: Testing and Validation
-
-```
-1. Functional Testing:
-   - All filters work correctly and update charts
-   - Data refresh updates all dependent visualizations
-   - Export functionality produces valid files
-   - Cross-filtering operates as expected
-   - Date ranges filter correctly
-   - Sorting and pagination work on tables
-   - Links and drill-downs navigate correctly
-
-2. Data Accuracy Testing:
-   - Spot-check calculations against source data
-   - Verify aggregations (sums, averages, counts)
-   - Confirm filters apply correctly
-   - Test edge cases (no data, single record, nulls)
-   - Validate date/time zone handling
-
-3. Performance Testing:
-   - Measure initial load time (<3s target)
-   - Test with maximum expected data volume
-   - Load test with concurrent users (50+ users)
-   - Monitor query execution times
-   - Test with slow network conditions
-   - Check memory usage and leaks
-
-4. User Acceptance Testing:
-   - Present to 3-5 representative users
-   - Collect feedback on clarity and usability
-   - Time common task completion
-   - Document usability issues and confusion
-   - Iterate based on feedback
-
-5. Accessibility Testing:
-   - Screen reader navigation (NVDA, JAWS, VoiceOver)
-   - Keyboard-only navigation (Tab, Enter, Arrow keys)
-   - Color contrast validation (WCAG 2.1 AA)
-   - Alt text for all visualizations
-   - Focus indicators visible
-   - No keyboard traps
-
-6. Cross-Browser Testing:
-   - Chrome, Firefox, Safari, Edge (latest 2 versions)
-   - Mobile browsers (iOS Safari, Android Chrome)
-   - Test on different operating systems
-   - Document any browser-specific issues
-
-7. Create test report:
-   - Document all tests performed
-   - Record any issues found and resolutions
-   - Include performance metrics
-   - List any known limitations
-```
-
-### Step 14: Verification
+### Step 13: Verification
 
 ```
 1. Verify all required outputs were created:

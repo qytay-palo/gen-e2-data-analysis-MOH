@@ -48,7 +48,7 @@ Read and synthesize information from:
 
 3. **Technical Stack** ([docs/project_context/tech_stack.md](../../../docs/project_context/tech_stack.md))
    - Extract: Available tools, platforms, technical capabilities, constraints
-   - Identify: Analytical methods enabled by tech stack, technical limitations
+   - Identify: Analytical methods enabled by tech stack, technical limitations, compute environment (Databricks, CDSW, local), primary languages (Python, R, SQL, STATA), analytics engines (Spark, local Polars), and platform constraints (batch vs real-time, distributed vs local)
 
 4. **Existing Documentation** ([docs/](../../../docs/))
    - Extract: Domain knowledge, business rules, existing analyses, stakeholder feedback
@@ -124,25 +124,21 @@ This allows the team to:
 - Discover optimal analytical approaches through experimentation
 - Deliver value early while refining the solution
 
-**Required Deliverable Components**:
-- **Data Product**: What tangible output will be created? (report, dashboard, model, dataset)
-- **Insight Format**: How will findings be communicated? (visualizations, metrics, recommendations)
-- **Validation Approach**: How will results be verified? (statistical tests, domain expert review, historical validation)
-- **Stakeholder Access**: How will stakeholders use the results? (self-service dashboard, regular report, API)
-
 ---
 
-### STEP 2: Identify Problem Statement Categories
+### STEP 2: Identify Problem Statement
 
 **MANDATORY**: Reference your **STEP 1.5 Data Reality Check** before proposing any problem statement.
 
 **CRITICAL CONSTRAINTS**:
-1. ✅ **Data Verification**: Only use datasets explicitly listed in your Data Inventory
-2. ✅ **Granularity Match**: Analytical approach must match temporal/geographic resolution available
-3. ✅ **End-to-End Solvable**: Must fit the complete analytical flow defined in STEP 1.5
-4. ✅ **Deliverable Defined**: Must specify concrete output stakeholders can use
-5. ❌ **Do NOT assume** data exists - verify against data_sources.md
-6. ❌ **Do NOT propose** analyses requiring finer granularity than available
+1. ✅ **Platform Match**: Analytical approach must fit tech stack (Databricks/Spark vs local Python/R)
+2. ✅ **Data Verification**: Only use datasets explicitly listed in your Data Inventory
+3. ✅ **Granularity Match**: Analytical approach must match temporal/geographic resolution available
+4. ✅ **End-to-End Solvable**: Must fit the complete analytical flow defined in STEP 1.5
+5. ✅ **Deliverable Defined**: Must specify concrete output stakeholders can use
+6. ❌ **Do NOT assume** data exists - verify against data_sources.md
+7. ❌ **Do NOT propose** analyses requiring finer granularity than available
+8. ❌ **Do NOT propose** approaches incompatible with platform (e.g., real-time if only batch processing)
 
 **Identify 2-5 problem statements** that pass ALL constraints above. Adapt category examples to match your actual data capabilities:
 
@@ -226,7 +222,7 @@ dependencies: [List other problem statement IDs or "None"]
 
 ---
 
-#### 3.2 Problem Statement (Executive Summary)
+#### 3.2 Executive Summary (Problem Statement)
 
 Write a concise 2-3 sentence problem statement that answers:
 - **What**: What is the analytical challenge or opportunity?
@@ -238,7 +234,7 @@ Write a concise 2-3 sentence problem statement that answers:
 
 ---
 
-#### 3.3 Problem Statement Hypothesis
+#### 3.3 Problem Statement Hypothesis (Value Proposition)
 
 Define the value hypothesis for this problem statement:
 
@@ -252,19 +248,19 @@ Define the value hypothesis for this problem statement:
 
 #### 3.4 Objectives
 
-Define **3-5 high-level objectives** that represent strategic goals:
+Define **3-5 high-level objectives** that represent strategic analytical goals. These objectives will decompose into user stories during sprint planning.
 
 **Format**:
 - Objective 1: [Strategic analytical goal]
 - Objective 2: [Strategic analytical goal]
 - Objective 3: [Strategic analytical goal]
 
-**✅ RIGHT Level (Business Requirement)**:
+**✅ RIGHT Level (Problem Statement Objective - Strategic)**:
 - "Calculate utilization rates by age, gender, and facility type for 2015-2020"
 - "Understand patient population diversity and care needs"
 - "Quantify healthcare access disparities across demographic groups"
 
-**❌ WRONG Level (User Story Detail)**:
+**❌ WRONG Level (User Story Detail - Tactical)**:
 - "Segment patients into 5-7 groups using K-means clustering" (too specific on method and number)
 - "Build Tableau dashboard with 12 visualizations showing trends" (solution specification)
 - "Load patient_visits.csv and demographics.csv, join on patient_id" (technical task)
@@ -274,27 +270,10 @@ Define **3-5 high-level objectives** that represent strategic goals:
 - Objective 2: Identify population segments with distinct care needs and service gaps
 - Objective 3: Enable targeted intervention strategies based on segment characteristics
 
-**Note**: Each high-level objective may decompose into 5-10 user stories during backlog refinement. Keep objectives strategic and outcome-focused, not tactical or prescriptive.
 
 ---
 
-#### 3.5 Problem Statement Acceptance Criteria
-
-Define when this problem statement can be considered "done" from a stakeholder perspective:
-
-**Format**: Write 3-5 high-level criteria that indicate the problem statement's value has been delivered:
-
-**Example**:
-- ✅ Stakeholders can identify and describe each patient segment with confidence
-- ✅ Segment insights directly inform at least 2 operational decisions or policy changes
-- ✅ Analysis is validated by domain experts and trusted by leadership
-- ✅ Results are accessible and understandable to non-technical stakeholders
-
-**Note**: Specific technical metrics and implementation details will emerge during sprint planning and be captured in user stories.
-
----
-
-#### 3.6 Stakeholders and Value Proposition
+#### 3.5 Stakeholders and Value Proposition
 
 **Primary Stakeholders**: [List specific roles, not generic terms]
 - Government policy makers, healthcare administrators, operational managers, etc.
@@ -307,7 +286,7 @@ Define when this problem statement can be considered "done" from a stakeholder p
 
 ---
 
-#### 3.7 Data Requirements
+#### 3.7 Data Requirements (High-Level)
 
 **Critical Considerations**:
 - Data availability: [Confirm specific datasets from data_sources.md that will be used]
@@ -339,13 +318,17 @@ When ideal data is NOT available, consider:
 - Brief description of the type of analysis needed (exploratory, predictive, comparative, etc.)
 - Note: The development team will determine specific methods and techniques during sprint planning
 
-**Feasibility Check**: (Reference [tech_stack.md](../../../docs/project_context/tech_stack.md))
+**Platform Feasibility**: (Reference [tech_stack.md](../../../docs/project_context/tech_stack.md))
+- **Primary Platform**: Which platform from tech stack will be used? (Databricks, CDSW, HUE, local Python/R, STATA)
+- **Language**: Primary language(s) for this Problem Statement? (Python, R, SQL, Scala)
+- **Compute Requirements**: Local compute sufficient or distributed processing needed?
+- **Data Access Pattern**: Batch processing or interactive queries? Spark RDDs, SQL, or file-based?
+
+**Technical Feasibility Check**:
 - **MANDATORY**: Confirm this is achievable with current technical capabilities documented in tech_stack.md
 - Identify specific tools/platforms from tech stack that will be used
 - If specialized tools/methods not in current stack are required, flag as blocker
-- Are there any obvious constraints or blockers to flag?
-
-**Note**: Detailed technical approach will be designed by the team—avoid prescribing specific algorithms or implementations.
+- Any platform constraints? (e.g., R package availability on CDSW, Spark version limitations)
 
 ---
 
@@ -379,10 +362,7 @@ Problem statement dependencies are not recommended, but if there are any, docume
 - Related to: [Other problem statements that address similar problems or stakeholders]
 
 **Key Assumptions**:
-- What are we assuming about data availability?
-- What are we assuming about stakeholder availability and engagement?
-- What are we assuming about technical capabilities?
-- What external factors could impact this work?
+- No assumptions should be made, data have to be verified against data_sources.md
 
 ---
 
@@ -396,24 +376,34 @@ Problem statement dependencies are not recommended, but if there are any, docume
 
 #### 3.12 Problem Statement Readiness
 
-**This  is ready for refinement session when** :
-- [ ] Problem statement validated with key stakeholders OR stakeholders identified and available
-- [ ] Data sources explicitly listed from data_sources.md (or gaps documented)
-- [ ] Business value and acceptance criteria are clear
-- [ ] No critical blockers prevent team from starting exploration
+**This Problem Statement is ready for backlog refinement when**:
+- [ ] Data domains explicitly verified against data_sources.md 
+- [ ] Platform and technical feasibility confirmed (tech_stack.md reviewed)
+- [ ] Problem statement can be decomposed into 5-10 user stories
+- [ ] Deliverable format and access method defined
 
-**When to Update problem_statements**:
+**Problem Statement Lifecycle Management**:
+
+**When to Update Problem Statements**:
 - ✅ New data sources become available
 - ✅ Technical constraints change
 - ✅ Business priorities shift
 
-**When to Archive problem_statements**:
+**When to Split Problem Statements**:
+- ⚡ Problem statement scope grows beyond 6-8 sprints
+- ⚡ Clear natural breakpoints emerge during refinement
+- ⚡ Can deliver incremental value by splitting
+
+**When to Archive Problem Statements**:
 - ❌ Data will never be available
-- ❌ Superseded by another problem_statement
+- ❌ Superseded by another Problem Statement
+- ❌ Business need no longer exists
+- ❌ Technical approach proven infeasible
 
 **Continuous Improvement**:
-- Review problem_statement quality every 3-4 sprints
+- Review Problem Statement quality every 3-4 sprints
 - Adjust template based on what works
+- Capture lessons learned from completed Problem Statements
 
 ---
 
@@ -423,14 +413,6 @@ Evaluate each problem statement on:
 - **Business Value**: Impact on stakeholder decisions and organizational goals (1-5)
 - **Feasibility**: Data availability and technical capability (1-5)  
 - **Urgency**: Time sensitivity and strategic alignment (1-5)
-
-**Priority Formula**: Consider all three factors together
-
-**Priority Tiers**:
-- **CRITICAL**: Must address immediately - foundational or blocking other work
-- **HIGH**: Significant value and feasible - should start soon
-- **MEDIUM**: Valuable but not urgent - plan for later
-- **LOW**: Nice-to-have - consider for future backlog
 
 **⚡ Agile Note**: Priorities are revisited every sprint. 
 
@@ -495,16 +477,6 @@ Create `docs/objectives/problem_statements/README.md` with:
 
 [Continue grouping by priority and dependencies...]
 
----
-
-## Quick Reference
-
-| Problem Statement ID | Title | Priority | Complexity | Status |
-|---------------------|-------|----------|------------|--------|
-| PS-001 | [Title] | CRITICAL | MEDIUM | Identified |
-| PS-002 | [Title] | HIGH | HIGH | Identified |
-[...]
-
 ```
 
 ---
@@ -551,41 +523,55 @@ Before finalizing each problem statement, verify:
 - [ ] Problem statement is clear and stakeholder-centric
 - [ ] Business value and impact are explicitly stated
 - [ ] Problem statement hypothesis articulates expected outcome and success signal
-- [ ] Acceptance criteria focus on stakeholder outcomes, not technical specs
 
 **Agile Readiness**:
 - [ ] Problem statement is a conversation starter, not a detailed specification
-- [ ] Solution approach left open for team design
 - [ ] Can be broken down into user stories during backlog refinement
 - [ ] Stakeholders are identified and accessible
-- [ ] Value can be delivered incrementally
-- [ ] Scope is appropriate for problem statement-level (not too granular, not too broad)
+- [ ] Value can be delivered incrementally across sprints
+- [ ] Objectives are strategic (business-level), not tactical (implementation-level)
 
-**Feasibility Assessment**:
-- [ ] **All required datasets verified against STEP 1.5 Data Inventory**
+**Data Feasibility**:
+- [ ] **All required data domains verified against STEP 1.5 Data Inventory**
 - [ ] **Data granularity (temporal/geographic) confirmed sufficient for analysis**
 - [ ] **No assumptions about datasets that "should" exist**
+- [ ] If data gaps exist, problem statement are reformulated
+
+**Platform & Technical Feasibility**:
+- [ ] **Primary platform identified** (../../docs/project_context/tech_stack.md)
 - [ ] **All required technical capabilities exist in tech_stack.md**
-- [ ] **End-to-end analysis flow is clearly defined** (extraction → analysis → deliverable)
-- [ ] **Concrete deliverable specified** with format and access method
-- [ ] If data gaps exist, problem statement reformulated or marked blocked
+
 - [ ] If tech gaps exist, flagged as blockers with workarounds identified
-- [ ] Dependencies and blockers are flagged
+
+**Dependencies & Risks**:
+- [ ] Dependencies and blockers are explicitly flagged
 - [ ] Key assumptions are documented
 
 **Documentation Quality**:
-- [ ] All sections are complete
-- [ ] Links to data sources and tech stack are correct
+- [ ] All required sections are complete
+- [ ] Links to data sources and tech stack are correct and current
 - [ ] Format is consistent with template
-- [ ] File naming follows convention
+- [ ] File naming follows convention (`ps-XXX-descriptive-name.md`)
+- [ ] Metadata includes all required fields (ps_id, platform, estimated_sprints)
+
+**Portfolio Validation** (For Scoped Projects):
+- [ ] Problem statement complements (not duplicates) existing project objectives from README
+- [ ] Problem statement leverages existing project data and infrastructure
+- [ ] Problem statement aligns with project timeline and stakeholder expectations
 
 ---
 
 ## Success Criteria
 
 Your problem statement portfolio should:
-- ✅ Cover diverse analytical needs aligned with business objectives
-- ✅ Balance quick wins with strategic initiatives  
+
+**Business Alignment**:
+- ✅ Cover diverse analytical needs aligned with business objectives (from README and business-objectives.md)
+- ✅ Balance quick wins (high feasibility) with strategic initiatives (high value)
+- ✅ Address stakeholder priorities from multiple analytical categories
+- ✅ For scoped projects: Complement existing objectives, don't duplicate or contradict
+
+**Technical Feasibility**:
 - ✅ **Be executable end-to-end** with explicitly verified data and tools
 - ✅ **Use only documented datasets** (no assumptions about "should have" data)
 - ✅ **Match data granularity** to analytical approach (no temporal/geographic mismatches)
@@ -593,9 +579,21 @@ Your problem statement portfolio should:
 
 **Agile Excellence**:
 - ✅ Focus on problems and value, not prescriptive solutions
-- ✅ Serve as conversation starters, not detailed specifications
-- ✅ Can be decomposed into 3-10 user stories per problem statement
+- ✅ Can be decomposed into 5-10 user stories per problem statement during refinement
 - ✅ Enable incremental value delivery across sprints
+- ✅ Appropriately scoped (3-8 sprints per problem statement)
+- ✅ Objectives are strategic (business-level), not tactical (implementation-level)
+
+**Deliverability**:
+- ✅ Concrete deliverable format specified (report, dashboard, model, dataset, notebook)
+- ✅ Stakeholder access method defined
+- ✅ Deployment platform identified
+
+**Portfolio Health**:
+- ✅ Includes foundational problem statements (if needed) that enable future work
+- ✅ Distributed across platforms (avoid over-concentration on one tool)
+- ✅ Mix of analytical categories (Predictive, Descriptive, Diagnostic, etc.)
+- ✅ Priorities based on objective scoring (not gut feel)
 
 ---
 

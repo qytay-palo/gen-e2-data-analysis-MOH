@@ -174,13 +174,7 @@ The feature engineering MUST produce:
    - Patient_age × Diagnosis_severity
    - Capacity × Demand
 
-5. Create polynomial features (when beneficial):
-   - Quadratic terms (x², x³) for non-linear relationships
-   - PolynomialFeatures for feature crosses (degree=2 or 3)
-   - Spline transformations for smooth non-linearities
-   - Note: Monitor feature count explosion with high-degree polynomials
-
-6. Consider advanced numerical techniques:
+5. Consider advanced numerical techniques:
    - Quantile transformations (uniform or normal distribution)
    - Power transformations (Yeo-Johnson for zero/negative values)
    - Rank-based features for robustness to outliers
@@ -228,7 +222,7 @@ Create features specific to your business domain:
 5. Save domain features notebook
 ```
 
-### Step 5a: Text Feature Engineering (if text data present)
+### Step 5a: Text Feature Engineering (if text data present and where relevant)
 
 ```
 1. Basic text features:
@@ -250,7 +244,6 @@ Create features specific to your business domain:
    - Pre-trained transformer embeddings (BERT, domain-specific models)
 
 4. Domain-specific text patterns:
-   - Medical codes extraction (ICD, CPT)
    - Keyword matching for specific terms
    - Regular expression patterns
    - Custom dictionary-based features
@@ -350,20 +343,7 @@ Create features specific to your business domain:
    - Correct data types
    - Expected value ranges
 
-5. Optimize data storage:
-   - Use appropriate data types (int8, int16 instead of int64 when possible)
-   - Convert to categorical dtype for low-cardinality strings
-   - Use sparse matrices for one-hot encoded features
-   - Save as Parquet for efficient compression and faster loading
-   - Document memory footprint and loading time
-
-6. For large datasets (>1GB), consider:
-   - Chunked processing with Dask or Vaex
-   - Out-of-core computation strategies
-   - Feature computation in batches
-   - Parallel processing where applicable
-
-7. Save final feature datasets
+5. Save final feature datasets
 ```
 
 ### Step 9: Feature Documentation

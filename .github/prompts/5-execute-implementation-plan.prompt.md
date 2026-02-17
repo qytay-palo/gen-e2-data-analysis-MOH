@@ -18,6 +18,15 @@ The input will consist of:
 ## Output Requirements
 
 The output MUST include:
+- **Problem-Statement-Specific Directory Structure**: ALL implementation code MUST be placed in:
+   `src/problem-statement-{num}-{name}/`
+   
+   **CRITICAL**: This directory MUST be created BEFORE any code implementation begins.
+   
+   **Examples**:
+   - For Problem Statement 001: `src/problem-statement-001-seasonal-pattern-forecasting/`
+   - For Problem Statement 002: `src/problem-statement-002-disease-burden-prioritization/`
+   
 - Implementation of all required files and changes
 - Verification that specifications have been met
 - Completed Design Implementation Verification Checklist
@@ -35,13 +44,16 @@ If any part of the plan is unclear or missing information, clarification MUST be
 ## Implementation Requirements
 
 The implementation MUST:
+- **FIRST: Create the problem-statement-specific directory structure in `src/` BEFORE writing any code** (see Stage 1 for details)
 - Follow the staged implementation approach outlined below
 - Adhere to file paths, code structures, and configurations specified in the plan
+- **ALL code files MUST be placed within `src/problem-statement-{num}-{name}/` directory**
 - Follow project coding standards and best practices
 - Create exact visual implementations matching design specifications
 - For any service or API integration step, you MUST implement the actual data fetching, error handling, and retries as described in the plan. Stubs or placeholders are NOT considered complete. If a function is only a stub, the implementation is NOT complete.
 - **Leverage MCP (Model Context Protocol) tools for all file and data operations as specified below**
 - **Implement ALL code blocks provided in the implementation plan verbatim (see Code Implementation Fidelity below)**
+- **Update README files to document the code running flow and execution instructions (see README Documentation Requirements below)**
 
 ### Code Implementation Fidelity
 
@@ -304,6 +316,7 @@ The following stages represent a complete data analysis lifecycle and should be 
 - Use **filesystem tools** to save reports to `reports/`
 - Ensure all code is well-commented and reproducible
 - Document limitations and future improvement opportunities
+- **Update README files with code execution instructions** (see README Documentation Requirements below)
 
 #### Stage 10: Delivery & Handoff
 - Package final deliverables (data, code, reports, dashboards)
@@ -485,6 +498,235 @@ The Structure Verification checklist MUST:
 - ✅ Column alignment matches design
 ```
 
+## README Documentation Requirements
+
+After implementing code, README files MUST be updated to reflect the actual code running flow and execution instructions. This ensures that future users (including stakeholders, team members, and the AI agent itself) can understand and execute the code correctly.
+
+### README Update Locations
+
+Update README files at appropriate levels based on the scope of implementation:
+
+1. **Problem Statement Level**: `src/problem-statement-{num}-{name}/README.md`
+   - Overall execution flow for the entire problem statement
+   - High-level orchestration of analysis stages
+   - Dependencies between user stories/waves
+   - Environment setup requirements
+
+2. **Module Level**: Individual module docstrings and inline comments
+   - Function-level execution details
+   - Parameter descriptions and examples
+   - Edge cases and error handling
+
+### Required README Sections
+
+Each README MUST include the following sections based on code running flow:
+
+#### 1. Quick Start
+```markdown
+## Quick Start
+
+### Running the Analysis
+
+```bash
+# Step-by-step execution commands
+python src/problem-statement-001-seasonal-forecasting/wave-1/01_extract_data.py
+python src/problem-statement-001-seasonal-forecasting/wave-1/02_profile_data.py
+```
+
+Or run the complete pipeline:
+
+```bash
+python src/problem-statement-001-seasonal-forecasting/run_all.py
+```
+```
+
+#### 2. Execution Flow
+```markdown
+## Execution Flow
+
+The analysis follows this sequence:
+
+1. **Data Extraction** (`01_extract_data.py`)
+   - Reads from: `data/1_raw/disease_data.csv`
+   - Outputs to: `data/3_interim/extracted_data_{timestamp}.csv`
+   - Duration: ~2 minutes
+   - Dependencies: Kaggle API credentials
+
+2. **Data Profiling** (`02_profile_data.py`)
+   - Reads from: `data/3_interim/extracted_data_{timestamp}.csv`
+   - Outputs to: `results/tables/data_quality_report.md`
+   - Duration: ~1 minute
+   - Dependencies: None
+
+3. **Data Cleaning** (`03_clean_data.py`)
+   - Reads from: `data/3_interim/extracted_data_{timestamp}.csv`
+   - Outputs to: `data/4_processed/cleaned_data.csv`
+   - Duration: ~3 minutes
+   - Dependencies: Quality report insights
+
+[Continue for all stages...]
+```
+
+#### 3. Input/Output Specifications
+```markdown
+## Input/Output Specifications
+
+### Inputs
+| File | Location | Format | Required Fields |
+|------|----------|--------|----------------|
+| Raw disease data | `data/1_raw/disease_data.csv` | CSV | date, disease, case_count, region |
+| Configuration | `config/analysis.yml` | YAML | target_diseases, date_range |
+
+### Outputs
+| File | Location | Format | Description |
+|------|----------|--------|-------------|
+| Cleaned data | `data/4_processed/cleaned_data.csv` | CSV | Standardized disease cases |
+| Quality report | `results/tables/data_quality_report.md` | Markdown | Data profiling results |
+| Visualizations | `reports/figures/seasonal_patterns.png` | PNG | Time series plots |
+```
+
+#### 4. Environment Setup
+```markdown
+## Environment Setup
+
+### 1. Python Environment
+```bash
+# Activate virtual environment
+source .venv/bin/activate
+
+# Install dependencies (use uv, not pip)
+uv pip install -r requirements.txt
+```
+
+### 2. Configuration
+```bash
+# Copy example config and customize
+cp config/analysis.example.yml config/analysis.yml
+
+# Edit config to set:
+# - target_diseases: ["Dengue", "HFMD", "COVID-19"]
+# - date_range: {start: "2012-01-01", end: "2023-12-31"}
+```
+
+### 3. API Keys (if applicable)
+```bash
+# Set Kaggle credentials
+export KAGGLE_USERNAME="your_username"
+export KAGGLE_KEY="your_api_key"
+```
+```
+
+#### 5. Execution Modes
+```markdown
+## Execution Modes
+
+### Development Mode
+Run individual scripts for testing and debugging:
+```bash
+python src/problem-statement-001/wave-1/02_profile_data.py --debug --sample-size 1000
+```
+
+### Production Mode
+Run complete pipeline with all data:
+```bash
+python src/problem-statement-001/run_all.py --mode production
+```
+
+### Notebook Mode
+Interactive exploration:
+```bash
+jupyter notebook notebooks/2_analysis/seasonal_analysis.ipynb
+```
+```
+
+#### 6. Troubleshooting
+```markdown
+## Troubleshooting
+
+### Common Issues
+
+**Issue**: ImportError: No module named 'polars'
+**Solution**: Install packages using `uv pip install -r requirements.txt`
+
+**Issue**: FileNotFoundError: data/1_raw/disease_data.csv
+**Solution**: Run data extraction first: `python 01_extract_data.py`
+
+**Issue**: Kaggle API authentication failed
+**Solution**: Set environment variables:
+```bash
+export KAGGLE_USERNAME="your_username"
+export KAGGLE_KEY="your_api_key"
+```
+
+### Logs
+Check execution logs for detailed error information:
+- ETL logs: `logs/etl/`
+- Error logs: `logs/errors/`
+- Audit logs: `logs/audit/`
+```
+
+#### 7. Performance Considerations
+```markdown
+## Performance Considerations
+
+### Data Size Recommendations
+- **Small datasets** (< 100MB): Run on local machine
+- **Medium datasets** (100MB - 1GB): Use lazy evaluation with Polars
+- **Large datasets** (> 1GB): Consider Databricks cluster execution
+
+### Optimization Tips
+1. Use `pl.scan_csv()` instead of `pl.read_csv()` for lazy loading
+2. Filter data early in the pipeline to reduce memory usage
+3. Use `Categorical` dtype for disease names to save memory
+4. Enable Polars' parallel processing for aggregations
+
+### Expected Execution Times
+| Stage | Small Data | Medium Data | Large Data |
+|-------|-----------|-------------|------------|
+| Extraction | 30s | 2 min | 10 min |
+| Profiling | 15s | 1 min | 5 min |
+| Cleaning | 45s | 3 min | 15 min |
+| Analysis | 1 min | 5 min | 20 min |
+```
+
+### README Update Process
+
+When updating README files, follow this process:
+
+1. **Execute the Code**: Run all implemented scripts/notebooks to verify actual execution flow
+2. **Document Actual Flow**: Record the actual sequence, inputs, outputs, and timings observed
+3. **Capture Error Messages**: Note common errors encountered during testing
+4. **Verify Instructions**: Test README instructions on a fresh environment to ensure accuracy
+5. **Use Filesystem Tools**: Save README updates using MCP filesystem tools
+
+### README Update Verification
+
+After updating README files, verify:
+
+- ✅ Quick Start commands execute successfully on a fresh environment
+- ✅ Execution Flow diagram matches actual code execution sequence
+- ✅ All input/output file paths are accurate and exist
+- ✅ Environment setup instructions are complete and tested
+- ✅ Execution modes work as documented
+- ✅ Troubleshooting section addresses actual errors encountered
+- ✅ Performance timings are based on actual measurements
+- ✅ All code snippets in README are syntactically correct
+- ✅ Dependencies listed match `requirements.txt`
+- ✅ Configuration examples match actual config files
+
+### Example README Update Using MCP Tools
+
+```bash
+# After implementing wave-1 scripts, update README
+Use filesystem tools to create src/problem-statement-001-seasonal-forecasting/wave-1/README.md
+
+# Verify README by testing instructions
+1. Use filesystem tools to read the README
+2. Execute each command in Quick Start section
+3. Verify outputs exist at documented locations
+4. Update README with any corrections needed
+```
+
 ## Error Handling Requirements
 
 If implementation or verification fails, the output MUST:
@@ -501,3 +743,5 @@ The final output MUST include:
 - Any command outputs or test results
 - The completed Design Implementation Verification Checklist
 - Any noted discrepancies or issues
+- **Updated README files documenting code execution flow** (see README Documentation Requirements above)
+- Verification that README instructions have been tested and work correctly
