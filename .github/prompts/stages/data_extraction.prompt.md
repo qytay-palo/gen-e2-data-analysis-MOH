@@ -23,8 +23,8 @@ The following inputs MUST be available before proceeding:
    - SQL queries for database extraction
    - Query parameters and filters
 
-3. **Target Epic/User Story**: 
-   - Epic number (e.g., epic-001)
+3. **Target problem-statement/User Story**: 
+   - problem-statement number (e.g., problem-statement-001)
    - User story identifier
    - Data requirements from user story acceptance criteria
 
@@ -42,23 +42,23 @@ The following inputs MUST be available before proceeding:
 
 The extraction MUST produce:
 
-1. **Raw Data Files**: `data/1_raw/{epic_id}/`
+1. **Raw Data Files**: `data/1_raw/{problem_statement_id}/`
    - Original, immutable source data
    - Filename format: `{source_name}_{timestamp}.{format}`
    - Supported formats: CSV, JSON, Parquet, Excel
 
-2. **Schema Documentation**: `data/schemas/{epic_id}/`
+2. **Schema Documentation**: `data/schemas/{problem_statement_id}/`
    - Data dictionary for each extracted dataset
    - Column names, data types, descriptions
    - Sample values and value ranges
 
-3. **Extraction Metadata**: `data/1_raw/{epic_id}/metadata.json`
+3. **Extraction Metadata**: `data/1_raw/{problem_statement_id}/metadata.json`
    - Extraction timestamp
    - Source system and version
    - Row counts and file sizes
    - Extraction parameters used
 
-4. **Extraction Log**: `logs/etl/extraction_{epic_id}_{timestamp}.log`
+4. **Extraction Log**: `logs/etl/extraction_{problem_statement_id}_{timestamp}.log`
    - Extraction start/end times
    - Success/failure status
    - Any warnings or errors encountered
@@ -70,9 +70,9 @@ The extraction MUST produce:
 
 ```
 1. Read config/data_sources.yml to get data source configurations
-2. Identify the data sources needed for this epic
-3. Create target directory: data/1_raw/{epic_id}/
-4. Create schema directory: data/schemas/{epic_id}/
+2. Identify the data sources needed for this problem-statement
+3. Create target directory: data/1_raw/{problem_statement_id}/
+4. Create schema directory: data/schemas/{problem_statement_id}/
 5. List existing files to check for duplicates
 ```
 
@@ -84,7 +84,7 @@ The extraction MUST produce:
 2. For each extraction query in sql/extractions/:
    a. Read the SQL query file
    b. Execute the query
-   c. Save results to data/1_raw/{epic_id}/{table_name}.csv
+   c. Save results to data/1_raw/{problem_statement_id}/{table_name}.csv
    d. Record row count and extraction time
 ```
 
@@ -92,7 +92,7 @@ The extraction MUST produce:
 ```
 1. Read source file locations from config
 2. Copy or read source files using polars, standard file operations
-3. Write to data/1_raw/{epic_id}/
+3. Write to data/1_raw/{problem_statement_id}/
 4. Verify file integrity (size, format)
 ```
 
@@ -100,7 +100,7 @@ The extraction MUST produce:
 ```
 1. Read API configuration from config folder
 2. Make API calls using requests library
-3. Save API responses to data/1_raw/{epic_id}/
+3. Save API responses to data/1_raw/{problem_statement_id}/
 4. Handle pagination and rate limiting
 ```
 
@@ -114,7 +114,7 @@ The extraction MUST produce:
    - Non-null counts
    - Unique value counts
    - Sample values (first 5)
-3. Write schema documentation to data/schemas/{epic_id}/{dataset_name}_schema.md
+3. Write schema documentation to data/schemas/{problem_statement_id}/{dataset_name}_schema.md
 ```
 
 ### Step 4: Metadata Generation
@@ -127,29 +127,29 @@ The extraction MUST produce:
    - File size: From file system (os.path.getsize)
    - Extraction parameters: Query filters, date ranges, etc.
 2. Format as JSON
-3. Write to data/1_raw/{epic_id}/metadata.json
+3. Write to data/1_raw/{problem_statement_id}/metadata.json
 ```
 
 ### Step 5: Logging
 
 ```
 1. Create extraction log with:
-   - Epic ID and user story reference
+   - problem-statement ID and user story reference
    - Start time and end time
    - List of extracted datasets with row counts
    - Success/failure status for each source
    - Any errors or warnings
-2. Write log to logs/etl/extraction_{epic_id}_{timestamp}.log using Python logging module
+2. Write log to logs/etl/extraction_{problem_statement_id}_{timestamp}.log using Python logging module
 ```
 
 ### Step 6: Verification
 
 ```
-1. List all files in data/1_raw/{epic_id}/ using os.listdir or pathlib
+1. List all files in data/1_raw/{problem_statement_id}/ using os.listdir or pathlib
 2. Verify each expected file exists using os.path.exists
 3. Check file sizes (should be > 0) using os.path.getsize
 4. Read first 5 rows of each dataset using polars.read_csv(nrows=5)
-5. Verify schema files exist in data/schemas/{epic_id}/
+5. Verify schema files exist in data/schemas/{problem_statement_id}/
 6. Verify metadata.json exists and is valid JSON using json.load
 7. Verify extraction log exists in logs/etl/
 ```
@@ -183,7 +183,7 @@ After extraction, perform these quality checks:
 
 If extraction fails or encounters issues:
 
-1. **Write detailed error log** to `logs/errors/extraction_{epic_id}_{timestamp}.log`
+1. **Write detailed error log** to `logs/errors/extraction_{problem_statement_id}_{timestamp}.log`
 2. **Document the specific failure**:
    - Which data source failed
    - Error message and stack trace
@@ -198,9 +198,9 @@ If extraction fails or encounters issues:
 
 The data extraction is considered successful when:
 
-- ✅ All required datasets are extracted and saved to `data/1_raw/{epic_id}/`
+- ✅ All required datasets are extracted and saved to `data/1_raw/{problem_statement_id}/`
 - ✅ All files are non-empty and readable
-- ✅ Schema documentation exists for each dataset in `data/schemas/{epic_id}/`
+- ✅ Schema documentation exists for each dataset in `data/schemas/{problem_statement_id}/`
 - ✅ Metadata file `metadata.json` is present and valid
 - ✅ Extraction log exists in `logs/etl/` and shows success status
 - ✅ Quality checks pass (completeness, integrity, documentation)
@@ -213,7 +213,7 @@ At the end of extraction, document the extraction summary:
 ### Extraction Summary
 
 **Files and Directories**:
-- Created directories: data/1_raw/epic-001/, data/schemas/epic-001/
+- Created directories: data/1_raw/problem-statement-001/, data/schemas/problem-statement-001/
 - Files written: 5 datasets, 5 schema docs, 1 metadata file, 1 log file
 - Files read: config/data_sources.yml, sql/extractions/*.sql
 - Verification: Listed directories, checked file sizes, read sample rows

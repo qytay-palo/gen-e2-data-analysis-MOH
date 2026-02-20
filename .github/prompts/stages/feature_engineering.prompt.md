@@ -44,31 +44,31 @@ The following inputs MUST be available before proceeding:
 
 The feature engineering MUST produce:
 
-1. **Feature Engineering Notebook**: `notebooks/3_feature_engineering/{epic_id}/`
+1. **Feature Engineering Notebook**: `notebooks/3_feature_engineering/{problem_statement_id}/`
    - Complete feature creation workflow
    - Transformation logic and rationale
    - Feature validation and quality checks
    - Inline visualizations of feature distributions
 
-2. **Feature Dataset**: `data/4_processed/{epic_id}/features/`
+2. **Feature Dataset**: `data/4_processed/{problem_statement_id}/features/`
    - Engineered feature sets (CSV/Parquet)
    - Train/test splits (if applicable)
    - Feature matrices ready for modeling
 
-3. **Feature Documentation**: `data/schemas/{epic_id}/feature_dictionary.md`
+3. **Feature Documentation**: `data/schemas/{problem_statement_id}/feature_dictionary.md`
    - Feature name and description
    - Creation logic and formula
    - Data type and value range
    - Missingness handling approach
    - Importance/relevance notes
 
-4. **Feature Statistics**: `results/metrics/{epic_id}_feature_stats.json`
+4. **Feature Statistics**: `results/metrics/{problem_statement_id}_feature_stats.json`
    - Feature distributions (mean, std, min, max)
    - Correlation matrix (with target if applicable)
    - Feature importance scores (if available)
    - Missingness rates
 
-5. **Feature Transformation Pipeline**: `src/features/{epic_id}_feature_pipeline.py`
+5. **Feature Transformation Pipeline**: `src/features/{problem_statement_id}_feature_pipeline.py`
    - Reusable feature engineering code
    - Preprocessing classes/functions
    - Transformation pipeline (sklearn Pipeline or custom)
@@ -79,8 +79,8 @@ The feature engineering MUST produce:
 
 ```
 1. Create feature directories:
-   - notebooks/3_feature_engineering/{epic_id}/
-   - data/4_processed/{epic_id}/features/
+   - notebooks/3_feature_engineering/{problem_statement_id}/
+   - data/4_processed/{problem_statement_id}/features/
    - src/features/
 
 2. Read prepared data from data/4_processed/
@@ -91,9 +91,9 @@ The feature engineering MUST produce:
 ```
 
 **Example MCP Commands**:
-- "Use filesystem tools to create directory notebooks/3_feature_engineering/epic-001/"
-- "Use filesystem tools to read data/4_processed/epic-001/clean_patient_visits.csv"
-- "Use filesystem tools to read data/schemas/epic-001/patient_visits_schema.md"
+- "Use filesystem tools to create directory notebooks/3_feature_engineering/problem_statement-001/"
+- "Use filesystem tools to read data/4_processed/problem_statement-001/clean_patient_visits.csv"
+- "Use filesystem tools to read data/schemas/problem_statement-001/patient_visits_schema.md"
 
 ### Step 2: Temporal Feature Engineering (for time-series data)
 
@@ -364,7 +364,7 @@ Create features specific to your business domain:
    - Why certain features were removed
    - Assumptions made
 
-3. Write feature dictionary to data/schemas/{epic_id}/feature_dictionary.md
+3. Write feature dictionary to data/schemas/{problem_statement_id}/feature_dictionary.md
 ```
 
 ### Step 10: Create Reusable Feature Pipeline
@@ -387,7 +387,7 @@ Create features specific to your business domain:
    - Fit on training data
    - Transform train/test consistently
 
-4. Save pipeline code to src/features/{epic_id}_feature_pipeline.py
+4. Save pipeline code to src/features/{problem_statement_id}_feature_pipeline.py
 ```
 
 ### Step 11: Feature Statistics and Validation
@@ -412,7 +412,7 @@ Create features specific to your business domain:
    - Population Stability Index (PSI) for key features
    - Expected value ranges for monitoring
 
-5. Save statistics to results/metrics/{epic_id}_feature_stats.json
+5. Save statistics to results/metrics/{problem_statement_id}_feature_stats.json
 
 6. Create feature versioning metadata:
    - Feature set version number
@@ -426,11 +426,11 @@ Create features specific to your business domain:
 
 ```
 1. Verify all required outputs were created:
-   - List files in notebooks/3_feature_engineering/{epic_id}/
-   - List files in data/4_processed/{epic_id}/features/
-   - Verify src/features/{epic_id}_feature_pipeline.py exists
-   - Verify data/schemas/{epic_id}/feature_dictionary.md exists
-   - Verify results/metrics/{epic_id}_feature_stats.json exists
+   - List files in notebooks/3_feature_engineering/{problem_statement_id}/
+   - List files in data/4_processed/{problem_statement_id}/features/
+   - Verify src/features/{problem_statement_id}_feature_pipeline.py exists
+   - Verify data/schemas/{problem_statement_id}/feature_dictionary.md exists
+   - Verify results/metrics/{problem_statement_id}_feature_stats.json exists
 
 2. Verify feature dataset quality:
    - Read feature dataset and check shape
@@ -540,7 +540,7 @@ After feature engineering, perform these quality checks:
 
 If feature engineering encounters issues:
 
-1. **Write detailed error log** to `logs/errors/feature_engineering_{epic_id}_{timestamp}.log`
+1. **Write detailed error log** to `logs/errors/feature_engineering_{problem_statement_id}_{timestamp}.log`
 
 2. **Document the specific issue**:
    - Which feature creation failed
@@ -557,11 +557,11 @@ If feature engineering encounters issues:
 
 The feature engineering is considered successful when:
 
-- ✅ All required features created and saved to `data/4_processed/{epic_id}/features/`
-- ✅ Feature engineering notebooks created in `notebooks/3_feature_engineering/{epic_id}/`
-- ✅ Feature dictionary documented in `data/schemas/{epic_id}/feature_dictionary.md`
-- ✅ Feature statistics calculated and saved to `results/metrics/{epic_id}_feature_stats.json`
-- ✅ Reusable feature pipeline created in `src/features/{epic_id}_feature_pipeline.py`
+- ✅ All required features created and saved to `data/4_processed/{problem_statement_id}/features/`
+- ✅ Feature engineering notebooks created in `notebooks/3_feature_engineering/{problem_statement_id}/`
+- ✅ Feature dictionary documented in `data/schemas/{problem_statement_id}/feature_dictionary.md`
+- ✅ Feature statistics calculated and saved to `results/metrics/{problem_statement_id}_feature_stats.json`
+- ✅ Reusable feature pipeline created in `src/features/{problem_statement_id}_feature_pipeline.py`
 - ✅ Train/test splits created (if applicable)
 - ✅ No data leakage detected
 - ✅ Quality checks passed (data, feature, pipeline, documentation)
@@ -578,6 +578,6 @@ After successful feature engineering, proceed to:
 ## References
 
 - Data Dictionary: `docs/data_dictionary/`
-- User Story: `docs/objectives/user_stories/{epic_id}/`
+- User Story: `docs/objectives/user_stories/{problem_statement_id}/`
 - Project Structure: `README.md`
 - Tech Stack: `docs/project_context/tech_stack.md`

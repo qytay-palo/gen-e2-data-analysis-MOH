@@ -14,13 +14,13 @@ Create compelling visualizations and comprehensive reports that communicate anal
 The following inputs MUST be available before proceeding:
 
 1. **Analysis Results**: 
-   - `results/tables/{epic_id}/` - Summary statistics, analytical tables
-   - `results/metrics/{epic_id}_metrics.json` - KPIs and performance metrics
-   - `notebooks/2_analysis/{epic_id}/` - Analysis notebooks with findings
+   - `results/tables/{problem_statement_id}/` - Summary statistics, analytical tables
+   - `results/metrics/{problem_statement_id}_metrics.json` - KPIs and performance metrics
+   - `notebooks/2_analysis/{problem_statement_id}/` - Analysis notebooks with findings
 
 2. **Data for Visualization**:
-   - `data/4_processed/{epic_id}/` - Clean datasets
-   - `data/3_interim/{epic_id}/` - Intermediate processed data
+   - `data/4_processed/{problem_statement_id}/` - Clean datasets
+   - `data/3_interim/{problem_statement_id}/` - Intermediate processed data
    - Database tables (if using SQLite)
 
 3. **Reporting Requirements**: From user story or stakeholder specs
@@ -45,25 +45,25 @@ The following inputs MUST be available before proceeding:
 
 The visualization and reporting MUST produce:
 
-1. **Static Visualizations**: `reports/figures/{epic_id}/`
+1. **Static Visualizations**: `reports/figures/{problem_statement_id}/`
    - High-resolution charts and plots (PNG, PDF)
    - Publication-quality graphics (300 DPI)
    - Properly labeled with titles, axes, legends
    - Accessible color schemes
 
-2. **Interactive Dashboards**: `reports/dashboards/{epic_id}/`
+2. **Interactive Dashboards**: `reports/dashboards/{problem_statement_id}/`
    - HTML dashboards (Plotly, Bokeh)
    - Power BI files (.pbix) if applicable
    - Streamlit/Dash apps
    - Jupyter Dashboard notebooks
 
-3. **Reports**: `reports/presentations/{epic_id}/`
+3. **Reports**: `reports/presentations/{problem_statement_id}/`
    - Executive summaries (PDF)
    - Slide decks (PPTX)
    - Technical reports (Markdown/PDF)
    - Infographics
 
-4. **Visualization Documentation**: `reports/{epic_id}/visualization_guide.md`
+4. **Visualization Documentation**: `reports/{problem_statement_id}/visualization_guide.md`
    - Description of each visualization
    - Data sources and calculations
    - Interpretation guidance
@@ -75,14 +75,14 @@ The visualization and reporting MUST produce:
 
 ```
 1. Create visualization directories:
-   - reports/figures/{epic_id}/
-   - reports/dashboards/{epic_id}/
-   - reports/presentations/{epic_id}/
+   - reports/figures/{problem_statement_id}/
+   - reports/dashboards/{problem_statement_id}/
+   - reports/presentations/{problem_statement_id}/
 
 2. Read analysis results:
-   - Read results/metrics/{epic_id}_metrics.json
-   - Read results/tables/{epic_id}/*.csv
-   - Read analysis summary from results/{epic_id}/analysis_summary.md
+   - Read results/metrics/{problem_statement_id}_metrics.json
+   - Read results/tables/{problem_statement_id}/*.csv
+   - Read analysis summary from results/{problem_statement_id}/analysis_summary.md
 
 3. Identify key findings to visualize:
    - Most important metrics and KPIs
@@ -580,9 +580,9 @@ Ensure visualizations are accessible and high quality:
 
 ```
 1. Verify all required outputs were created:
-   - List files in reports/figures/{epic_id}/
-   - List files in reports/dashboards/{epic_id}/
-   - List files in reports/presentations/{epic_id}/
+   - List files in reports/figures/{problem_statement_id}/
+   - List files in reports/dashboards/{problem_statement_id}/
+   - List files in reports/presentations/{problem_statement_id}/
 
 2. Verify visualization quality:
    - All images at required resolution (300 DPI for print)
@@ -834,7 +834,7 @@ After visualization creation, perform these quality checks:
 
 If visualization creation encounters issues:
 
-1. **Write detailed error log** to `logs/errors/visualization_{epic_id}_{timestamp}.log`
+1. **Write detailed error log** to `logs/errors/visualization_{problem_statement_id}_{timestamp}.log`
 
 2. **Document the specific issue**:
    - Which visualization failed
@@ -853,10 +853,10 @@ If visualization creation encounters issues:
 
 The visualization and reporting is considered successful when:
 
-- ✅ All required visualizations created and saved to `reports/figures/{epic_id}/`
-- ✅ Interactive dashboards (if applicable) saved to `reports/dashboards/{epic_id}/`
-- ✅ Reports and presentations saved to `reports/presentations/{epic_id}/`
-- ✅ Visualization guide documented in `reports/{epic_id}/visualization_guide.md`
+- ✅ All required visualizations created and saved to `reports/figures/{problem_statement_id}/`
+- ✅ Interactive dashboards (if applicable) saved to `reports/dashboards/{problem_statement_id}/`
+- ✅ Reports and presentations saved to `reports/presentations/{problem_statement_id}/`
+- ✅ Visualization guide documented in `reports/{problem_statement_id}/visualization_guide.md`
 - ✅ All visualizations are high quality, accurate, and accessible
 - ✅ Key findings clearly communicated with actionable recommendations
 - ✅ Acceptance criteria from user story met
@@ -877,7 +877,7 @@ After successful visualization, proceed to:
 
 ## References
 
-- Analysis Results: `results/{epic_id}/`
+- Analysis Results: `results/{problem_statement_id}/`
 - Style Guide: `docs/style_guide.md` (if exists)
-- User Story: `docs/objectives/user_stories/{epic_id}/`
+- User Story: `docs/objectives/user_stories/{problem_statement_id}/`
 - Project Structure: `README.md`

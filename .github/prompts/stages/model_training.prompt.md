@@ -13,7 +13,7 @@ Develop, train, and evaluate machine learning models to make predictions, classi
 
 The following inputs MUST be available before proceeding:
 
-1. **Feature Datasets**: `data/4_processed/{epic_id}/features/`
+1. **Feature Datasets**: `data/4_processed/{problem_statement_id}/features/`
    - Training set (features + target)
    - Validation set (if available)
    - Test set (for final evaluation)
@@ -47,20 +47,20 @@ The following inputs MUST be available before proceeding:
 
 The model training MUST produce:
 
-1. **Trained Models**: `models/{epic_id}/`
+1. **Trained Models**: `models/{problem_statement_id}/`
    - Serialized model files (.pkl, .joblib, .h5)
    - Model metadata (hyperparameters, features used)
    - Preprocessing pipelines (scalers, encoders)
    - Model versioning information
 
-2. **Model Training Notebooks**: `notebooks/2_analysis/{epic_id}/` or `notebooks/models/`
+2. **Model Training Notebooks**: `notebooks/2_analysis/{problem_statement_id}/` or `notebooks/models/`
    - Data preparation and splitting
    - Baseline model training
    - Model experimentation
    - Hyperparameter tuning
    - Final model training and evaluation
 
-3. **Model Evaluation Results**: `results/metrics/{epic_id}_model_performance.json`
+3. **Model Evaluation Results**: `results/metrics/{problem_statement_id}_model_performance.json`
    - Training metrics
    - Validation metrics
    - Test metrics
@@ -68,7 +68,7 @@ The model training MUST produce:
    - Confusion matrix (classification)
    - Feature importance scores
 
-4. **Model Visualizations**: `reports/figures/{epic_id}/model/`
+4. **Model Visualizations**: `reports/figures/{problem_statement_id}/model/`
    - ROC curves (classification)
    - Precision-recall curves
    - Feature importance plots
@@ -76,7 +76,7 @@ The model training MUST produce:
    - Residual plots (regression)
    - Confusion matrices
 
-5. **Model Documentation**: `models/{epic_id}/model_card.md`
+5. **Model Documentation**: `models/{problem_statement_id}/model_card.md`
    - Model description and purpose
    - Training data details
    - Performance metrics
@@ -89,14 +89,14 @@ The model training MUST produce:
 
 ```
 1. Create model directories:
-   - models/{epic_id}/
+   - models/{problem_statement_id}/
    - notebooks/models/ (if not exists)
-   - reports/figures/{epic_id}/model/
+   - reports/figures/{problem_statement_id}/model/
 
 2. Read feature datasets using Polars:
    import polars as pl
-   train_df = pl.read_csv('data/4_processed/{epic_id}/features/train_features.csv')
-   test_df = pl.read_csv('data/4_processed/{epic_id}/features/test_features.csv')
+   train_df = pl.read_csv('data/4_processed/{problem_statement_id}/features/train_features.csv')
+   test_df = pl.read_csv('data/4_processed/{problem_statement_id}/features/test_features.csv')
    # Read feature documentation
 
 3. Verify data quality:
@@ -122,11 +122,11 @@ Set up experiment tracking for reproducibility and comparison:
 
 2. Initialize experiment:
    import mlflow
-   mlflow.set_experiment(f"{epic_id}_model_training")
+   mlflow.set_experiment(f"{problem_statement_id}_model_training")
    mlflow.set_tracking_uri("file:./mlruns")  # or remote server
 
 3. Set up experiment metadata:
-   mlflow.set_tag("project", "epic_id")
+   mlflow.set_tag("project", "problem_statement_id")
    mlflow.set_tag("stage", "model_training")
    mlflow.set_tag("date", datetime.now().isoformat())
 
@@ -305,7 +305,7 @@ Train final model with best hyperparameters:
 4. Train final model
 5. Save trained model with MLflow:
    mlflow.sklearn.log_model(final_model, "model", 
-                            registered_model_name=f"{epic_id}_model")
+                            registered_model_name=f"{problem_statement_id}_model")
 ```
 
 ### Step 5.5: Model Calibration (for Classification)
@@ -343,7 +343,7 @@ Ensure predicted probabilities are reliable (critical for probabilistic predicti
    plt.xlabel('Predicted Probability')
    plt.ylabel('True Probability')
    plt.title('Calibration Curve')
-   plt.savefig(f'reports/figures/{epic_id}/model/calibration_curve.png')
+   plt.savefig(f'reports/figures/{problem_statement_id}/model/calibration_curve.png')
 
 5. Use calibrated model for final predictions if ECE improves
 
@@ -565,12 +565,12 @@ Save everything needed to use model in production:
        artifact_path="model",
        signature=signature,
        input_example=input_example,
-       registered_model_name=f"{epic_id}_model"
+       registered_model_name=f"{problem_statement_id}_model"
    )
    
    # Alternative: Traditional serialization
    import joblib
-   model_path = f"models/{epic_id}/model_v{version}_{timestamp}.joblib"
+   model_path = f"models/{problem_statement_id}/model_v{version}_{timestamp}.joblib"
    joblib.dump(final_model, model_path)
 
 2. Save preprocessing artifacts:
@@ -581,7 +581,7 @@ Save everything needed to use model in production:
    - Full sklearn Pipeline (recommended)
    
    # Save as part of MLflow model or separately
-   preprocessing_path = f"models/{epic_id}/preprocessing_v{version}.joblib"
+   preprocessing_path = f"models/{problem_statement_id}/preprocessing_v{version}.joblib"
    joblib.dump(preprocessing_pipeline, preprocessing_path)
 
 3. Save model metadata:
@@ -605,11 +605,11 @@ Save everything needed to use model in production:
    }
    
    import json
-   with open(f"models/{epic_id}/metadata_v{version}.json", 'w') as f:
+   with open(f"models/{problem_statement_id}/metadata_v{version}.json", 'w') as f:
        json.dump(metadata, f, indent=2)
 
 4. Create model package:
-   models/{epic_id}/
+   models/{problem_statement_id}/
    ├── model_v{version}_{timestamp}.joblib
    ├── preprocessing_v{version}.joblib
    ├── metadata_v{version}.json
@@ -618,7 +618,7 @@ Save everything needed to use model in production:
    └── monitoring_baseline.json (see Step 13.5)
 
 5. Generate requirements.txt:
-   uv pip freeze > models/{epic_id}/requirements.txt
+   uv pip freeze > models/{problem_statement_id}/requirements.txt
 
 6. Test model loading:
    # Verify model can be loaded and used
@@ -703,8 +703,8 @@ Create reproducible training notebook:
 
 ```
 1. Verify all required outputs were created:
-   - List files in models/{epic_id}/
-   - List files in results/metrics/{epic_id}/
+   - List files in models/{problem_statement_id}/
+   - List files in results/metrics/{problem_statement_id}/
    - Verify model_card.md exists
    - Verify all evaluation visualizations saved
    - Verify MLflow tracking data exists
@@ -712,11 +712,11 @@ Create reproducible training notebook:
 2. Verify model can be loaded and used:
    # Test traditional loading
    import joblib
-   loaded_model = joblib.load(f"models/{epic_id}/model_v{version}.joblib")
-   loaded_preprocessing = joblib.load(f"models/{epic_id}/preprocessing_v{version}.joblib")
+   loaded_model = joblib.load(f"models/{problem_statement_id}/model_v{version}.joblib")
+   loaded_preprocessing = joblib.load(f"models/{problem_statement_id}/preprocessing_v{version}.joblib")
    
    # Test MLflow loading
-   model_uri = f"models:/{epic_id}_model/{version}"
+   model_uri = f"models:/{problem_statement_id}_model/{version}"
    mlflow_model = mlflow.sklearn.load_model(model_uri)
    
    # Make predictions on sample data
@@ -812,7 +812,7 @@ Set up foundations for production monitoring (drift detection, performance track
    }
    
    # Save monitoring baseline
-   with open(f"models/{epic_id}/monitoring_baseline.json", 'w') as f:
+   with open(f"models/{problem_statement_id}/monitoring_baseline.json", 'w') as f:
        json.dump(monitoring_baseline, f, indent=2)
 
 3. Document monitoring plan in model card:
@@ -822,7 +822,7 @@ Set up foundations for production monitoring (drift detection, performance track
    - Data quality checks
 
 4. Create monitoring script template (optional):
-   # scripts/monitor_model_{epic_id}.py
+   # scripts/monitor_model_{problem_statement_id}.py
    # Template for production monitoring
    # - Load monitoring baseline
    # - Calculate drift metrics on new data
@@ -931,18 +931,18 @@ For recommendation systems:
 
 The model training is considered successful when:
 
-- ✅ Trained model(s) saved to `models/{epic_id}/` with version and timestamp
+- ✅ Trained model(s) saved to `models/{problem_statement_id}/` with version and timestamp
 - ✅ Model significantly outperforms baseline (document improvement)
 - ✅ Evaluation metrics meet user story acceptance criteria
 - ✅ Feature importance analyzed and documented
-- ✅ Model card created in `models/{epic_id}/model_card.md`
+- ✅ Model card created in `models/{problem_statement_id}/model_card.md`
 - ✅ Training notebook created with clear documentation
-- ✅ All evaluation visualizations saved to `reports/figures/{epic_id}/model/`
+- ✅ All evaluation visualizations saved to `reports/figures/{problem_statement_id}/model/`
 - ✅ Model can be loaded and used for predictions (verified)
 - ✅ No data leakage detected (preprocessing fitted on training only)
 - ✅ All outputs verified and tested
 - ✅ MLflow experiments tracked and logged
-- ✅ Monitoring baseline created in `models/{epic_id}/monitoring_baseline.json`
+- ✅ Monitoring baseline created in `models/{problem_statement_id}/monitoring_baseline.json`
 - ✅ Business impact documented and translated from metrics
 - ✅ Model calibrated if probabilities are used
 - ✅ Temporal validation used if data has time structure
@@ -956,7 +956,7 @@ After successful model training, proceed to:
 
 ## References
 
-- Feature Data: `data/4_processed/{epic_id}/features/`
-- User Story: `docs/objectives/user_stories/{epic_id}/`
+- Feature Data: `data/4_processed/{problem_statement_id}/features/`
+- User Story: `docs/objectives/user_stories/{problem_statement_id}/`
 - Tech Stack: `docs/project_context/tech_stack.md`
 - Project Structure: `README.md`

@@ -45,29 +45,29 @@ The following inputs MUST be available before proceeding:
 
 The analysis MUST produce:
 
-1. **Analysis Notebooks**: `notebooks/2_analysis/{epic_id}/`
+1. **Analysis Notebooks**: `notebooks/2_analysis/{problem_statement_id}/`
    - Jupyter notebooks with complete analysis workflow
    - Markdown explanations and interpretations
    - Code cells with analysis logic
    - Inline visualizations
 
-2. **Result Tables**: `results/tables/{epic_id}/`
+2. **Result Tables**: `results/tables/{problem_statement_id}/`
    - Summary statistics (CSV/Excel)
    - Statistical test results
    - Aggregated metrics
 
-3. **Visualizations**: `reports/figures/{epic_id}/`
+3. **Visualizations**: `reports/figures/{problem_statement_id}/`
    - Charts, plots, and graphs (PNG/PDF)
    - Interactive visualizations (HTML) if applicable
    - Properly labeled with titles, axis labels, legends
 
-4. **Analysis Summary**: `results/{epic_id}/analysis_summary.md`
+4. **Analysis Summary**: `results/{problem_statement_id}/analysis_summary.md`
    - Key findings and insights
    - Statistical significance of results
    - Answers to research questions
    - Recommendations based on analysis
 
-5. **Metrics Report**: `results/metrics/{epic_id}_metrics.json`
+5. **Metrics Report**: `results/metrics/{problem_statement_id}_metrics.json`
    - KPIs calculated
    - Performance metrics
    - Comparison metrics
@@ -78,10 +78,10 @@ The analysis MUST produce:
 
 ```
 1. Create analysis directories:
-   - notebooks/2_analysis/{epic_id}/
-   - results/tables/{epic_id}/
-   - results/metrics/{epic_id}/
-   - reports/figures/{epic_id}/
+   - notebooks/2_analysis/{problem_statement_id}/
+   - results/tables/{problem_statement_id}/
+   - results/metrics/{problem_statement_id}/
+   - reports/figures/{problem_statement_id}/
 
 2. Read prepared data files from data/4_processed/
 
@@ -108,7 +108,7 @@ The analysis MUST produce:
    - Box plots for outliers
    - Heat maps for correlations
 
-4. Save exploratory notebook to notebooks/2_analysis/{epic_id}/01_eda.ipynb
+4. Save exploratory notebook to notebooks/2_analysis/{problem_statement_id}/01_eda.ipynb
 ```
 
 ### Step 3: Statistical Analysis
@@ -125,7 +125,7 @@ The analysis MUST produce:
 
 3. Interpret statistical significance
 
-4. Save statistical test results to results/tables/{epic_id}/statistical_tests.csv
+4. Save statistical test results to results/tables/{problem_statement_id}/statistical_tests.csv
 ```
 
 ### Step 4: Metric Calculation
@@ -141,7 +141,7 @@ The analysis MUST produce:
 
 3. Format metrics as JSON or CSV
 
-4. Save to results/metrics/{epic_id}_metrics.json
+4. Save to results/metrics/{problem_statement_id}_metrics.json
 ```
 
 ### Step 5: Visualization Generation
@@ -165,7 +165,7 @@ The analysis MUST produce:
    - PDF for publications
    - HTML for interactive dashboards (if applicable)
 
-4. Save all figures to reports/figures/{epic_id}/
+4. Save all figures to reports/figures/{problem_statement_id}/
 ```
 
 ### Step 6: Insight Generation and Documentation
@@ -186,7 +186,7 @@ The analysis MUST produce:
    - Limitations and caveats
    - Recommendations
 
-3. Write analysis summary to results/{epic_id}/analysis_summary.md
+3. Write analysis summary to results/{problem_statement_id}/analysis_summary.md
 ```
 
 ### Step 7: Create Analysis Notebook
@@ -207,17 +207,17 @@ The analysis MUST produce:
    - Statistical significance
    - Business implications
 
-3. Save final notebook to notebooks/2_analysis/{epic_id}/final_analysis.ipynb
+3. Save final notebook to notebooks/2_analysis/{problem_statement_id}/final_analysis.ipynb
 ```
 
 ### Step 8: Verification
 
 ```
 1. Verify all required outputs were created:
-   - List files in notebooks/2_analysis/{epic_id}/
-   - List files in results/tables/{epic_id}/
-   - List files in results/metrics/{epic_id}/
-   - List files in reports/figures/{epic_id}/
+   - List files in notebooks/2_analysis/{problem_statement_id}/
+   - List files in results/tables/{problem_statement_id}/
+   - List files in results/metrics/{problem_statement_id}/
+   - List files in reports/figures/{problem_statement_id}/
 
 2. Verify output quality:
    - Read analysis_summary.md and check completeness
@@ -333,7 +333,7 @@ After analysis, perform these quality checks:
 
 If analysis encounters issues:
 
-1. **Write detailed error log** to `logs/errors/analysis_{epic_id}_{timestamp}.log`
+1. **Write detailed error log** to `logs/errors/analysis_{problem_statement_id}_{timestamp}.log`
 
 2. **Document the specific issue**:
    - Which analysis step failed
@@ -351,11 +351,11 @@ If analysis encounters issues:
 The analysis is considered successful when:
 
 - ✅ All research questions addressed with statistical evidence
-- ✅ Analysis notebooks created and saved to `notebooks/2_analysis/{epic_id}/`
-- ✅ Result tables generated and saved to `results/tables/{epic_id}/`
-- ✅ Visualizations created and saved to `reports/figures/{epic_id}/`
-- ✅ Analysis summary document completed in `results/{epic_id}/analysis_summary.md`
-- ✅ Metrics calculated and saved to `results/metrics/{epic_id}_metrics.json`
+- ✅ Analysis notebooks created and saved to `notebooks/2_analysis/{problem_statement_id}/`
+- ✅ Result tables generated and saved to `results/tables/{problem_statement_id}/`
+- ✅ Visualizations created and saved to `reports/figures/{problem_statement_id}/`
+- ✅ Analysis summary document completed in `results/{problem_statement_id}/analysis_summary.md`
+- ✅ Metrics calculated and saved to `results/metrics/{problem_statement_id}_metrics.json`
 - ✅ Quality checks passed (analytical rigor, insight quality, visualization quality)
 - ✅ Acceptance criteria from user story met
 - ✅ All outputs verified

@@ -162,7 +162,7 @@ Use for all file operations throughout the project structure:
 **MCP Commands Examples**:
 ```
 "Use filesystem tools to read data/1_raw/hospital_visits.csv"
-"Use filesystem tools to create directory results/epic-001/wave-1/"
+"Use filesystem tools to create directory results/problem_statement-001/wave-1/"
 "Use filesystem tools to write the processed data to data/4_processed/clean_visits.csv"
 "Use filesystem tools to list all files in notebooks/1_exploratory/"
 ```
@@ -196,7 +196,7 @@ When implementing any feature or analysis:
    - ❌ Incorrect: Asking user to paste file contents
 
 2. **Directory Management**: MUST use filesystem MCP tools for organization
-   - ✅ Correct: "Use filesystem tools to create directory structure for Epic 001"
+   - ✅ Correct: "Use filesystem tools to create directory structure for problem_statement 001"
    - ❌ Incorrect: Manual directory creation commands
 
 3. **Data Writing**: MUST use filesystem MCP tools for all outputs
