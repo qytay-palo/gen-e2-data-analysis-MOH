@@ -131,7 +131,7 @@ This allows the team to:
 **MANDATORY**: Reference your **STEP 1.5 Data Reality Check** before proposing any problem statement.
 
 **CRITICAL CONSTRAINTS**:
-1. ✅ **Platform Match**: Analytical approach must fit tech stack (Databricks/Spark vs local Python/R)
+1. ✅ **Platform Match**: Analytical approach must fit tech stack
 2. ✅ **Data Verification**: Only use datasets explicitly listed in your Data Inventory
 3. ✅ **Granularity Match**: Analytical approach must match temporal/geographic resolution available
 4. ✅ **End-to-End Solvable**: Must fit the complete analytical flow defined in STEP 1.5
@@ -176,13 +176,13 @@ This allows the team to:
 ---
 
 #### D. Prescriptive Analytics Problems
-**Goal**: Recommend optimal actions or policies
+**Goal**: Develop evaluation systems or scoring frameworks to guide decisions
 
 **Examples**:
-- Optimize resource allocation or scheduling
-- Identify intervention opportunities
-- Recommend policy changes or operational improvements
-- Prioritize investments or initiatives
+- Build prioritization scoring systems for resource allocation or scheduling
+- Create intervention opportunity assessment matrices
+- Develop policy evaluation frameworks with weighted criteria
+- Design investment prioritization point systems or ranking models
 
 ---
 
@@ -437,14 +437,14 @@ Create `docs/objectives/problem_statements/README.md` with:
 
 ### Critical Priority (Start Immediately)
 
-1. **[PS-001: Title](ps-001-title.md)** ⭐ CRITICAL
+1. **[PS-XXX: Title](ps-XXX-title.md)** ⭐ CRITICAL
    - One-line description of the problem and value
    - Complexity: [LEVEL]
    - Dependencies: [None or problem statement IDs]
 
 ### High Priority
 
-2. **[PS-002: Title](ps-002-title.md)** ⭐ HIGH
+2. **[PS-XXX: Title](ps-XXX-title.md)** ⭐ HIGH
    - One-line description of the problem and value
    - Complexity: [LEVEL]
    - Dependencies: [Problem Statement IDs]
